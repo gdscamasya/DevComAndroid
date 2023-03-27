@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">DevCom</string>
+    <string name="main_sub_title">Blog Yazıları</string>
+    <string name="main_sub_title2">Duyurular</string>
+    <string name="main_sub_title3">Haberler</string>
+    <string name="main_title">Ana Sayfa</string>
+    <string name="like">Beğen</string>
+    <string name="comment">Yorum</string>
+    <string name="blog_name">Blog Name</string>
+    <string name="nickname">NickName</string>
+    <string name="Form">Form</string>
+    <string name="Event">Etkinlik</string>
+    <string name="Homepage">Ana Sayfa</string>
+    <string name="blog_info">little blog information</string>
+    <string name="nickname_text">Kullanıcı Adı</string>
+    <string name="password">Şifre</string>
+    <string name="edt_email">E-mail</string>
+    <string name="sign_in">Giriş Yap</string>
+    <string name="register">Üye Ol</string>
+    <string name="forget">Şifreni mi unuttun?</string>
+    <string name="recovery">Giriş için yenile.</string>
+    <string name="password_reset">Şifreni Sıfırla</string>
+
+    <string name="facebook_google">veya diğer hesaplarla giriş yapınız.</string>
+    <string name="reset_password">Şifreni Yenile</string>
+    <string name="reset_password_info">Hesabına bağlı olan \n e-posta adresini giriniz.</string>
+
+    <string name="facebook_app_id">1234</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
+</resources>

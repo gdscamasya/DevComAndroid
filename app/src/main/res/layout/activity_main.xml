@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.activity.main.MainActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_header"
+        android:layout_width="423dp"
+        android:layout_height="105dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.461"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/top_backgorund" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/main_title"
+        android:textColor="#B2000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_header"
+        app:layout_constraintEnd_toStartOf="@+id/iv_profile"
+        app:layout_constraintHorizontal_bias="0.445"
+        app:layout_constraintStart_toEndOf="@+id/iv_elipse"
+        app:layout_constraintTop_toTopOf="@+id/iv_header" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="36dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_elipse"
+        app:layout_constraintEnd_toEndOf="@+id/iv_elipse"
+        app:layout_constraintStart_toStartOf="@+id/iv_elipse"
+        app:layout_constraintTop_toTopOf="@+id/iv_elipse"
+        app:srcCompat="@drawable/gdsc" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_elipse"
+        android:layout_width="62dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/elipse"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_profile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circle_img"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@+id/btn_blog"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:background="@drawable/main_button_v1"
+        android:onClick="blogClick"
+        android:text="@string/main_sub_title"
+        android:textAllCaps="false"
+        android:textSize="11sp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_announcements"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_announcements"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="90dp"
+        android:gravity="center"
+        android:background="@drawable/main_button_v1"
+        android:text="@string/main_sub_title2"
+        android:textAllCaps="false"
+        android:textSize="11sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_news"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="90dp"
+        android:gravity="center"
+        android:background="@drawable/main_button_v1"
+        android:text="@string/main_sub_title3"
+        android:textAllCaps="false"
+        android:textSize="11sp"
+        app:layout_constraintStart_toEndOf="@+id/btn_announcements"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_title"
+        android:layout_width="41dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="3dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_elipse"
+        app:srcCompat="@drawable/devcomname" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_activityMain"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="#2B2A67"
+        app:itemIconTint="@color/backgroundWhite"
+        app:itemTextColor="@color/backgroundWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:itemIconSize="20dp"
+        app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/nav_activityMain"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_blog" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
