@@ -10,9 +10,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import devcom.android.databinding.ActivitySignInBinding
-import devcom.android.extensions.navigateToAnotherActivity
 import devcom.android.ui.activity.main.EditorActivity
 import devcom.android.ui.activity.main.MainActivity
+import devcom.android.utils.extensions.*
 
 class SignInActivity : AppCompatActivity() {
 
@@ -89,13 +89,12 @@ class SignInActivity : AppCompatActivity() {
             }else{
                 auth.signInWithEmailAndPassword(nickOrEmail,password).addOnCompleteListener {
                     if(it.isSuccessful){
-                        Handler().postDelayed({
-                            binding.pbSign.visibility = View.INVISIBLE
-                        },2000)
-                        binding.pbSign.visibility = View.VISIBLE
+                        binding.pbSign.visible()
+                        unTouchableScreen()
                         getDataBase()
                     }else{
                         Toast.makeText(this, "Bir şeyler ters gitti, tekrar deneyiniz.", Toast.LENGTH_SHORT).show()
+                        touchableScreen()
                     }
 
                 }
@@ -115,14 +114,13 @@ private fun getDataBase(){
 
                     for(document in documents){
                         val uuid = document.get("uuid") as String
-                        val nick = document.get("nickname") as String
                         val authority = document.get("authority") as String
 
                         if(uuid == auth.currentUser!!.uid.toString()){
                             if(authority == "User"){
                                 navigateToAnotherActivity(MainActivity::class.java)
                             }
-                            if(authority == "Admin"){
+                            if(authority == "Editor"){
                                 navigateToAnotherActivity(EditorActivity::class.java)
                             }
                         }
@@ -131,6 +129,8 @@ private fun getDataBase(){
                 }
             }
         }
+        binding.pbSign.gone()
+        touchableScreen()
     }
 }
 

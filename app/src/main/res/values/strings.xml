@@ -28,4 +28,14 @@
     <string name="facebook_app_id">1234</string>
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">56789</string>
+
+    <string name="something_went_wrong">Bir şeyler yanlış gitti, tekrar deneyiniz.</string>
+    <string name="please_enter_username">Lütfen geçerli bir kullanıcı adı giriniz!</string>
+    <string name="please_enter_email_username">Lütfen e-mail adresinizi giriniz!</string>
+    <string name="please_enter_password_username">Lütfen şifrenizi girinizi!</string>
+    <string name="password_rules">
+        En az 1 sayı\nEn az 1 küçük harf\nEn az 1 büyük harf\nEn az 6 karakter
+    </string>
+
+    <string name="google_register_after_info">Kayıt işlemini tamamlamak için\nKullanıcı adınızı belirleyiniz</string>
 </resources>
