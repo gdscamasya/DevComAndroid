@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background = "@color/backgroundWhite"
-    tools:context=".ui.activity.logins.SignInActivity">
+    tools:context=".ui.activity.signin.SignInActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,8 +35,8 @@
                 android:gravity = "center"
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_elipsee"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/iv_elipsee"
+                app:layout_constraintStart_toStartOf="@id/iv_elipsee"
                 app:layout_constraintTop_toTopOf="@+id/iv_elipsee"
                 app:srcCompat="@drawable/gdsc" />
 

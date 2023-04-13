@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundWhite"
-    tools:context=".ui.activity.logins.RegisterActivity">
+    tools:context=".ui.activity.signup.SignUpActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -113,6 +113,9 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_register" />
+
+
+
 
             <ImageView
                 android:id="@+id/iv_facebook"
