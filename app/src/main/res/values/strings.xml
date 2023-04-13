@@ -1,17 +1,22 @@
 <resources>
     <string name="app_name">DevCom</string>
+
+    <!-- MainActivity -->
     <string name="main_sub_title">Blog Yazıları</string>
     <string name="main_sub_title2">Duyurular</string>
     <string name="main_sub_title3">Haberler</string>
     <string name="main_title">Ana Sayfa</string>
+    <string name="Form">Forum</string>
+    <string name="Event">Etkinlik</string>
+
+    <!-- main_blog_pagerow -->
     <string name="like">Beğen</string>
     <string name="comment">Yorum</string>
     <string name="blog_name">Blog Name</string>
     <string name="nickname">NickName</string>
-    <string name="Form">Form</string>
-    <string name="Event">Etkinlik</string>
-    <string name="Homepage">Ana Sayfa</string>
     <string name="blog_info">little blog information</string>
+
+    <!-- sign_in && register && password_reset -->
     <string name="nickname_text">Kullanıcı Adı</string>
     <string name="password">Şifre</string>
     <string name="edt_email">E-mail</string>
@@ -20,22 +25,29 @@
     <string name="forget">Şifreni mi unuttun?</string>
     <string name="recovery">Giriş için yenile.</string>
     <string name="password_reset">Şifreni Sıfırla</string>
-
+    <string name="used_same_username">Bu kullanıcı adı daha önce kullanılmış</string>
+    <string name="get_email">Email adresinizi giriniz</string>
+    <string name="used_same_email">Bu email adresi daha önce kullanılmış</string>
+    <string name="sign_up_succesfull">başarılı bir şekilde kayıt oldunuz</string>
     <string name="facebook_google">veya diğer hesaplarla giriş yapınız.</string>
     <string name="reset_password">Şifreni Yenile</string>
     <string name="reset_password_info">Hesabına bağlı olan \n e-posta adresini giriniz.</string>
-
-    <string name="facebook_app_id">1234</string>
-    <string name="fb_login_protocol_scheme">fb1234</string>
-    <string name="facebook_client_token">56789</string>
-
-    <string name="something_went_wrong">Bir şeyler yanlış gitti, tekrar deneyiniz.</string>
-    <string name="please_enter_username">Lütfen geçerli bir kullanıcı adı giriniz!</string>
-    <string name="please_enter_email_username">Lütfen e-mail adresinizi giriniz!</string>
-    <string name="please_enter_password_username">Lütfen şifrenizi girinizi!</string>
-    <string name="password_rules">
-        En az 1 sayı\nEn az 1 küçük harf\nEn az 1 büyük harf\nEn az 6 karakter
-    </string>
+    <string name="facebook_app_id">172053089050398</string>
+    <string name="fb_login_protocol_scheme">fb172053089050398</string>
+    <string name="facebook_client_token">4cb6c41f2afbc8832255f7c682bbb318</string>
+    <string name="something_went_wrong">Bir şeyler yanlış gitti, tekrar deneyiniz</string>
+    <string name="please_enter_username">Lütfen geçerli bir kullanıcı adı giriniz</string>
+    <string name="please_enter_email_username">Lütfen e-mail adresinizi giriniz</string>
+    <string name="please_enter_password_username">Lütfen şifrenizi girinizi</string>
+    <string name="password_rules">En az 1 sayı\nEn az 1 küçük harf\nEn az 1 büyük harf\nEn az 6 karakter </string>
 
     <string name="google_register_after_info">Kayıt işlemini tamamlamak için\nKullanıcı adınızı belirleyiniz</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Profile -->
+    <string name="profile">Profil</string>
+    <string name="exit_app">Çıkış Yap</string>
+    <string name="settings">Ayarlar</string>
+    <string name="account">Hesap</string>
 </resources>
