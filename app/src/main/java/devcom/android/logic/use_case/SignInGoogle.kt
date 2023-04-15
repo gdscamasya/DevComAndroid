@@ -1,4 +1,4 @@
-package devcom.android.ui.activity.signin
+package devcom.android.logic.use_case
 
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -9,10 +9,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import devcom.android.users.User
 import devcom.android.utils.constants.FirebaseConstants
 
-class SignInUseCase(private val auth: FirebaseAuth, private val db: FirebaseFirestore) {
+class SignInGoogle(private val auth: FirebaseAuth, private val db: FirebaseFirestore) {
 
 
-    fun signInAndUpFacebook(account: AccessToken) {
+    /*fun signInAndUpFacebook(account: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(account.token)
 
         auth.signInWithCredential(credential).addOnSuccessListener {
@@ -65,8 +65,10 @@ class SignInUseCase(private val auth: FirebaseAuth, private val db: FirebaseFire
             }
     }
 
+     */
 
-    fun signInAndUpGoogle(
+
+    fun signInGoogle(
         account: GoogleSignInAccount,
         onSuccess: () -> Unit,
         onFailure: () -> Unit

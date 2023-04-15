@@ -1,4 +1,4 @@
-package devcom.android.ui.activity.signin
+package devcom.android.ui.activity.logins
 
 import android.content.Intent
 import android.os.Bundle
@@ -21,19 +21,19 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import devcom.android.R
 import devcom.android.databinding.ActivitySignInBinding
-import devcom.android.ui.activity.logins.PasswordResetActivity
-import devcom.android.ui.activity.signup.SignUpActivity
+import devcom.android.logic.use_case.*
 import devcom.android.ui.activity.main.EditorActivity
 import devcom.android.ui.activity.main.MainActivity
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.*
-import devcom.android.viewmodel.SignInViewModel
+import devcom.android.viewmodel.MainViewModel
+import devcom.android.viewmodel.MainViewModelFactory
 import java.lang.Exception
 
 
 class SignInActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SignInViewModel
+    private lateinit var viewModel: MainViewModel
     private lateinit var binding: ActivitySignInBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient : GoogleSignInClient
@@ -54,8 +54,14 @@ class SignInActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        viewModel = ViewModelProvider(this).get(SignInViewModel::class.java)
-        auth = Firebase.auth // Initialize Firebase Auth
+        auth = Firebase.auth
+
+        val mainViewModelFactory = MainViewModelFactory(
+            SignInGoogle(auth, db), SignInFacebook(auth, db),
+            SameUsername(auth, db), SignUpEmail(auth, db)
+        )
+        viewModel = ViewModelProvider(this,mainViewModelFactory).get(MainViewModel::class.java)
+        // Initialize Firebase Auth
 
 
         val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -68,9 +74,8 @@ class SignInActivity : AppCompatActivity() {
         registerSetOnClickListener()
         signInSetOnClickListener()
         googleLoginSetOnClickListener()
-        signInWithGoogle()
         facebookLoginSetOnClickListener()
-        signInWithFacebookObserver()
+        createAccountsListener()
 
     }
 
@@ -89,7 +94,32 @@ class SignInActivity : AppCompatActivity() {
     }
 
      */
+    private fun createAccountsListener() {
 
+        viewModel.isUsedSameEmail.observe(this) { isUsedEmail ->
+            if (isUsedEmail) {
+                binding.etpNickname.error = getString(R.string.used_same_email)
+            }
+        }
+        viewModel.isSignedGoogleIn.observe(this) { isSignedGoogleIn ->
+            if (isSignedGoogleIn) {
+                navigateToAnotherActivity(MainActivity::class.java)
+                this.finish()
+            } else {
+                showToastMessage(getString(R.string.something_went_wrong))
+            }
+        }
+
+        viewModel.isSignedFacebookIn.observe(this) { isSignedFacebookIn ->
+            if (isSignedFacebookIn) {
+                navigateToAnotherActivity(MainActivity::class.java)
+                this.finish()
+            } else {
+                showToastMessage(getString(R.string.something_went_wrong))
+            }
+        }
+        touchableScreen(R.id.pb_sign)
+    }
     private fun forgetPasswordSetOnClickListener(){
         binding.tvForgetPassaword.setOnClickListener {
             navigateToAnotherActivity(PasswordResetActivity::class.java)
@@ -152,7 +182,7 @@ class SignInActivity : AppCompatActivity() {
             fb.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
                 override fun onSuccess(loginResult: LoginResult){
                     unTouchableScreen(R.id.pb_sign)
-                    viewModel.signInWithFacebook(loginResult.accessToken)
+                    viewModel.signInFacebook(loginResult.accessToken,getEmail())
                 }
 
                 override fun onCancel() {
@@ -164,17 +194,6 @@ class SignInActivity : AppCompatActivity() {
                 }
             })
         }
-    }
-    private fun signInWithFacebookObserver() {
-        viewModel.isSignedIn.observe(this) { isSignedIn ->
-            if (isSignedIn) {
-                navigateToAnotherActivity(MainActivity::class.java)
-                this.finish()
-            } else {
-                showToastMessage(getString(R.string.something_went_wrong))
-            }
-        }
-        touchableScreen(R.id.pb_sign)
     }
     private fun googleLoginSetOnClickListener(){
         binding.ivGoogle.setOnClickListener {
@@ -192,26 +211,16 @@ class SignInActivity : AppCompatActivity() {
                     showToastMessage(getString(R.string.used_same_email))
                     touchableScreen(R.id.pb_sign)
                 }else{
-                    viewModel.signInWithGoogle(account)
+                    viewModel.signInGoogle(account)
                 }
             }
 
         }catch (e: Exception){
+            touchableScreen(R.id.pb_sign)
             showToastMessage(getString(R.string.something_went_wrong))
         }
     }
 
-    private fun signInWithGoogle() {
-        viewModel.isSignedIn.observe(this) { isSignedIn ->
-            if (isSignedIn) {
-                navigateToAnotherActivity(MainActivity::class.java)
-                this.finish()
-            } else {
-                showToastMessage(getString(R.string.something_went_wrong))
-            }
-        }
-        touchableScreen(R.id.pb_sign)
-    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

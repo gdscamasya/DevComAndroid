@@ -23,7 +23,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
 import devcom.android.databinding.ActivityProfileBinding
-import devcom.android.ui.activity.signin.SignInActivity
+import devcom.android.ui.activity.logins.SignInActivity
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.showToastMessage
 import java.util.*
