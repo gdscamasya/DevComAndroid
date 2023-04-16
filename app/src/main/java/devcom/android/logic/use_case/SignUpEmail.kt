@@ -9,7 +9,7 @@ class SignUpEmail(private val auth: FirebaseAuth, private val db: FirebaseFirest
 
     fun signUpAccount(email: String, password: String, Username: String, onSuccess: () -> Unit, onFailure: () -> Unit,onSameEmail: () -> Unit) {
         auth.fetchSignInMethodsForEmail(email).addOnSuccessListener {
-            if(it.signInMethods!!.size > 0 && it.signInMethods!![0].equals("password")){
+            if(it.signInMethods!!.size > 0){
                 onSameEmail()
             }else{
                 auth.createUserWithEmailAndPassword(email, password)

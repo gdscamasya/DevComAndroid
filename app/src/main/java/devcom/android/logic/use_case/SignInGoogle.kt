@@ -77,8 +77,8 @@ class SignInGoogle(private val auth: FirebaseAuth, private val db: FirebaseFires
         auth.signInWithCredential(credential).addOnSuccessListener {
             val currentUser = auth.currentUser
             if (it.additionalUserInfo!!.isNewUser) {
-                db.collection("users").document(currentUser!!.uid)
-                    .set(User(currentUser.displayName, currentUser.email, "User"))
+                db.collection(FirebaseConstants.COLLECTION_PATH_USERS)
+                    .add(User(currentUser!!.displayName, currentUser.uid, "User"))
                     .addOnSuccessListener { onSuccess() }
                     .addOnFailureListener { onFailure() }
             } else {

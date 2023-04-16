@@ -3,6 +3,7 @@ package devcom.android.ui.activity.logins
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.facebook.*
 import com.facebook.login.LoginManager
@@ -121,22 +122,43 @@ class SignUpActivity : AppCompatActivity() {
         viewModel.isUsedSameUsername.observe(this){ sameUsername ->
             if(sameUsername){
                 binding.etpNickname.error = getString(R.string.used_same_username)
+                touchableScreen(R.id.pb_register)
             }else{
                 viewModel.signUpEmail(getEmail(), getPassword(), getUsername())
+            }
+        }
+
+        viewModel.isUsedSameEmailFacebook.observe(this){ isUsedSameEmailFacebook ->
+            if(isUsedSameEmailFacebook){
+                showSnackBarToMessage(binding.root,getString(R.string.used_same_email))
+                touchableScreen(R.id.pb_register)
             }
         }
 
         viewModel.isUsedSameEmail.observe(this) { isUsedEmail ->
             if (isUsedEmail) {
                 binding.etpEmail.error = getString(R.string.used_same_email)
+                touchableScreen(R.id.pb_register)
             }
         }
+
+        viewModel.isSignedGoogleIn.observe(this) { isSignedGoogleIn ->
+            if (isSignedGoogleIn) {
+                navigateToAnotherActivity(MainActivity::class.java)
+                this.finish()
+            } else {
+                showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
+                touchableScreen(R.id.pb_register)
+            }
+        }
+
         viewModel.isSignUp.observe(this) { isSignUp ->
             if (isSignUp) {
                 navigateToAnotherActivity(SignInActivity::class.java)
-                showToastMessage(getString(R.string.sign_up_succesfull))
+                showSnackBarToMessage(binding.root,getString(R.string.sign_up_succesfull))
             } else {
-                showToastMessage(getString(R.string.something_went_wrong))
+                showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
+                touchableScreen(R.id.pb_register)
             }
         }
 
@@ -145,10 +167,12 @@ class SignUpActivity : AppCompatActivity() {
                 navigateToAnotherActivity(MainActivity::class.java)
                 this.finish()
             } else {
-                showToastMessage(getString(R.string.something_went_wrong))
+                showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
+                touchableScreen(R.id.pb_register)
             }
         }
-        touchableScreen(R.id.pb_register)
+
+
     }
 
     private fun facebookLoginSetOnClickListener() {
@@ -158,14 +182,15 @@ class SignUpActivity : AppCompatActivity() {
             fb.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
                 override fun onSuccess(loginResult: LoginResult) {
                     unTouchableScreen(R.id.pb_register)
-                    viewModel.signInFacebook(loginResult.accessToken,getEmail())
+                    viewModel.signInFacebook(loginResult.accessToken)
                 }
 
                 override fun onCancel() {
+
                 }
 
                 override fun onError(error: FacebookException) {
-                    showToastMessage(getString(R.string.something_went_wrong))
+                    showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
                 }
 
             })
@@ -174,7 +199,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun googleLoginSetOnClickListener() {
         binding.ivGoogle.setOnClickListener {
-            unTouchableScreen(R.id.pb_sign)
+            unTouchableScreen(R.id.pb_register)
             googleSignInClient.signOut()
             val intent = googleSignInClient.signInIntent
             startActivityForResult(intent, RC_SIGN_IN)
@@ -187,7 +212,7 @@ class SignUpActivity : AppCompatActivity() {
             auth.fetchSignInMethodsForEmail(account.email.toString()).addOnSuccessListener {
                 if (it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("password") || it.signInMethods!![0].equals("facebook.com")))
                 {
-                    showToastMessage(getString(R.string.used_same_email))
+                    showSnackBarToMessage(binding.root,getString(R.string.used_same_email))
                     touchableScreen(R.id.pb_register)
                 } else {
                     viewModel.signInGoogle(account)
@@ -195,7 +220,7 @@ class SignUpActivity : AppCompatActivity() {
             }
 
         } catch (e: Exception) {
-            showToastMessage(getString(R.string.something_went_wrong))
+            touchableScreen(R.id.pb_register)
         }
     }
 

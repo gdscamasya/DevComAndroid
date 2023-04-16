@@ -5,23 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import devcom.android.logic.use_case.*
 
 class MainViewModel(private val signInGoogle: SignInGoogle,private val signInFacebook: SignInFacebook,private val sameUsername: SameUsername,private val signUpEmail: SignUpEmail) : ViewModel() {
 
     private val _isSignedGoogleIn = MutableLiveData<Boolean>()
-    private val _isSignedIn = MutableLiveData<Boolean>()
+    private val _isSignUp = MutableLiveData<Boolean>()
     private val _isSignedFacebookIn = MutableLiveData<Boolean>()
     private val _isUsedSameEmail = MutableLiveData<Boolean>()
+    private val _isUsedSameEmailFacebook = MutableLiveData<Boolean>()
     private val _isUsedSameUsername = MutableLiveData<Boolean>()
 
     val isSignUp: LiveData<Boolean>
-        get() = _isSignedIn
+        get() = _isSignUp
     val isSignedFacebookIn: LiveData<Boolean>
         get() = _isSignedFacebookIn
+    val isUsedSameEmailFacebook: LiveData<Boolean>
+        get() = _isUsedSameEmailFacebook
     val isUsedSameUsername: LiveData<Boolean>
         get() = _isUsedSameUsername
     val isUsedSameEmail: LiveData<Boolean>
@@ -36,9 +36,9 @@ class MainViewModel(private val signInGoogle: SignInGoogle,private val signInFac
             onFailure = { _isSignedGoogleIn.value = false })
     }
 
-    fun signInFacebook(account: AccessToken,email: String) {
+    fun signInFacebook(account: AccessToken) {
         signInFacebook.signInFacebook(account,
-            onSameEmail = {_isUsedSameEmail.value = true},
+            onSameEmail = { _isUsedSameEmailFacebook.value = true },
             onSuccess = { _isSignedFacebookIn.value = true },
             onFailure = { _isSignedFacebookIn.value = false })
     }
@@ -54,8 +54,8 @@ class MainViewModel(private val signInGoogle: SignInGoogle,private val signInFac
     fun signUpEmail(email: String, password: String, Username: String) {
         signUpEmail.signUpAccount(email, password, Username,
             onSameEmail = { _isUsedSameEmail.value = true },
-            onSuccess = { _isSignedIn.value = true },
-            onFailure = { _isSignedIn.value = false })
+            onSuccess = { _isSignUp.value = true },
+            onFailure = { _isSignUp.value = false })
     }
 
 
