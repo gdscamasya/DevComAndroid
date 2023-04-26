@@ -12,6 +12,9 @@ package devcom.android
 2-Bütün textler string.xml
 
 
+24.04.2023
+1-Data store authority kaydetme
+
 
 
  */

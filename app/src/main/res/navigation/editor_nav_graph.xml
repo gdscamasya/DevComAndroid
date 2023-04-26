@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/editor_nav_graph"
+app:startDestination="@id/HomePage">
+
+<fragment
+    android:id="@+id/HomePage"
+    android:name="devcom.android.ui.fragments.homeFragment.HomeFragment"
+    android:label="fragment_home"
+    tools:layout="@layout/fragment_home" >
+    <action
+        android:id="@+id/action_HomePage_to_authorityEditorProfileFragment"
+        app:destination="@id/authorityEditorProfileFragment" />
+</fragment>
+    <fragment
+    android:id="@+id/event"
+    android:name="devcom.android.ui.fragments.eventFragment.EventFragment"
+    android:label="fragment_event"
+    tools:layout="@layout/fragment_event" />
+<fragment
+    android:id="@+id/form"
+    android:name="devcom.android.ui.fragments.forumFragment.ForumFragment"
+    android:label="fragment_forum"
+    tools:layout="@layout/fragment_forum" />
+    <fragment
+        android:id="@+id/authorityEditorProfileFragment"
+        android:name="devcom.android.ui.fragments.AuthorityEditorProfileFragment"
+        android:label="fragment_authority_editor_profile"
+        tools:layout="@layout/fragment_authority_editor_profile" >
+        <action
+            android:id="@+id/action_authorityEditorProfileFragment_to_HomePage2"
+            app:destination="@id/HomePage" />
+    </fragment>
+</navigation>

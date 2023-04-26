@@ -1,9 +1,7 @@
-package devcom.android.logic.use_case
+package devcom.android.logic.usecase
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import com.facebook.AccessToken
 import com.facebook.GraphRequest
 import com.google.firebase.auth.FacebookAuthProvider
@@ -15,7 +13,7 @@ import devcom.android.utils.constants.FirebaseConstants
 class SignInFacebook(private val auth: FirebaseAuth, private val db: FirebaseFirestore) {
 
 
-    fun signInFacebook(account: AccessToken, onSuccess: () -> Unit, onFailure: () -> Unit,onSameEmail: () -> Unit) {
+    fun signInFacebook(account: AccessToken, onSuccess: () -> Unit, onFailure: (errorMessage: String) -> Unit, onExistsEmail: (errorMessage: String) -> Unit) {
         val credential = FacebookAuthProvider.getCredential(account.token)
 
 
@@ -27,7 +25,7 @@ class SignInFacebook(private val auth: FirebaseAuth, private val db: FirebaseFir
 
             auth.fetchSignInMethodsForEmail(email!!).addOnSuccessListener {
                 if(it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("password") || it.signInMethods!![0].equals("google.com"))){
-                    onSameEmail()
+                    onExistsEmail("Bu email adresi daha önce kullanılmış")
                 }else{
                     auth.signInWithCredential(credential).addOnSuccessListener {
                         if (it.additionalUserInfo!!.isNewUser) {
@@ -36,12 +34,12 @@ class SignInFacebook(private val auth: FirebaseAuth, private val db: FirebaseFir
                             db.collection(FirebaseConstants.COLLECTION_PATH_USERS)
                                 .add(User(fullName, user!!.uid, "User"))
                                 .addOnSuccessListener { onSuccess() }
-                                .addOnFailureListener { onFailure() }
+                                .addOnFailureListener { onFailure("Bir şeyler yanlış gitti, tekrar deneyiniz") }
                         } else {
                             onSuccess()
                         }
                     }.addOnFailureListener {
-                        onFailure()
+                        onFailure("Bir şeyler yanlış gitti, tekrar deneyiniz")
                     }
                 }
             }

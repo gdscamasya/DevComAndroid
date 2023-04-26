@@ -1,19 +1,17 @@
 package devcom.android.ui.fragments.homeFragment
 
-import android.app.FragmentManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TableLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.get
+import androidx.navigation.Navigation
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
@@ -22,9 +20,11 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import devcom.android.R
-import devcom.android.ui.activity.main.ProfileActivity
+import devcom.android.ui.activity.main.MainActivity
 import devcom.android.ui.fragments.homeFragment.adapter.ViewPagerAdapter
-import devcom.android.utils.extensions.navigateToAnotherActivity
+import devcom.android.utils.constants.FirebaseConstants.COLLECTION_PATH_USERS
+import devcom.android.utils.constants.FirebaseConstants.FIELD_DOWNLOAD_URL
+import devcom.android.utils.constants.FirebaseConstants.FIELD_UUID
 
 
 class HomeFragment : Fragment() {
@@ -32,14 +32,16 @@ class HomeFragment : Fragment() {
     val db = Firebase.firestore
     private lateinit var auth : FirebaseAuth
     private lateinit var viewPagerAdapter: ViewPagerAdapter
+    private lateinit var profileImageView:ImageView
     private lateinit var viewPager: ViewPager2
+
+
     private val tabTitles = arrayListOf("Blog Yazıları", "Duyurular", "Haberler")
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -47,6 +49,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -58,12 +61,17 @@ class HomeFragment : Fragment() {
         viewPagerAdapter = ViewPagerAdapter(this)
         viewPager = view.findViewById(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
-        val profile = view.findViewById<ImageView>(R.id.iv_profile)
+        profileImageView = view.findViewById(R.id.iv_profile)
+
+
+        profileImageView.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomePageToProfileFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
 
         viewPager.adapter = viewPagerAdapter
-
-
         // TabLayout ile ViewPager2'yi bağlayın
+
         TabLayoutMediator(tabLayout,viewPager) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
@@ -73,9 +81,46 @@ class HomeFragment : Fragment() {
                 as TextView
             tabLayout.getTabAt(i)?.customView = textview
         }
+
+        getData()
+
     }
 
 
+
+
+
+    private fun getData(){
+
+        db.collection(COLLECTION_PATH_USERS).addSnapshotListener{ value,error ->
+            if(error != null){
+                Toast.makeText(requireContext(), "beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT).show()
+            }else{
+                if(value != null){
+                    if(!value.isEmpty){
+                        val documents = value.documents
+
+                        for(document in documents){
+
+                            val uuid = document.get(FIELD_UUID) as? String
+                            val downloadUrl = document.get(FIELD_DOWNLOAD_URL) as? String
+
+
+                            if(uuid == auth.currentUser!!.uid){
+
+                                if(downloadUrl != null){
+                                    Picasso.get().load(downloadUrl).resize(200,200).centerCrop().into(profileImageView)
+                                }else{
+                                    continue
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
 }
 
 

@@ -3,7 +3,6 @@ package devcom.android.ui.activity.logins
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.facebook.*
 import com.facebook.login.LoginManager
@@ -20,7 +19,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import devcom.android.R
 import devcom.android.databinding.ActivityRegisterBinding
-import devcom.android.logic.use_case.*
+import devcom.android.logic.usecase.*
 import devcom.android.ui.activity.main.MainActivity
 import devcom.android.utils.extensions.*
 import devcom.android.viewmodel.MainViewModel
@@ -58,7 +57,7 @@ class SignUpActivity : AppCompatActivity() {
 
         val mainViewModelFactory = MainViewModelFactory(
             SignInGoogle(auth, db), SignInFacebook(auth, db),
-            SameUsername(auth, db), SignUpEmail(auth, db)
+            CheckUsernameUseCase(auth, db), SignUpEmail(auth, db)
         )
         viewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
         // Initialize Firebase Auth
@@ -73,7 +72,9 @@ class SignUpActivity : AppCompatActivity() {
         signUpSetOnClickListener()
         googleLoginSetOnClickListener()
         facebookLoginSetOnClickListener()
-        createAccountsListener()
+
+
+        observeLiveData()
 
     }
 
@@ -82,23 +83,25 @@ class SignUpActivity : AppCompatActivity() {
             this.finish()
         }
     }
+
     private fun signUpSetOnClickListener() {
         binding.btnRegister.setOnClickListener {
             if (!validateRegister()) {
                 return@setOnClickListener
             }
             unTouchableScreen(R.id.pb_register)
-            viewModel.sameUsername(getUsername())
+            viewModel.checkUsername(getEmail(), getPassword(), getUsername())
         }
     }
+
     private fun validateRegister(): Boolean {
-        val nick = binding.etpNickname.text.toString()
+        val nick = binding.etpUsername.text.toString()
         val email = binding.etpEmail.text.toString()
         val password = binding.etpPassword.text.toString()
 
         return when {
             nick.isEmpty() -> {
-                binding.etpNickname.error = getString(R.string.please_enter_username)
+                binding.etpUsername.error = getString(R.string.please_enter_username)
                 false
             }
             email.isEmpty() || !email.matches(emailPattern.toRegex()) -> {
@@ -118,61 +121,74 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
     }
-    private fun createAccountsListener() {
-        viewModel.isUsedSameUsername.observe(this){ sameUsername ->
-            if(sameUsername){
-                binding.etpNickname.error = getString(R.string.used_same_username)
-                touchableScreen(R.id.pb_register)
-            }else{
-                viewModel.signUpEmail(getEmail(), getPassword(), getUsername())
-            }
-        }
 
-        viewModel.isUsedSameEmailFacebook.observe(this){ isUsedSameEmailFacebook ->
-            if(isUsedSameEmailFacebook){
-                showSnackBarToMessage(binding.root,getString(R.string.used_same_email))
-                touchableScreen(R.id.pb_register)
-            }
+    private fun observeIsExistsUsername() {
+        viewModel.isExistsUsername.observe(this) { existsUsername ->
+            binding.etpUsername.error = existsUsername
+            touchableScreen(R.id.pb_register)
         }
+    }
 
-        viewModel.isUsedSameEmail.observe(this) { isUsedEmail ->
-            if (isUsedEmail) {
-                binding.etpEmail.error = getString(R.string.used_same_email)
-                touchableScreen(R.id.pb_register)
-            }
+    private fun observeIsExistsEmailFacebook(){
+        viewModel.isExistsEmailFacebook.observe(this) { ExistsEmailFacebook ->
+            showSnackBarToMessage(binding.root, ExistsEmailFacebook)
+            touchableScreen(R.id.pb_register)
         }
+    }
 
-        viewModel.isSignedGoogleIn.observe(this) { isSignedGoogleIn ->
-            if (isSignedGoogleIn) {
-                navigateToAnotherActivity(MainActivity::class.java)
-                this.finish()
-            } else {
-                showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
-                touchableScreen(R.id.pb_register)
-            }
-        }
-
-        viewModel.isSignUp.observe(this) { isSignUp ->
-            if (isSignUp) {
-                navigateToAnotherActivity(SignInActivity::class.java)
-                showSnackBarToMessage(binding.root,getString(R.string.sign_up_succesfull))
-            } else {
-                showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
-                touchableScreen(R.id.pb_register)
-            }
-        }
-
-        viewModel.isSignedFacebookIn.observe(this) { isSignedFacebookIn ->
+    private fun observeSignInFacebook(){
+        viewModel.isSignInFacebook.observe(this) { isSignedFacebookIn ->
             if (isSignedFacebookIn) {
                 navigateToAnotherActivity(MainActivity::class.java)
                 this.finish()
             } else {
-                showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
+                showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
                 touchableScreen(R.id.pb_register)
             }
         }
+    }
 
+    private fun observeIsExistsEmail(){
+        viewModel.isExistsEmail.observe(this) { existsEmail ->
+            binding.etpEmail.error = existsEmail
+            touchableScreen(R.id.pb_register)
+        }
+    }
 
+    private fun observeIsSignInGoogle(){
+        viewModel.isSignInGoogle.observe(this) { isSignedGoogleIn ->
+            if (isSignedGoogleIn) {
+                navigateToAnotherActivity(MainActivity::class.java)
+                this.finish()
+            } else {
+                showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
+                touchableScreen(R.id.pb_register)
+            }
+        }
+    }
+
+    private fun observeIsSignUp(){
+        viewModel.isSignUp.observe(this) { isSignUp ->
+            if (isSignUp) {
+                navigateToAnotherActivity(SignInActivity::class.java)
+                showSnackBarToMessage(binding.root, getString(R.string.sign_up_succesfull))
+            } else {
+                showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
+                touchableScreen(R.id.pb_register)
+            }
+        }
+    }
+
+    private fun observeLiveData() {
+        observeIsExistsUsername()
+        observeIsExistsEmail()
+        observeIsExistsEmailFacebook()
+
+        observeSignInFacebook()
+        observeIsSignInGoogle()
+        observeIsSignUp()
+
+        touchableScreen(R.id.pb_register)
     }
 
     private fun facebookLoginSetOnClickListener() {
@@ -190,7 +206,7 @@ class SignUpActivity : AppCompatActivity() {
                 }
 
                 override fun onError(error: FacebookException) {
-                    showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
+                    showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
                 }
 
             })
@@ -210,9 +226,11 @@ class SignUpActivity : AppCompatActivity() {
         try {
             val account = accountTask.getResult(ApiException::class.java)
             auth.fetchSignInMethodsForEmail(account.email.toString()).addOnSuccessListener {
-                if (it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("password") || it.signInMethods!![0].equals("facebook.com")))
-                {
-                    showSnackBarToMessage(binding.root,getString(R.string.used_same_email))
+                if (it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("password") || it.signInMethods!![0].equals(
+                        "facebook.com"
+                    ))
+                ) {
+                    showSnackBarToMessage(binding.root, getString(R.string.used_same_email))
                     touchableScreen(R.id.pb_register)
                 } else {
                     viewModel.signInGoogle(account)
@@ -245,7 +263,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun getUsername(): String {
-        return "${binding.etpNickname.text}"
+        return "${binding.etpUsername.text}"
     }
 
 

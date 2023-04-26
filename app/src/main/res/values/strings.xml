@@ -60,4 +60,7 @@
     <string name="exit_app">Çıkış Yap</string>
     <string name="settings">Ayarlar</string>
     <string name="account">Hesap</string>
+    <string name="add_blog">Blog Ekle</string>
+    <string name="add_announcements">Duyuru Ekle</string>
+    <string name="add_news">Haber Ekle</string>
 </resources>

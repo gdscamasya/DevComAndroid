@@ -1,7 +1,6 @@
 package devcom.android.ui.fragments.homeFragment.adapter
 
 
-import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import devcom.android.ui.fragments.homeFragment.tabFragments.AnnouncementsFragment

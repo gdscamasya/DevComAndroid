@@ -18,8 +18,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/top_backgorund" />
 
-
-
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
@@ -70,51 +68,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <Button
-        android:id="@+id/btn_blog"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="90dp"
-        android:layout_marginEnd="20dp"
-        android:gravity="center"
-        android:background="@drawable/main_button_v1"
-        android:text="@string/main_sub_title"
-        android:textAllCaps="false"
-        android:textSize="11sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/btn_announcements"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btn_announcements"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="90dp"
-        android:gravity="center"
-        android:background="@drawable/main_button_v1"
-        android:text="@string/main_sub_title2"
-        android:textAllCaps="false"
-        android:textSize="11sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btn_news"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="90dp"
-        android:gravity="center"
-        android:background="@drawable/main_button_v1"
-        android:text="@string/main_sub_title3"
-        android:textAllCaps="false"
-        android:visibility="invisible"
-        android:textSize="11sp"
-        app:layout_constraintStart_toEndOf="@+id/btn_announcements"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_title"
         android:layout_width="41dp"
@@ -130,9 +83,11 @@
         android:id="@+id/tab_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_header"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:tabIndicatorHeight="0dp"
         app:textAllCaps="false"
         app:tabMode="fixed"
@@ -148,8 +103,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package devcom.android.ui.fragments.homeFragment.tabFragments
+package devcom.android.ui.fragments.profileFragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import devcom.android.R
 
 
-class AnnouncementsFragment : Fragment() {
+class AddNewsFragment : Fragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,9 +21,7 @@ class AnnouncementsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_announcements, container, false)
+        return inflater.inflate(R.layout.fragment_add_news, container, false)
     }
-
-
 
 }

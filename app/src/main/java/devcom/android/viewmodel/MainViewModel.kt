@@ -5,59 +5,76 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import devcom.android.logic.use_case.*
+import devcom.android.logic.usecase.*
 
-class MainViewModel(private val signInGoogle: SignInGoogle,private val signInFacebook: SignInFacebook,private val sameUsername: SameUsername,private val signUpEmail: SignUpEmail) : ViewModel() {
+class MainViewModel(
+    private val signInGoogle: SignInGoogle,
+    private val signInFacebook: SignInFacebook,
+    private val checkUsername: CheckUsernameUseCase,
+    private val signUpEmail: SignUpEmail
+) : ViewModel() {
 
-    private val _isSignedGoogleIn = MutableLiveData<Boolean>()
+    private val _isSignInGoogle = MutableLiveData<Boolean>()
+    val isSignInGoogle: LiveData<Boolean>
+        get() = _isSignInGoogle
+
     private val _isSignUp = MutableLiveData<Boolean>()
-    private val _isSignedFacebookIn = MutableLiveData<Boolean>()
-    private val _isUsedSameEmail = MutableLiveData<Boolean>()
-    private val _isUsedSameEmailFacebook = MutableLiveData<Boolean>()
-    private val _isUsedSameUsername = MutableLiveData<Boolean>()
-
     val isSignUp: LiveData<Boolean>
         get() = _isSignUp
-    val isSignedFacebookIn: LiveData<Boolean>
-        get() = _isSignedFacebookIn
-    val isUsedSameEmailFacebook: LiveData<Boolean>
-        get() = _isUsedSameEmailFacebook
-    val isUsedSameUsername: LiveData<Boolean>
-        get() = _isUsedSameUsername
-    val isUsedSameEmail: LiveData<Boolean>
-        get() = _isUsedSameEmail
-    val isSignedGoogleIn: LiveData<Boolean>
-        get() = _isSignedGoogleIn
 
-    //Use-case katmanı
+    private val _isSignedFacebookIn = MutableLiveData<Boolean>()
+    val isSignInFacebook: LiveData<Boolean>
+        get() = _isSignedFacebookIn
+
+    private val _isExistsEmail = MutableLiveData<String>()
+    val isExistsEmail: LiveData<String>
+        get() = _isExistsEmail
+
+    private val _isExistsEmailFacebook = MutableLiveData<String>()
+    val isExistsEmailFacebook: LiveData<String>
+        get() = _isExistsEmailFacebook
+
+    private val _isExistsUsername = MutableLiveData<String>()
+    val isExistsUsername: LiveData<String>
+        get() = _isExistsUsername
+
+
     fun signInGoogle(account: GoogleSignInAccount) {
         signInGoogle.signInGoogle(account,
-            onSuccess = { _isSignedGoogleIn.value = true },
-            onFailure = { _isSignedGoogleIn.value = false })
+            onSuccess = { _isSignInGoogle.value = true },
+            onFailure = { _isSignInGoogle.value = false })
     }
 
     fun signInFacebook(account: AccessToken) {
         signInFacebook.signInFacebook(account,
-            onSameEmail = { _isUsedSameEmailFacebook.value = true },
-            onSuccess = { _isSignedFacebookIn.value = true },
-            onFailure = { _isSignedFacebookIn.value = false })
+            onExistsEmail = {
+                _isExistsEmailFacebook.value = it
+            },
+            onSuccess = {
+                _isSignedFacebookIn.value = true
+            },
+            onFailure = {
+                _isSignedFacebookIn.value = false
+            })
     }
 
-    fun sameUsername(Username: String) {
-        sameUsername.sameUsername(Username,
-            onSuccess = { _isUsedSameUsername.value = true },
-            onFailure = { _isUsedSameUsername.value = false })
+    fun checkUsername(email: String, password: String, username: String) {
+        checkUsername.checkUsername(username,
+            onSuccess = {
+                signUpEmail(email, password, username)
+            },
+            onFailure = {
+                _isExistsUsername.value = it
+            })
     }
-
 
 
     fun signUpEmail(email: String, password: String, Username: String) {
         signUpEmail.signUpAccount(email, password, Username,
-            onSameEmail = { _isUsedSameEmail.value = true },
+            onSameEmail = { _isExistsEmail.value = it },
             onSuccess = { _isSignUp.value = true },
             onFailure = { _isSignUp.value = false })
     }
-
 
 
 }

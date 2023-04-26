@@ -1,11 +1,16 @@
 package devcom.android.ui.activity.logins
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -17,20 +22,24 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import devcom.android.R
+import devcom.android.data.repository.DataStoreRepository
 import devcom.android.databinding.ActivitySignInBinding
-import devcom.android.logic.use_case.*
-import devcom.android.ui.activity.main.EditorActivity
+import devcom.android.logic.usecase.*
 import devcom.android.ui.activity.main.MainActivity
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.*
 import devcom.android.viewmodel.MainViewModel
 import devcom.android.viewmodel.MainViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.lang.Exception
 
 
@@ -39,15 +48,17 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: ActivitySignInBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var googleSignInClient : GoogleSignInClient
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var dataStoreRepository: DataStoreRepository
 
-    val db =Firebase.firestore
+
+    val db = Firebase.firestore
     val fb = LoginManager.getInstance()
     val callbackManager = CallbackManager.Factory.create();
-    val permission = listOf<String>("email","public_profile")
+    val permission = listOf<String>("email", "public_profile")
 
-    private companion object{
-        private const val  RC_SIGN_IN = 100
+    private companion object {
+        private const val RC_SIGN_IN = 100
         private const val TAG = "GOOGLE_SIGN_IN_TAG"
     }
 
@@ -57,13 +68,14 @@ class SignInActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        auth = Firebase.auth
 
+        auth = Firebase.auth
+        dataStoreRepository = DataStoreRepository(this@SignInActivity)
         val mainViewModelFactory = MainViewModelFactory(
             SignInGoogle(auth, db), SignInFacebook(auth, db),
-            SameUsername(auth, db), SignUpEmail(auth, db)
+            CheckUsernameUseCase(auth, db), SignUpEmail(auth, db)
         )
-        viewModel = ViewModelProvider(this,mainViewModelFactory).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
         // Initialize Firebase Auth
 
 
@@ -71,14 +83,15 @@ class SignInActivity : AppCompatActivity() {
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        googleSignInClient = GoogleSignIn.getClient(this,googleSignInOptions)
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
+
 
         forgetPasswordSetOnClickListener()
         registerSetOnClickListener()
         signInSetOnClickListener()
         googleLoginSetOnClickListener()
         facebookLoginSetOnClickListener()
-        createAccountsListener()
+        observeLiveData()
 
     }
 
@@ -97,54 +110,68 @@ class SignInActivity : AppCompatActivity() {
     }
 
      */
-    private fun createAccountsListener() {
 
-        viewModel.isSignedGoogleIn.observe(this) { isSignedGoogleIn ->
+    private fun observeIsSignInGoogle() {
+        viewModel.isSignInGoogle.observe(this) { isSignedGoogleIn ->
             if (isSignedGoogleIn) {
-                navigateToAnotherActivity(MainActivity::class.java)
-                this.finish()
+                getDataBase()
+
             } else {
-                showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
+                showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
                 touchableScreen(R.id.pb_sign)
             }
         }
+    }
 
-        viewModel.isUsedSameEmailFacebook.observe(this){ isUsedSameEmailFacebook ->
-            if(isUsedSameEmailFacebook){
-                showSnackBarToMessage(binding.root,getString(R.string.used_same_email))
-                touchableScreen(R.id.pb_sign)
-            }
-        }
+    private fun observeIsExistsEmailFacebook() {
+        viewModel.isExistsEmailFacebook.observe(this) { ExistsEmailFacebook ->
+            showSnackBarToMessage(binding.root, ExistsEmailFacebook)
+            touchableScreen(R.id.pb_sign)
 
-        viewModel.isSignedFacebookIn.observe(this) { isSignedFacebookIn ->
-            if (isSignedFacebookIn) {
-                navigateToAnotherActivity(MainActivity::class.java)
-                this.finish()
-            } else {
-                showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
-                touchableScreen(R.id.pb_sign)
-            }
         }
 
     }
-    private fun forgetPasswordSetOnClickListener(){
+
+    private fun observeIsSignInFacebook() {
+        viewModel.isSignInFacebook.observe(this) { SignInFacebook ->
+            if (SignInFacebook) {
+                getDataBase()
+                //this.finish()
+            } else {
+                showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
+                touchableScreen(R.id.pb_sign)
+            }
+        }
+    }
+
+    private fun observeLiveData() {
+        observeIsExistsEmailFacebook()
+
+        observeIsSignInGoogle()
+        observeIsSignInFacebook()
+
+    }
+
+    private fun forgetPasswordSetOnClickListener() {
         binding.tvForgetPassaword.setOnClickListener {
             navigateToAnotherActivity(PasswordResetActivity::class.java)
         }
     }
-    private fun registerSetOnClickListener(){
+
+    private fun registerSetOnClickListener() {
         binding.btnRegister.setOnClickListener {
             navigateToAnotherActivity(SignUpActivity::class.java)
 
         }
     }
-    private fun validateRegister() : Boolean {
-        val nick = binding.etpNickname.text.toString()
+
+    private fun validateRegister(): Boolean {
+        val nick = binding.etpUsername.text.toString()
         val password = binding.etpPassword.text.toString()
 
         return when {
             nick.isEmpty() -> {
-                binding.etpNickname.error = getString(R.string.get_email)
+                binding.etpUsername.error = getString(R.string.get_email)
                 false
             }
             password.isEmpty() -> {
@@ -156,46 +183,60 @@ class SignInActivity : AppCompatActivity() {
             }
         }
     }
-    private fun signInSetOnClickListener(){
+
+    private fun signInSetOnClickListener() {
         binding.btnSignIn.setOnClickListener {
-            if(!validateRegister()){
+            if (!validateRegister()) {
                 return@setOnClickListener
             }
             unTouchableScreen(R.id.pb_sign)
             signIn()
         }
     }
-    private fun getEmail():String{
-        return "${binding.etpNickname.text}"
+
+    private fun getEmail(): String {
+        return "${binding.etpUsername.text}"
     }
-    private fun getPassword():String{
+
+    private fun getPassword(): String {
         return "${binding.etpPassword.text}"
     }
-    private fun signIn(){
-        auth.signInWithEmailAndPassword(getEmail(),getPassword()).addOnCompleteListener {
-            if(it.isSuccessful){
+
+    private fun signIn() {
+        auth.signInWithEmailAndPassword(getEmail(), getPassword()).addOnCompleteListener {
+            if (it.isSuccessful) {
                 getDataBase()
-            }else{
-                Log.i("erroer",it.exception!!.message.toString())
-                if(it.exception!!.message.equals(getString(R.string.error_login_disable))){
-                    showSnackBarToMessage(binding.root,getString(R.string.error_login_disable_translate))
-                }else if(it.exception!!.message.equals(getString(R.string.error_login_password))){
-                    showSnackBarToMessage(binding.root,getString(R.string.error_login_password_translate))
-                }else if(it.exception!!.message.equals(getString(R.string.error_login_email))){
-                    showSnackBarToMessage(binding.root,getString(R.string.error_login_email_translate))
-                }else{
-                    showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
+            } else {
+                Log.i("erroer", it.exception!!.message.toString())
+                if (it.exception!!.message.equals(getString(R.string.error_login_disable))) {
+                    showSnackBarToMessage(
+                        binding.root,
+                        getString(R.string.error_login_disable_translate)
+                    )
+                } else if (it.exception!!.message.equals(getString(R.string.error_login_password))) {
+                    showSnackBarToMessage(
+                        binding.root,
+                        getString(R.string.error_login_password_translate)
+                    )
+                } else if (it.exception!!.message.equals(getString(R.string.error_login_email))) {
+                    showSnackBarToMessage(
+                        binding.root,
+                        getString(R.string.error_login_email_translate)
+                    )
+                } else {
+                    showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
                 }
                 touchableScreen(R.id.pb_sign)
             }
         }
     }
-    private fun facebookLoginSetOnClickListener(){
+
+    private fun facebookLoginSetOnClickListener() {
         binding.ivFacebook.setOnClickListener {
             fb.logOut()
             fb.logInWithReadPermissions(this, permission)
             fb.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-                override fun onSuccess(loginResult: LoginResult){
+                override fun onSuccess(loginResult: LoginResult) {
                     unTouchableScreen(R.id.pb_sign)
                     viewModel.signInFacebook(loginResult.accessToken)
                 }
@@ -205,12 +246,13 @@ class SignInActivity : AppCompatActivity() {
                 }
 
                 override fun onError(error: FacebookException) {
-                    showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
+                    showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
                 }
             })
         }
     }
-    private fun googleLoginSetOnClickListener(){
+
+    private fun googleLoginSetOnClickListener() {
         binding.ivGoogle.setOnClickListener {
             unTouchableScreen(R.id.pb_sign)
             googleSignInClient.signOut()
@@ -218,19 +260,23 @@ class SignInActivity : AppCompatActivity() {
             startActivityForResult(intent, RC_SIGN_IN)
         }
     }
+
     private fun handleSignInResult(accountTask: Task<GoogleSignInAccount>) {
         try {
             val account = accountTask.getResult(ApiException::class.java)
-            auth.fetchSignInMethodsForEmail(account.email.toString()).addOnSuccessListener{
-                if(it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("password") || it.signInMethods!![0].equals("facebook.com"))){
-                    showSnackBarToMessage(binding.root,getString(R.string.used_same_email))
+            auth.fetchSignInMethodsForEmail(account.email.toString()).addOnSuccessListener {
+                if (it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("password") || it.signInMethods!![0].equals(
+                        "facebook.com"
+                    ))
+                ) {
+                    showSnackBarToMessage(binding.root, getString(R.string.used_same_email))
                     touchableScreen(R.id.pb_sign)
-                }else{
+                } else {
                     viewModel.signInGoogle(account)
                 }
             }
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             touchableScreen(R.id.pb_sign)
         }
     }
@@ -238,42 +284,55 @@ class SignInActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == RC_SIGN_IN){
+        if (requestCode == RC_SIGN_IN) {
             val accountTask = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(accountTask)
         }
 
         callbackManager.onActivityResult(requestCode, resultCode, data)
     }
-    private fun getDataBase(){
-    db.collection(FirebaseConstants.COLLECTION_PATH_USERS).addSnapshotListener{ value, error ->
-        if(error != null){
-            showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
-        }else{
-            if(value != null){
-                if(!value.isEmpty){
-                    val documents = value.documents
 
-                    for(document in documents){
+    private fun getDataBase() {
+        db.collection(FirebaseConstants.COLLECTION_PATH_USERS).addSnapshotListener { value, error ->
+            if (error != null) {
+                showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
+            } else {
+                if (value != null) {
+                    if (!value.isEmpty) {
+                        val documents = value.documents
 
-                        val uuid = document.get(FirebaseConstants.FIELD_UUID) as? String
-                        val authority = document.get(FirebaseConstants.FIELD_AUTHORITY) as? String
+                        for (document in documents) {
 
-                        if(uuid == auth.currentUser!!.uid){
-                            if(authority == "User"){
-                                navigateToAnotherActivity(MainActivity::class.java)
-                            }
-                            if(authority == "Editor"){
-                                navigateToAnotherActivity(EditorActivity::class.java)
+                            val uuid = document.get(FirebaseConstants.FIELD_UUID) as? String
+                            val authority =
+                                document.get(FirebaseConstants.FIELD_AUTHORITY) as? String
+
+                            if (uuid == auth.currentUser!!.uid) {
+                                //showToastMessage(dataStoreRepository.getDataFromDataStore()!!)
+                                when (authority) {
+                                    "user" -> {
+                                        lifecycleScope.launch {
+                                            dataStoreRepository.saveDataToDataStore(authority)
+                                            showToastMessage(dataStoreRepository.getDataFromDataStore()!!)
+                                        }
+                                        navigateToAnotherActivity(MainActivity::class.java)
+                                    }
+                                    "editor" -> {
+                                        lifecycleScope.launch {
+                                            dataStoreRepository.saveDataToDataStore(authority)
+                                            showToastMessage(dataStoreRepository.getDataFromDataStore()!!)
+                                        }
+                                        navigateToAnotherActivity(MainActivity::class.java)
+                                    }
+                                }
                             }
                         }
-
                     }
                 }
             }
+            touchableScreen(R.id.pb_sign)
         }
-        touchableScreen(R.id.pb_sign)
     }
-}
+
 
 }

@@ -9,16 +9,19 @@
     tools:context=".ui.activity.main.MainActivity">
 
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fcv_main"
-        android:name="devcom.android.ui.fragments.homeFragment.tabFragments.BlogFragment"
+    <fragment
+        android:id="@+id/fcv_main_host"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/user_nav_graph"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/nav_activityMain" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_activityMain"
@@ -33,5 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
