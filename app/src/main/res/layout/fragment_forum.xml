@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".ui.fragment.form.ForumFragment">
+
+    tools:context=".ui.fragment.form.FormFragment">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_header"
@@ -72,12 +72,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/form_recycler"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </androidx.viewpager2.widget.ViewPager2>
 
     <SearchView
