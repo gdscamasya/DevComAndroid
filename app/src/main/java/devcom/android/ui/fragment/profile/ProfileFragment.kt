@@ -1,4 +1,4 @@
-package devcom.android.ui.fragments.profileFragment
+package devcom.android.ui.fragment.profile
 
 import android.Manifest
 import android.content.Context

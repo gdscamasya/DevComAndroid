@@ -31,6 +31,7 @@ import devcom.android.data.repository.DataStoreRepository
 import devcom.android.databinding.ActivitySignInBinding
 import devcom.android.logic.usecase.*
 import devcom.android.ui.activity.main.MainActivity
+import devcom.android.utils.Resource
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.*
 import devcom.android.viewmodel.MainViewModel
@@ -115,7 +116,6 @@ class SignInActivity : AppCompatActivity() {
         viewModel.isSignInGoogle.observe(this) { isSignedGoogleIn ->
             if (isSignedGoogleIn) {
                 getDataBase()
-
             } else {
                 showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
                 touchableScreen(R.id.pb_sign)
@@ -127,19 +127,21 @@ class SignInActivity : AppCompatActivity() {
         viewModel.isExistsEmailFacebook.observe(this) { ExistsEmailFacebook ->
             showSnackBarToMessage(binding.root, ExistsEmailFacebook)
             touchableScreen(R.id.pb_sign)
-
         }
-
     }
 
     private fun observeIsSignInFacebook() {
-        viewModel.isSignInFacebook.observe(this) { SignInFacebook ->
-            if (SignInFacebook) {
-                getDataBase()
-                //this.finish()
-            } else {
-                showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
-                touchableScreen(R.id.pb_sign)
+        viewModel.isSignInFacebook.observe(this) { response ->
+            when(response){
+                is Resource.Success ->{
+                    navigateToAnotherActivity(MainActivity::class.java)
+                    this.finish()
+                }
+
+                is Resource.Error ->{
+                    showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
+                    touchableScreen(R.id.pb_sign)
+                }
             }
         }
     }

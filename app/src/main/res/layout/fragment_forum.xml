@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.fragments.forumFragment.ForumFragment">
+    tools:context=".ui.fragment.form.ForumFragment">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_header"
@@ -19,44 +19,21 @@
         app:srcCompat="@drawable/top_backgorund" />
 
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/main_title"
-        android:textColor="#B2000000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_header"
-        app:layout_constraintEnd_toStartOf="@+id/iv_profile"
-        app:layout_constraintHorizontal_bias="0.445"
-        app:layout_constraintStart_toEndOf="@+id/iv_elipse"
-        app:layout_constraintTop_toTopOf="@+id/iv_header" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_logo"
-        android:layout_width="36dp"
-        android:layout_height="30dp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_elipse"
-        app:layout_constraintEnd_toEndOf="@+id/iv_elipse"
-        app:layout_constraintStart_toStartOf="@+id/iv_elipse"
-        app:layout_constraintTop_toTopOf="@+id/iv_elipse"
-        app:srcCompat="@drawable/gdsc" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_elipse"
-        android:layout_width="62dp"
-        android:layout_height="45dp"
+    <ImageView
+        android:id="@+id/vector_menu"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/elipse"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/ic_baseline_menu_24"
+        tools:layout_editor_absoluteX="27dp"
+        tools:layout_editor_absoluteY="36dp" />
+
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_profile"
+        android:id="@+id/iv_profile_forum"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:padding="2dp"
@@ -69,40 +46,51 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_title"
-        android:layout_width="41dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="3dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_elipse"
-        app:srcCompat="@drawable/devcomname" />
-
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+        android:id="@+id/tab_layout_form"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="73dp"
+        app:layout_constraintTop_toTopOf="@+id/iv_header"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tabGravity="center"
         app:tabIndicatorHeight="0dp"
-        app:textAllCaps="false"
         app:tabMode="fixed"
         app:tabRippleColor="@null"
-        app:tabGravity="center"/>
+        app:textAllCaps="false"
+         />
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager"
+        android:id="@+id/view_pager_form"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:saveEnabled="false"
-        app:layout_constraintTop_toBottomOf="@id/tab_layout"
+        app:layout_constraintTop_toBottomOf="@id/tab_layout_form"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/form_recycler"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.viewpager2.widget.ViewPager2>
+
+    <SearchView
+        android:id="@+id/seacrher"
+        android:layout_width="190dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/tab_layout_form"
+        app:layout_constraintEnd_toStartOf="@+id/iv_profile_forum"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toEndOf="@+id/vector_menu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.375" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

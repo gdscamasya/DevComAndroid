@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import devcom.android.logic.usecase.*
+import devcom.android.ui.activity.main.MainActivity
+import devcom.android.utils.Resource
+import devcom.android.utils.extensions.navigateToAnotherActivity
 
 class MainViewModel(
     private val signInGoogle: SignInGoogle,
@@ -22,8 +25,8 @@ class MainViewModel(
     val isSignUp: LiveData<Boolean>
         get() = _isSignUp
 
-    private val _isSignedFacebookIn = MutableLiveData<Boolean>()
-    val isSignInFacebook: LiveData<Boolean>
+    private val _isSignedFacebookIn = MutableLiveData<Resource<Void>>()
+    val isSignInFacebook: LiveData<Resource<Void>>
         get() = _isSignedFacebookIn
 
     private val _isExistsEmail = MutableLiveData<String>()
@@ -47,14 +50,11 @@ class MainViewModel(
 
     fun signInFacebook(account: AccessToken) {
         signInFacebook.signInFacebook(account,
-            onExistsEmail = {
-                _isExistsEmailFacebook.value = it
-            },
             onSuccess = {
-                _isSignedFacebookIn.value = true
+                _isSignedFacebookIn.value = Resource.Success()
             },
             onFailure = {
-                _isSignedFacebookIn.value = false
+                _isSignedFacebookIn.value = Resource.Error(it)
             })
     }
 

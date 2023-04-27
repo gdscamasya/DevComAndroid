@@ -17,9 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DevComAndroid"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.activity.main.ProfileActivity"
-            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
@@ -48,9 +45,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.activity.main.EditorActivity"
-            android:exported="false" />
         <activity
             android:name=".ui.activity.logins.PasswordResetActivity"
             android:exported="false" />

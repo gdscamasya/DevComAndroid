@@ -8,7 +8,7 @@ import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.flow.first
 
 val Context.dataStore by preferencesDataStore(name = "authy_preferences")
-val authKey = stringPreferencesKey("authy")
+val authKey = stringPreferencesKey("auth")
 
 class DataStoreRepository(context: Context) {
     val context1 = context

@@ -1,4 +1,4 @@
-package devcom.android.ui.fragments.homeFragment.tabFragments
+package devcom.android.ui.fragment.home.tabFragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

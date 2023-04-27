@@ -13,8 +13,15 @@
     <string name="like">Beğen</string>
     <string name="comment">Yorum</string>
     <string name="blog_name">Blog Name</string>
-    <string name="nickname">NickName</string>
+    <string name="nickname">Username</string>
     <string name="blog_info">little blog information</string>
+
+    <!-- item_question_row -->
+    <string name="timer">süre</string>
+    <string name="Question">Sorunun Başlığı</string>
+    <string name="Question_introdoucten">Sorunun İçeriği</string>
+
+
 
     <!-- sign_in && register && password_reset -->
     <string name="nickname_text">Kullanıcı Adı</string>

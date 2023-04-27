@@ -1,4 +1,4 @@
-package devcom.android.ui.fragments.forumFragment
+package devcom.android.ui.fragment.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import devcom.android.R
 
 
-class ForumFragment : Fragment() {
+class AddNewsFragment : Fragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,9 +21,7 @@ class ForumFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_forum, container, false)
+        return inflater.inflate(R.layout.fragment_add_news, container, false)
     }
 
 }
-
-

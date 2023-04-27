@@ -13,7 +13,7 @@ import devcom.android.utils.constants.FirebaseConstants
 class SignInFacebook(private val auth: FirebaseAuth, private val db: FirebaseFirestore) {
 
 
-    fun signInFacebook(account: AccessToken, onSuccess: () -> Unit, onFailure: (errorMessage: String) -> Unit, onExistsEmail: (errorMessage: String) -> Unit) {
+    fun signInFacebook(account: AccessToken, onSuccess: () -> Unit, onFailure: (errorMessage: String) -> Unit) {
         val credential = FacebookAuthProvider.getCredential(account.token)
 
 
@@ -25,7 +25,7 @@ class SignInFacebook(private val auth: FirebaseAuth, private val db: FirebaseFir
 
             auth.fetchSignInMethodsForEmail(email!!).addOnSuccessListener {
                 if(it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("password") || it.signInMethods!![0].equals("google.com"))){
-                    onExistsEmail("Bu email adresi daha önce kullanılmış")
+                    onFailure("Bu email adresi daha önce kullanılmış")
                 }else{
                     auth.signInWithCredential(credential).addOnSuccessListener {
                         if (it.additionalUserInfo!!.isNewUser) {

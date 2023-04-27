@@ -21,6 +21,7 @@ import devcom.android.R
 import devcom.android.databinding.ActivityRegisterBinding
 import devcom.android.logic.usecase.*
 import devcom.android.ui.activity.main.MainActivity
+import devcom.android.utils.Resource
 import devcom.android.utils.extensions.*
 import devcom.android.viewmodel.MainViewModel
 import devcom.android.viewmodel.MainViewModelFactory
@@ -60,7 +61,7 @@ class SignUpActivity : AppCompatActivity() {
             CheckUsernameUseCase(auth, db), SignUpEmail(auth, db)
         )
         viewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
-        // Initialize Firebase Auth
+
 
         val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -104,7 +105,7 @@ class SignUpActivity : AppCompatActivity() {
                 binding.etpUsername.error = getString(R.string.please_enter_username)
                 false
             }
-            email.isEmpty() || !email.matches(emailPattern.toRegex()) -> {
+            email.isEmpty() || !email.checkEmail() -> {
                 binding.etpEmail.error = getString(R.string.please_enter_email_username)
                 false
             }
@@ -137,13 +138,17 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun observeSignInFacebook(){
-        viewModel.isSignInFacebook.observe(this) { isSignedFacebookIn ->
-            if (isSignedFacebookIn) {
-                navigateToAnotherActivity(MainActivity::class.java)
-                this.finish()
-            } else {
-                showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
-                touchableScreen(R.id.pb_register)
+        viewModel.isSignInFacebook.observe(this) { response ->
+            when(response){
+                is Resource.Success ->{
+                    navigateToAnotherActivity(MainActivity::class.java)
+                    this.finish()
+                }
+
+                is Resource.Error ->{
+                    showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
+                    touchableScreen(R.id.pb_register)
+                }
             }
         }
     }

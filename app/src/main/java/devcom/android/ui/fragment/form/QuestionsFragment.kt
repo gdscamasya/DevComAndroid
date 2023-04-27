@@ -1,4 +1,4 @@
-package devcom.android.ui.fragments.eventFragment
+package devcom.android.ui.fragment.form
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,13 +8,10 @@ import android.view.ViewGroup
 import devcom.android.R
 
 
-class EventFragment : Fragment() {
+class QuestionsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
+       super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -22,7 +19,7 @@ class EventFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_event, container, false)
+        return inflater.inflate(R.layout.fragment_questions, container, false)
     }
 
 

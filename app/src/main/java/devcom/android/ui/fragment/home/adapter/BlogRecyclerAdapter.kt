@@ -1,4 +1,4 @@
-package devcom.android.ui.fragments.homeFragment.adapter
+package devcom.android.ui.fragment.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

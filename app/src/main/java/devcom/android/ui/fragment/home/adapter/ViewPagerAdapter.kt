@@ -1,11 +1,11 @@
-package devcom.android.ui.fragments.homeFragment.adapter
+package devcom.android.ui.fragment.home.adapter
 
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import devcom.android.ui.fragments.homeFragment.tabFragments.AnnouncementsFragment
-import devcom.android.ui.fragments.homeFragment.tabFragments.BlogFragment
-import devcom.android.ui.fragments.homeFragment.tabFragments.NewsFragment
+import devcom.android.ui.fragment.home.tabFragments.AnnouncementsFragment
+import devcom.android.ui.fragment.home.tabFragments.BlogFragment
+import devcom.android.ui.fragment.home.tabFragments.NewsFragment
 
 
 class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {

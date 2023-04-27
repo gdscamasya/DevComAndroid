@@ -7,7 +7,7 @@ app:startDestination="@id/HomePage">
 
 <fragment
     android:id="@+id/HomePage"
-    android:name="devcom.android.ui.fragments.homeFragment.HomeFragment"
+    android:name="devcom.android.ui.fragment.home.HomeFragment"
     android:label="fragment_home"
     tools:layout="@layout/fragment_home" >
     <action
@@ -16,17 +16,17 @@ app:startDestination="@id/HomePage">
 </fragment>
     <fragment
     android:id="@+id/event"
-    android:name="devcom.android.ui.fragments.eventFragment.EventFragment"
+    android:name="devcom.android.ui.fragment.event.EventFragment"
     android:label="fragment_event"
     tools:layout="@layout/fragment_event" />
 <fragment
     android:id="@+id/form"
-    android:name="devcom.android.ui.fragments.forumFragment.ForumFragment"
+    android:name="devcom.android.ui.fragment.form.ForumFragment"
     android:label="fragment_forum"
     tools:layout="@layout/fragment_forum" />
     <fragment
         android:id="@+id/authorityEditorProfileFragment"
-        android:name="devcom.android.ui.fragments.AuthorityEditorProfileFragment"
+        android:name="devcom.android.ui.fragment.AuthorityEditorProfileFragment"
         android:label="fragment_authority_editor_profile"
         tools:layout="@layout/fragment_authority_editor_profile" >
         <action

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/HomePage"
-        android:name="devcom.android.ui.fragments.homeFragment.HomeFragment"
+        android:name="devcom.android.ui.fragment.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="devcom.android.ui.fragments.profileFragment.ProfileFragment"
+        android:name="devcom.android.ui.fragment.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -34,17 +34,17 @@
     </fragment>
     <fragment
         android:id="@+id/event"
-        android:name="devcom.android.ui.fragments.eventFragment.EventFragment"
+        android:name="devcom.android.ui.fragment.event.EventFragment"
         android:label="fragment_event"
         tools:layout="@layout/fragment_event" />
     <fragment
         android:id="@+id/form"
-        android:name="devcom.android.ui.fragments.forumFragment.ForumFragment"
+        android:name="devcom.android.ui.fragment.form.ForumFragment"
         android:label="fragment_forum"
         tools:layout="@layout/fragment_forum" />
     <fragment
         android:id="@+id/addBlogFragment"
-        android:name="devcom.android.ui.fragments.profileFragment.AddBlogFragment"
+        android:name="devcom.android.ui.fragment.profile.AddBlogFragment"
         android:label="AddBlogFragment" >
         <action
             android:id="@+id/action_addBlogFragment_to_profileFragment"
@@ -52,7 +52,7 @@
     </fragment>
     <fragment
         android:id="@+id/addAnnouncentsFragment"
-        android:name="devcom.android.ui.fragments.profileFragment.AddAnnouncentsFragment"
+        android:name="devcom.android.ui.fragment.profile.AddAnnouncentsFragment"
         android:label="fragment_add_announcents"
         tools:layout="@layout/fragment_add_announcents" >
         <action
@@ -61,7 +61,7 @@
     </fragment>
     <fragment
         android:id="@+id/addNewsFragment"
-        android:name="devcom.android.ui.fragments.profileFragment.AddNewsFragment"
+        android:name="devcom.android.ui.fragment.profile.AddNewsFragment"
         android:label="fragment_add_news"
         tools:layout="@layout/fragment_add_news" >
         <action

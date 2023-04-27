@@ -1,6 +1,5 @@
-package devcom.android.ui.fragments.homeFragment
+package devcom.android.ui.fragment.home
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
@@ -20,8 +18,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import devcom.android.R
-import devcom.android.ui.activity.main.MainActivity
-import devcom.android.ui.fragments.homeFragment.adapter.ViewPagerAdapter
+import devcom.android.ui.fragment.home.adapter.ViewPagerAdapter
 import devcom.android.utils.constants.FirebaseConstants.COLLECTION_PATH_USERS
 import devcom.android.utils.constants.FirebaseConstants.FIELD_DOWNLOAD_URL
 import devcom.android.utils.constants.FirebaseConstants.FIELD_UUID
@@ -85,9 +82,6 @@ class HomeFragment : Fragment() {
         getData()
 
     }
-
-
-
 
 
     private fun getData(){
