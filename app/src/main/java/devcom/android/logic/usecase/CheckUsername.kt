@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import devcom.android.utils.constants.FirebaseConstants
 import java.lang.Error
 
-class CheckUsernameUseCase(private val auth: FirebaseAuth, private val db: FirebaseFirestore) {
+class CheckUsername(private val auth: FirebaseAuth, private val db: FirebaseFirestore) {
 
     private val usersRef = db.collection(FirebaseConstants.COLLECTION_PATH_USERS)
 

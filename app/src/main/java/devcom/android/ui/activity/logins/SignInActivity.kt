@@ -1,14 +1,9 @@
 package devcom.android.ui.activity.logins
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.facebook.CallbackManager
@@ -36,11 +31,7 @@ import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.*
 import devcom.android.viewmodel.MainViewModel
 import devcom.android.viewmodel.MainViewModelFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.lang.Exception
 
 
@@ -74,7 +65,7 @@ class SignInActivity : AppCompatActivity() {
         dataStoreRepository = DataStoreRepository(this@SignInActivity)
         val mainViewModelFactory = MainViewModelFactory(
             SignInGoogle(auth, db), SignInFacebook(auth, db),
-            CheckUsernameUseCase(auth, db), SignUpEmail(auth, db)
+            CheckUsername(auth, db), SignUpEmail(auth, db)
         )
         viewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
         // Initialize Firebase Auth

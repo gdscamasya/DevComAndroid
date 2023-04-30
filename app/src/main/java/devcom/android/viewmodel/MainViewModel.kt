@@ -6,14 +6,12 @@ import androidx.lifecycle.ViewModel
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import devcom.android.logic.usecase.*
-import devcom.android.ui.activity.main.MainActivity
 import devcom.android.utils.Resource
-import devcom.android.utils.extensions.navigateToAnotherActivity
 
 class MainViewModel(
     private val signInGoogle: SignInGoogle,
     private val signInFacebook: SignInFacebook,
-    private val checkUsername: CheckUsernameUseCase,
+    private val checkUsername: CheckUsername,
     private val signUpEmail: SignUpEmail
 ) : ViewModel() {
 

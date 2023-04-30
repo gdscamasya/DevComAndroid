@@ -58,7 +58,7 @@ class SignUpActivity : AppCompatActivity() {
 
         val mainViewModelFactory = MainViewModelFactory(
             SignInGoogle(auth, db), SignInFacebook(auth, db),
-            CheckUsernameUseCase(auth, db), SignUpEmail(auth, db)
+            CheckUsername(auth, db), SignUpEmail(auth, db)
         )
         viewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
 

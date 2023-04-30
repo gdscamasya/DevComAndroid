@@ -6,7 +6,7 @@ import devcom.android.logic.usecase.*
 
 class MainViewModelFactory(private val signInGoogle: SignInGoogle,
                            private val signInFacebook: SignInFacebook,
-                           private val sameUsername: CheckUsernameUseCase,
+                           private val sameUsername: CheckUsername,
                            private val signUpEmail: SignUpEmail
 ):ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

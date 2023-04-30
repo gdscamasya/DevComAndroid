@@ -13,11 +13,6 @@
     <string name="like">Beğen</string>
     <string name="comment">Yorum</string>
     <string name="blog_name">Blog Name</string>
-<<<<<<< HEAD
-    <string name="nickname">NickName</string>
-    <string name="blog_info">little blog information</string>
-
-=======
     <string name="nickname">Username</string>
     <string name="blog_info">little blog information</string>
 
@@ -28,7 +23,7 @@
 
 
 
->>>>>>> FormDesign
+
     <!-- sign_in && register && password_reset -->
     <string name="nickname_text">Kullanıcı Adı</string>
     <string name="password">Şifre</string>
@@ -41,15 +36,12 @@
     <string name="used_same_username">Bu kullanıcı adı daha önce kullanılmış</string>
     <string name="get_email">Email adresinizi giriniz</string>
     <string name="used_same_email">Bu email adresi daha önce kullanılmış</string>
-<<<<<<< HEAD
-=======
     <string name="error_login_disable">We have blocked all requests from this device due to unusual activity. Try again later. [ Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. ]</string>
     <string name="error_login_password">The password is invalid or the user does not have a password.</string>
     <string name="error_login_email">There is no user record corresponding to this identifier. The user may have been deleted.</string>
     <string name="error_login_email_translate">Bu tanımlayıcıya karşılık gelen kullanıcı kaydı yok.</string>
     <string name="error_login_disable_translate">Birçok başarısız oturum açma girişimi nedeniyle bu hesaba erişim geçici olarak devre dışı bırakıldı</string>
     <string name="error_login_password_translate">Parola geçersiz veya kullanıcının parolası yok.</string>
->>>>>>> FormDesign
     <string name="sign_up_succesfull">başarılı bir şekilde kayıt oldunuz</string>
     <string name="facebook_google">veya diğer hesaplarla giriş yapınız.</string>
     <string name="reset_password">Şifreni Yenile</string>
@@ -66,7 +58,6 @@
     <string name="please_enter_email_username">Lütfen e-mail adresinizi giriniz</string>
     <string name="please_enter_password_username">Lütfen şifrenizi girinizi</string>
     <string name="password_rules">En az 1 sayı\nEn az 1 küçük harf\nEn az 1 büyük harf\nEn az 6 karakter </string>
-
     <string name="google_register_after_info">Kayıt işlemini tamamlamak için\nKullanıcı adınızı belirleyiniz</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -76,10 +67,8 @@
     <string name="exit_app">Çıkış Yap</string>
     <string name="settings">Ayarlar</string>
     <string name="account">Hesap</string>
-<<<<<<< HEAD
-=======
     <string name="add_blog">Blog Ekle</string>
     <string name="add_announcements">Duyuru Ekle</string>
     <string name="add_news">Haber Ekle</string>
->>>>>>> FormDesign
+
 </resources>
