@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/HomePage">
+
+    <fragment
+        android:id="@+id/HomePage"
+        android:name="devcom.android.ui.fragment.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_HomePage_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="devcom.android.ui.fragment.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_HomePage"
+            app:destination="@id/HomePage" />
+        <action
+            android:id="@+id/action_profileFragment_to_addAnnouncentsFragment"
+            app:destination="@id/addAnnouncentsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_addNewsFragment"
+            app:destination="@id/addNewsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_addBlogFragment"
+            app:destination="@id/addBlogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/event"
+        android:name="devcom.android.ui.fragment.event.EventFragment"
+        android:label="fragment_event"
+        tools:layout="@layout/fragment_event" />
+    <fragment
+        android:id="@+id/form"
+        android:name="devcom.android.ui.fragment.form.FormFragment"
+        android:label="fragment_forum"
+        tools:layout="@layout/fragment_forum" />
+    <fragment
+        android:id="@+id/addBlogFragment"
+        android:name="devcom.android.ui.fragment.profile.AddBlogFragment"
+        android:label="AddBlogFragment" >
+        <action
+            android:id="@+id/action_addBlogFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addAnnouncentsFragment"
+        android:name="devcom.android.ui.fragment.profile.AddAnnouncentsFragment"
+        android:label="fragment_add_announcents"
+        tools:layout="@layout/fragment_add_announcents" >
+        <action
+            android:id="@+id/action_addAnnouncentsFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNewsFragment"
+        android:name="devcom.android.ui.fragment.profile.AddNewsFragment"
+        android:label="fragment_add_news"
+        tools:layout="@layout/fragment_add_news" >
+        <action
+            android:id="@+id/action_addNewsFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+</navigation>

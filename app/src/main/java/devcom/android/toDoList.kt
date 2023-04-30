@@ -12,6 +12,17 @@ package devcom.android
 2-Bütün textler string.xml
 
 
+<<<<<<< HEAD
+=======
+24.04.2023
+1-Data store authority kaydetme
+
+27.04.2023
+1- Regex i extension class da yapalım
+2-Activity’ler ve Fragment’ları base bir yapıda nasıl toplayabilirim
+
+
+>>>>>>> FormDesign
 
 
  */

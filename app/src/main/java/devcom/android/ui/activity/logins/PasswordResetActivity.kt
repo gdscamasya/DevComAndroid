@@ -6,7 +6,9 @@ import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import devcom.android.R
 import devcom.android.databinding.ActivityPasswordResetBinding
+import devcom.android.utils.extensions.showSnackBarToMessage
 
 class PasswordResetActivity : AppCompatActivity() {
 
@@ -39,13 +41,22 @@ class PasswordResetActivity : AppCompatActivity() {
         val email = binding.etpEmail.text.toString()
 
         if(email.isEmpty()){
-            binding.etpEmail.error = "Email adresinizi giriniz."
+            binding.etpEmail.error = getString(R.string.input_email)
         }else{
-            auth.sendPasswordResetEmail(email).addOnSuccessListener {
-                AlertDialog.Builder(this).setTitle("Şifrenizi sıfırlamak için e-postanızı kontrol edin.").show()
+            auth.fetchSignInMethodsForEmail(email).addOnSuccessListener {
+                if(it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("facebook.com") || it.signInMethods!![0].equals("google.com"))){
+                    showSnackBarToMessage(binding.root,getString(R.string.cant_change_password))
+                }else{
+                    auth.sendPasswordResetEmail(email).addOnSuccessListener {
+                        AlertDialog.Builder(this).setTitle(getString(R.string.check_email))
+                    }.addOnFailureListener {
+                        binding.etpEmail.error = getString(R.string.registered_email)
+                    }
+                }
             }.addOnFailureListener {
-                binding.etpEmail.error = "Lütfen kayıtlı bir email adresi giriniz."
+                showSnackBarToMessage(binding.root,getString(R.string.something_went_wrong))
             }
+
         }
 
 

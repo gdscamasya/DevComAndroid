@@ -6,7 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+<<<<<<< HEAD
     tools:context=".ui.fragments.homeFragment.HomeFragment">
+=======
+    tools:context=".ui.fragment.home.HomeFragment">
+>>>>>>> FormDesign
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_header"
@@ -18,8 +22,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/top_backgorund" />
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> FormDesign
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
@@ -62,7 +69,10 @@
         android:layout_height="50dp"
         android:padding="2dp"
         android:src="@drawable/circle_img"
+<<<<<<< HEAD
         app:strokeColor="@color/black"
+=======
+>>>>>>> FormDesign
         app:strokeWidth="2sp"
         app:shapeAppearanceOverlay="@style/Circular"
         android:layout_marginTop="20dp"
@@ -70,6 +80,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+<<<<<<< HEAD
     <Button
         android:id="@+id/btn_blog"
         android:layout_width="100dp"
@@ -115,6 +126,8 @@
         app:layout_constraintStart_toEndOf="@+id/btn_announcements"
         app:layout_constraintTop_toTopOf="parent" />
 
+=======
+>>>>>>> FormDesign
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_title"
         android:layout_width="41dp"
@@ -130,9 +143,17 @@
         android:id="@+id/tab_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_header"
+=======
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+>>>>>>> FormDesign
         app:tabIndicatorHeight="0dp"
         app:textAllCaps="false"
         app:tabMode="fixed"
@@ -150,6 +171,9 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> FormDesign
 </androidx.constraintlayout.widget.ConstraintLayout>

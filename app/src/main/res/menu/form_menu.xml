@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/HomePage"
+        android:enabled="true"
+        android:title="@string/main_title"
+        android:icon="@drawable/ic_home"/>
+
+    <item
+        android:id="@+id/form"
+        android:enabled="true"
+        android:title="@string/Form"
+        android:icon="@drawable/ic_form"/>
+
+    <item
+        android:id="@+id/event"
+        android:enabled="true"
+        android:title="@string/Event"
+        android:icon="@drawable/ic_event"/>
+
+</menu>

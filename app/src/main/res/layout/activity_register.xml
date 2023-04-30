@@ -5,7 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundWhite"
+<<<<<<< HEAD
     tools:context=".ui.activity.signup.SignUpActivity">
+=======
+    tools:context=".ui.activity.logins.SignUpActivity">
+>>>>>>> FormDesign
 
     <ScrollView
         android:layout_width="match_parent"
@@ -53,7 +57,7 @@
                 app:srcCompat="@drawable/devcomname" />
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/etp_nickname"
+                android:id="@+id/etp_username"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="30dp"
@@ -82,7 +86,7 @@
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etp_nickname" />
+                app:layout_constraintTop_toBottomOf="@+id/etp_username" />
 
 
             <androidx.appcompat.widget.AppCompatEditText

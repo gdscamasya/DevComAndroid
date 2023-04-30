@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/add_blog"
+        android:enabled="true"
+        android:title="@string/add_blog"
+        />
+
+    <item
+        android:id="@+id/add_announcents"
+        android:enabled="true"
+        android:title="@string/add_announcements"
+        />
+
+    <item
+        android:id="@+id/add_news"
+        android:enabled="true"
+        android:title="@string/add_news"
+        />
+</menu>
