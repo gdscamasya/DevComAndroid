@@ -1,0 +1,53 @@
+[33mcommit 03c511190ff0404b73fbaf05abb07fc1b450f13c[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/FormDesign[m[33m, [m[1;32mviewPage[m[33m, [m[1;32musecaseWithMVVM[m[33m, [m[1;32mtemp-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mFormDesign[m[33m)[m
+Author: emirelci <emirelci34@hotmail.com>
+Date:   Sat Apr 29 15:16:24 2023 +0300
+
+    last update form
+
+[33mcommit a8bac94a1e456204fc0e7bbcd51ef38ecf2f48c8[m
+Author: emirelci <emirelci34@hotmail.com>
+Date:   Thu Apr 27 18:21:29 2023 +0300
+
+    start design form screen
+
+[33mcommit 5c8d24fee98e30f774281563b14929706818b738[m[33m ([m[1;31morigin/addBlogFragmentBackend[m[33m)[m
+Author: emirelci <emirelci34@hotmail.com>
+Date:   Thu Apr 27 17:06:07 2023 +0300
+
+    meeting and cleaning code
+
+[33mcommit b22117791e5e92c0b517cfcaad5122d79a55f2d8[m
+Author: emirelci <emirelci34@hotmail.com>
+Date:   Wed Apr 26 23:11:01 2023 +0300
+
+    starting make form
+
+[33mcommit d1940d0f01d171201ee5079abaa8b28e728da667[m
+Author: emirelci <emirelci34@hotmail.com>
+Date:   Sun Apr 16 03:28:05 2023 +0300
+
+    Finally finish all signIn Register PasswordReset (MVVM and UseCase) Architecture
+
+[33mcommit fce82e75c5026aaf2de276df306646c5af032ff7[m
+Author: emirelci <emirelci34@hotmail.com>
+Date:   Sat Apr 15 20:55:53 2023 +0300
+
+    finish so close use-case architectures
+
+[33mcommit f6284926f121f76e7bcf959f8c6d603093562b21[m
+Author: emirelci <emirelci34@hotmail.com>
+Date:   Thu Apr 13 21:16:04 2023 +0300
+
+    Clean Architecture with MVVM and useCase
+
+[33mcommit 83d4d555ab7910137ed4f18ca9d9170ea795ffb6[m
+Author: emirelci <emirelci34@hotmail.com>
+Date:   Sun Apr 2 19:24:08 2023 +0300
+
+    reguler login and register finish
+
+[33mcommit c08cb1f29ce8a75778d8d4089c941d90d484671f[m
+Author: emirelci <emirelci34@hotmail.com>
+Date:   Mon Mar 27 14:24:46 2023 +0300
+
+    first week tasks
