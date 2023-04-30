@@ -8,7 +8,10 @@ import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+<<<<<<< HEAD
+=======
 import com.google.android.material.snackbar.Snackbar
+>>>>>>> FormDesign
 import devcom.android.R
 
 fun Activity.navigateToAnotherActivity(activity:Class<*>){
@@ -21,10 +24,13 @@ fun Activity.showToastMessage(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
+<<<<<<< HEAD
+=======
 fun Activity.showSnackBarToMessage(view: View, message: String,){
     Snackbar.make(view,message,Snackbar.LENGTH_LONG).show()
 }
 
+>>>>>>> FormDesign
 fun Activity.touchableScreen(ProgressId:Int){
     val loadingIndicator = findViewById<ProgressBar>(ProgressId)
     loadingIndicator.gone()

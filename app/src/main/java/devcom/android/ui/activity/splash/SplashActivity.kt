@@ -5,7 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import devcom.android.R
+<<<<<<< HEAD
+import devcom.android.ui.activity.signin.SignInActivity
+=======
 import devcom.android.ui.activity.logins.SignInActivity
+>>>>>>> FormDesign
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
