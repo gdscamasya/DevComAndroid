@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
         viewPagerAdapter = ViewPagerAdapter(this)
         viewPager = view.findViewById(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
-        profileImageView = view.findViewById(R.id.iv_profile)
+        profileImageView = view.findViewById(R.id.iv_profile_question)
 
 
         profileImageView.setOnClickListener {

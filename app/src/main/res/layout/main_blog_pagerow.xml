@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_profile"
+            android:id="@+id/iv_profile_question"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="12dp"
@@ -35,8 +35,8 @@
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:hint="@string/nickname"
-            app:layout_constraintStart_toEndOf="@+id/iv_profile"
-            app:layout_constraintTop_toTopOf="@id/iv_profile" />
+            app:layout_constraintStart_toEndOf="@+id/iv_profile_question"
+            app:layout_constraintTop_toTopOf="@id/iv_profile_question" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_blog_name"
@@ -46,7 +46,7 @@
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:hint="@string/blog_name"
-            app:layout_constraintStart_toEndOf="@+id/iv_profile"
+            app:layout_constraintStart_toEndOf="@+id/iv_profile_question"
             app:layout_constraintTop_toBottomOf="@+id/tv_nickname" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -102,7 +102,7 @@
             android:hint="@string/blog_info"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_profile"
+            app:layout_constraintTop_toBottomOf="@id/iv_profile_question"
             tools:layout_editor_absoluteY="77dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

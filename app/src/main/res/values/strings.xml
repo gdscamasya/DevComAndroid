@@ -20,10 +20,7 @@
     <string name="timer">süre</string>
     <string name="Question">Sorunun Başlığı</string>
     <string name="Question_introdoucten">Sorunun İçeriği</string>
-
-
-
-
+    
     <!-- sign_in && register && password_reset -->
     <string name="nickname_text">Kullanıcı Adı</string>
     <string name="password">Şifre</string>
@@ -70,5 +67,8 @@
     <string name="add_blog">Blog Ekle</string>
     <string name="add_announcements">Duyuru Ekle</string>
     <string name="add_news">Haber Ekle</string>
+    
+    <!-- Form -->
+    <string name="Question_add">Soru sor</string>
 
 </resources>

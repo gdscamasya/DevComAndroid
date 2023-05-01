@@ -29,7 +29,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/iv_header"
-        app:layout_constraintEnd_toStartOf="@+id/iv_profile"
+        app:layout_constraintEnd_toStartOf="@+id/iv_profile_question"
         app:layout_constraintHorizontal_bias="0.445"
         app:layout_constraintStart_toEndOf="@+id/iv_elipse"
         app:layout_constraintTop_toTopOf="@+id/iv_header" />
@@ -56,7 +56,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_profile"
+        android:id="@+id/iv_profile_question"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:padding="2dp"

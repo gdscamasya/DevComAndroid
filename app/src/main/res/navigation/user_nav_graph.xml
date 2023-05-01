@@ -41,7 +41,14 @@
         android:id="@+id/form"
         android:name="devcom.android.ui.fragment.form.FormFragment"
         android:label="fragment_forum"
-        tools:layout="@layout/fragment_forum" />
+        tools:layout="@layout/fragment_form" >
+        <action
+            android:id="@+id/action_form_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_form_to_askQuestionFragment"
+            app:destination="@id/askQuestionFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addBlogFragment"
         android:name="devcom.android.ui.fragment.profile.AddBlogFragment"
@@ -68,4 +75,9 @@
             android:id="@+id/action_addNewsFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/askQuestionFragment"
+        android:name="devcom.android.AskQuestionFragment"
+        android:label="fragment_ask_question"
+        tools:layout="@layout/fragment_ask_question" />
 </navigation>
