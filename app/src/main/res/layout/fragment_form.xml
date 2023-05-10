@@ -19,7 +19,7 @@
         app:srcCompat="@drawable/top_backgorund" />
 
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/vector_menu"
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -74,7 +74,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
     </androidx.viewpager2.widget.ViewPager2>
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/seacrher"
         android:layout_width="190dp"
         android:layout_height="32dp"

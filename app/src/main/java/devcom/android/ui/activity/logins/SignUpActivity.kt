@@ -37,10 +37,7 @@ class SignUpActivity : AppCompatActivity() {
     val fb = LoginManager.getInstance()
 
     val callbackManager = CallbackManager.Factory.create();
-    private val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
-    private val passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,}$"
-    private val usersRef = db.collection("users")
-    private val permission = listOf<String>("email", "public_profile")
+    private val permission = listOf("email", "public_profile")
 
     private companion object {
         private const val RC_SIGN_IN = 100
@@ -113,7 +110,7 @@ class SignUpActivity : AppCompatActivity() {
                 binding.etpPassword.error = getString(R.string.please_enter_password_username)
                 false
             }
-            !password.matches(passwordPattern.toRegex()) -> {
+            !password.checkPassword() -> {
                 binding.etpPassword.error = getString(R.string.password_rules)
                 false
             }
@@ -201,9 +198,9 @@ class SignUpActivity : AppCompatActivity() {
             fb.logOut()
             fb.logInWithReadPermissions(this, permission)
             fb.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-                override fun onSuccess(loginResult: LoginResult) {
+                override fun onSuccess(result: LoginResult) {
                     unTouchableScreen(R.id.pb_register)
-                    viewModel.signInFacebook(loginResult.accessToken)
+                    viewModel.signInFacebook(result.accessToken)
                 }
 
                 override fun onCancel() {

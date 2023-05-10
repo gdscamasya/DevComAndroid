@@ -8,17 +8,20 @@ package devcom.android
 4- mainActivity tasarımı ama önce mimari
 
 4.13.2023
-1-Use-Case katmanı
-2-Bütün textler string.xml
+1- Use-Case katmanı
+2- Bütün textler string.xml
 
 24.04.2023
-1-Data store authority kaydetme
+1- Data store authority kaydetme
 
 27.04.2023
 1- Regex i extension class da yapalım
-2-Activity’ler ve Fragment’ları base bir yapıda nasıl toplayabilirim
+2- Activity’ler ve Fragment’ları base bir yapıda nasıl toplayabilirim
 
-
+05.04.2023
+1- GetData'yı MVVM ve UseCase ile kullan
+2- Debounce arama çubuğu ile ilgili
+3- coroutine
 
 
 

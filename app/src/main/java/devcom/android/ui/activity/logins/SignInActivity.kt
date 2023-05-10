@@ -147,7 +147,7 @@ class SignInActivity : AppCompatActivity() {
 
     private fun forgetPasswordSetOnClickListener() {
         binding.tvForgetPassaword.setOnClickListener {
-            navigateToAnotherActivity(PasswordResetActivity::class.java)
+            navigateToAnotherActivity(UpdatePasswordActivity::class.java)
         }
     }
 
@@ -229,9 +229,9 @@ class SignInActivity : AppCompatActivity() {
             fb.logOut()
             fb.logInWithReadPermissions(this, permission)
             fb.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-                override fun onSuccess(loginResult: LoginResult) {
+                override fun onSuccess(result: LoginResult) {
                     unTouchableScreen(R.id.pb_sign)
-                    viewModel.signInFacebook(loginResult.accessToken)
+                    viewModel.signInFacebook(result.accessToken)
                 }
 
                 override fun onCancel() {

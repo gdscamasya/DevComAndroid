@@ -57,12 +57,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
+            android:textStyle = "bold"
             android:hint="@string/Question"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_profile_question"
             app:layout_constraintBottom_toTopOf="@+id/tv_question_introdoucten"
-            tools:layout_editor_absoluteY="77dp" />
+             />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_question_introdoucten"
@@ -74,7 +75,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_question_header"
-            tools:layout_editor_absoluteY="77dp" />
+             />
 
         <ImageView
             android:id="@+id/iv_views"
@@ -85,8 +86,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:srcCompat="@drawable/ic_baseline_remove_red_eye_24"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="205dp" />
+            />
 
         <ImageView
             android:id="@+id/iv_answers"
@@ -96,8 +96,7 @@
             app:layout_constraintStart_toEndOf="@+id/tv_views"
             app:layout_constraintBottom_toBottomOf="@+id/iv_views"
             app:srcCompat="@drawable/ic_comment"
-            tools:layout_editor_absoluteX="62dp"
-            tools:layout_editor_absoluteY="215dp" />
+             />
 
         <ImageView
             android:id="@+id/iv_up"
@@ -111,8 +110,8 @@
 
         <ImageView
             android:id="@+id/imageView6"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             app:srcCompat="@drawable/ic_save"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

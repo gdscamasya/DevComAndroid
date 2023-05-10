@@ -31,6 +31,7 @@ class HomeFragment : Fragment() {
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var profileImageView:ImageView
     private lateinit var viewPager: ViewPager2
+    private lateinit var tabLayout:TabLayout
 
 
     private val tabTitles = arrayListOf("Blog Yazıları", "Duyurular", "Haberler")
@@ -57,7 +58,7 @@ class HomeFragment : Fragment() {
         auth = Firebase.auth
         viewPagerAdapter = ViewPagerAdapter(this)
         viewPager = view.findViewById(R.id.view_pager)
-        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
+        tabLayout = view.findViewById(R.id.tab_layout)
         profileImageView = view.findViewById(R.id.iv_profile_question)
 
 

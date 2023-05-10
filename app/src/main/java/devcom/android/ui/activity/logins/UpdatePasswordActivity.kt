@@ -10,7 +10,7 @@ import devcom.android.R
 import devcom.android.databinding.ActivityPasswordResetBinding
 import devcom.android.utils.extensions.showSnackBarToMessage
 
-class PasswordResetActivity : AppCompatActivity() {
+class UpdatePasswordActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPasswordResetBinding
     private lateinit var auth: FirebaseAuth

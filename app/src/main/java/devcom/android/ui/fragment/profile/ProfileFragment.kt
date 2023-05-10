@@ -53,6 +53,7 @@ class ProfileFragment : Fragment() {
     private lateinit var usernameProfileScope:TextView
     private lateinit var profileImageView: ImageView
     private lateinit var addPostImageView: ImageView
+    private lateinit var returnImageView: ImageView
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +77,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val returnImageView = view.findViewById<ImageView>(R.id.iv_back_profile_to_main)
+        returnImageView = view.findViewById(R.id.iv_back_profile_to_main)
         addPostImageView = view.findViewById(R.id.iv_add_post)
         usernameProfileScope = view.findViewById(R.id.tv_username)
         profileImageView = view.findViewById(R.id.iv_profile2)
@@ -138,9 +139,6 @@ class ProfileFragment : Fragment() {
             bottomNav = context.getBottomView()
         }
     }
-
-
-
 
     private fun checkAuthority(){
         lifecycleScope.launch {
@@ -248,7 +246,6 @@ class ProfileFragment : Fragment() {
                             val uuid = document.get("uuid") as? String
                             val username = document.get("username") as? String
                             val downloadUrl = document.get("downloadUrl") as? String
-                            val authority = document.get("authority") as? String
 
                             if(uuid == auth.currentUser!!.uid){
                                  usernameProfileScope.text = username

@@ -17,7 +17,7 @@ class SignInFacebook(private val auth: FirebaseAuth, private val db: FirebaseFir
         val credential = FacebookAuthProvider.getCredential(account.token)
 
 
-        val request = GraphRequest.newMeRequest(account){ `object` ,response->
+        val request = GraphRequest.newMeRequest(account){ `object`, _ ->
 
             val email = `object`?.getString("email")
             val fullName = `object`?.getString("name")

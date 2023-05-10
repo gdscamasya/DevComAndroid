@@ -28,9 +28,11 @@
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_add_blog.xml" value="0.7876984126984127" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_add_news.xml" value="0.7876984126984127" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_announcements.xml" value="0.21077383497221033" />
+        <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_ask_question.xml" value="0.33" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_blank.xml" value="0.816468253968254" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_blog.xml" value="0.25" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_event.xml" value="0.80125" />
+        <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_form.xml" value="0.2864471996579735" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_forum.xml" value="0.80375" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_home.xml" value="0.75" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_news.xml" value="0.18554938007695596" />
@@ -38,7 +40,7 @@
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_questions.xml" value="0.7876984126984127" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_top_voted.xml" value="0.7876984126984127" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/fragment_un_answered.xml" value="0.7876984126984127" />
-        <entry key="..\:/DevComAndroid/app/src/main/res/layout/item_question_row.xml" value="0.6498015873015873" />
+        <entry key="..\:/DevComAndroid/app/src/main/res/layout/item_question_row.xml" value="0.67" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/main_blog_pagerow.xml" value="0.5" />
         <entry key="..\:/DevComAndroid/app/src/main/res/layout/tab_titles.xml" value="0.2864471996579735" />
         <entry key="..\:/DevComAndroid/app/src/main/res/menu/add_news_menu.xml" value="0.8375" />

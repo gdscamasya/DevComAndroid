@@ -11,10 +11,7 @@ fun Fragment.navigateToAnotherActivity(activity:Class<*>){
     startActivity(intent)
 }
 
-<<<<<<< HEAD
-=======
 fun Fragment.showToastMessageFragment(message: String){
     Toast.makeText(requireContext(),message,Toast.LENGTH_LONG).show()
 }
 
->>>>>>> FormDesign
