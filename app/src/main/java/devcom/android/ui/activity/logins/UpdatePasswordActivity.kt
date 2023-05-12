@@ -7,16 +7,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import devcom.android.R
-import devcom.android.databinding.ActivityPasswordResetBinding
+import devcom.android.databinding.ActivityUpdatePasswordBinding
 import devcom.android.utils.extensions.showSnackBarToMessage
 
 class UpdatePasswordActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityPasswordResetBinding
+    private lateinit var binding: ActivityUpdatePasswordBinding
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityPasswordResetBinding.inflate(layoutInflater)
+        binding = ActivityUpdatePasswordBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 

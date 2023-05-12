@@ -11,9 +11,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.SearchView
 import androidx.navigation.Navigation
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.search.SearchBar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
@@ -37,6 +39,7 @@ class FormFragment : Fragment() {
     private lateinit var auth : FirebaseAuth
 
 
+    private lateinit var searchBar:SearchView
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var tabLayout:TabLayout
     private lateinit var viewPager2: ViewPager2
@@ -66,6 +69,7 @@ class FormFragment : Fragment() {
         tabLayout = view.findViewById(R.id.tab_layout_form)
         profileImageView = view.findViewById(R.id.iv_profile_forum)
         addQuestionMenu = view.findViewById(R.id.vector_menu)
+        searchBar = view.findViewById(R.id.searcher)
         bottomNav.visibility = View.VISIBLE
         auth = Firebase.auth
 

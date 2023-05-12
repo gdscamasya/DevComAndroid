@@ -21,7 +21,7 @@ class SignInFacebook(private val auth: FirebaseAuth, private val db: FirebaseFir
 
             val email = `object`?.getString("email")
             val fullName = `object`?.getString("name")
-            Log.i("emailveName",email.toString() + fullName.toString())
+
 
             auth.fetchSignInMethodsForEmail(email!!).addOnSuccessListener {
                 if(it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("password") || it.signInMethods!![0].equals("google.com"))){

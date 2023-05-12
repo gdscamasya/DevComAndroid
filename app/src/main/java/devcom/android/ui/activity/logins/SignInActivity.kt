@@ -125,6 +125,7 @@ class SignInActivity : AppCompatActivity() {
         viewModel.isSignInFacebook.observe(this) { response ->
             when(response){
                 is Resource.Success ->{
+                    getDataBase()
                     navigateToAnotherActivity(MainActivity::class.java)
                     this.finish()
                 }
@@ -139,7 +140,6 @@ class SignInActivity : AppCompatActivity() {
 
     private fun observeLiveData() {
         observeIsExistsEmailFacebook()
-
         observeIsSignInGoogle()
         observeIsSignInFacebook()
 
@@ -199,6 +199,8 @@ class SignInActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(getEmail(), getPassword()).addOnCompleteListener {
             if (it.isSuccessful) {
                 getDataBase()
+                navigateToAnotherActivity(MainActivity::class.java)
+                this.finish()
             } else {
                 Log.i("erroer", it.exception!!.message.toString())
                 if (it.exception!!.message.equals(getString(R.string.error_login_disable))) {
@@ -232,6 +234,7 @@ class SignInActivity : AppCompatActivity() {
                 override fun onSuccess(result: LoginResult) {
                     unTouchableScreen(R.id.pb_sign)
                     viewModel.signInFacebook(result.accessToken)
+
                 }
 
                 override fun onCancel() {
@@ -297,23 +300,26 @@ class SignInActivity : AppCompatActivity() {
                         for (document in documents) {
 
                             val uuid = document.get(FirebaseConstants.FIELD_UUID) as? String
-                            val authority =
-                                document.get(FirebaseConstants.FIELD_AUTHORITY) as? String
+                            val authority =document.get(FirebaseConstants.FIELD_AUTHORITY) as? String
 
                             if (uuid == auth.currentUser!!.uid) {
-                                //showToastMessage(dataStoreRepository.getDataFromDataStore()!!)
+                                lifecycleScope.launch {
+                                    dataStoreRepository.saveDataToDataStore(document.id,"document")
+                                    showToastMessage(dataStoreRepository.getDataFromDataStore("document")!!)
+                                }
+
                                 when (authority) {
                                     "user" -> {
                                         lifecycleScope.launch {
-                                            dataStoreRepository.saveDataToDataStore(authority)
-                                            showToastMessage(dataStoreRepository.getDataFromDataStore()!!)
+                                            dataStoreRepository.saveDataToDataStore(authority,"Auth")
+                                            showToastMessage(dataStoreRepository.getDataFromDataStore("Auth")!!)
                                         }
                                         navigateToAnotherActivity(MainActivity::class.java)
                                     }
                                     "editor" -> {
                                         lifecycleScope.launch {
-                                            dataStoreRepository.saveDataToDataStore(authority)
-                                            showToastMessage(dataStoreRepository.getDataFromDataStore()!!)
+                                            dataStoreRepository.saveDataToDataStore(authority,"Auth")
+                                            showToastMessage(dataStoreRepository.getDataFromDataStore("Auth")!!)
                                         }
                                         navigateToAnotherActivity(MainActivity::class.java)
                                     }

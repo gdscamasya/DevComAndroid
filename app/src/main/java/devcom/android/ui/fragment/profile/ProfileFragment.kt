@@ -142,11 +142,12 @@ class ProfileFragment : Fragment() {
 
     private fun checkAuthority(){
         lifecycleScope.launch {
-            authorityStatus = dataStoreRepository.getDataFromDataStore()
+            authorityStatus = dataStoreRepository.getDataFromDataStore("Auth")
         }
         if(authorityStatus == "editor"){
             addPostImageView.visibility = View.VISIBLE
         }
+
     }
 
     private fun signOutSetOnClickListener(){

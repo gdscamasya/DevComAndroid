@@ -8,5 +8,7 @@ object FirebaseConstants {
     const val FIELD_AUTHORITY = "authority"
     const val FIELD_DOWNLOAD_URL = "downloadUrl"
 
+    const val COLLECTİON_PATH_QUESTİONS = "Questions"
+
 
 }
