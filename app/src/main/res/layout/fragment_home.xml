@@ -62,6 +62,7 @@
         android:padding="2dp"
         android:src="@drawable/circle_img"
         app:strokeWidth="2sp"
+        app:strokeColor="@color/black"
         app:shapeAppearanceOverlay="@style/Circular"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
