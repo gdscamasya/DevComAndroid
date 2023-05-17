@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import devcom.android.databinding.ItemQuestionRowBinding
-import devcom.android.users.User
+import devcom.android.users.Question
 
-class QuestionAdapter(val QuestionList : ArrayList<User>) : RecyclerView.Adapter<QuestionAdapter.AskQuestionHolder>() {
+class QuestionAdapter(val questionList : ArrayList<Question>) : RecyclerView.Adapter<QuestionAdapter.AskQuestionHolder>() {
 
     class AskQuestionHolder(val binding: ItemQuestionRowBinding) : RecyclerView.ViewHolder(binding.root){
 
@@ -18,10 +18,12 @@ class QuestionAdapter(val QuestionList : ArrayList<User>) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: AskQuestionHolder, position: Int) {
-        TODO("Not yet implemented")
+        holder.binding.tvNickname.text = questionList.get(position).QuestionUsername
+        holder.binding.tvQuestionHeader.text = questionList.get(position).QuestionHeader
+        holder.binding.tvQuestionIntrodoucten.text = questionList.get(position).QuestionContent
     }
 
     override fun getItemCount(): Int {
-        return QuestionList.size
+        return questionList.size
     }
 }
