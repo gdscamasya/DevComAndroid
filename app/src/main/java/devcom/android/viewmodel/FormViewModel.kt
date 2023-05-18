@@ -28,11 +28,11 @@ class FormViewModel(private val askQuestionToPersonalSave: AskQuestionToPersonal
             )
     }
 
-    fun askQuestionToSaveGlobal(
+    fun askQuestionToSaveGlobal(profileImageUrl: String,
         questionContent: String, questionHeader: String,itemSelected: String,
         selectedPicture: Uri?,
     ){
-        askQuestionsToSaveGlobal.askQuestionToSaveGlobal(questionContent, questionHeader,itemSelected, selectedPicture,
+        askQuestionsToSaveGlobal.askQuestionToSaveGlobal(profileImageUrl,questionContent, questionHeader,itemSelected, selectedPicture,
         onSucces = { _isAskQuestion.value = true },
         onFailure = { _isAskQuestion.value = false })
     }

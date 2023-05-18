@@ -14,6 +14,7 @@ object FirebaseConstants {
     const val FIELD_QUESTION_TAGS = "QuestionTags"
     const val FIELD_QUESTION_IMAGE = "QuestionImage"
     const val FIELD_QUESTION_USERNAME = "QuestionUsername"
+    const val FILED_QUESTION_PROFILE_IMAGE = "AskQuestionProfileImage"
 
 
 

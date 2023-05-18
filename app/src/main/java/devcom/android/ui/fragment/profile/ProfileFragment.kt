@@ -179,6 +179,9 @@ class ProfileFragment : Fragment() {
                     val updates = hashMapOf<String,Any>(
                         "downloadUrl" to downloadUrl
                     )
+
+
+
                     collecRef.whereEqualTo(FirebaseConstants.FIELD_UUID,auth.currentUser!!.uid)
                         .get()
                         .addOnSuccessListener {documents ->

@@ -1,4 +1,4 @@
-package devcom.android
+package devcom.android.ui.fragment.form
 
 import android.Manifest
 import android.content.Intent
@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -28,18 +29,19 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import devcom.android.R
 import devcom.android.logic.usecase.*
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.showToastMessageFragment
 import devcom.android.viewmodel.FormViewModel
 import devcom.android.viewmodel.FormViewModelFactory
 import kotlinx.coroutines.launch
-import java.util.*
 
 
 class AskQuestionFragment : Fragment() {
 
     private lateinit var formviewModel: FormViewModel
+    private lateinit var returnForm:ImageView
     private lateinit var postQuestionBtn:Button
     private lateinit var editTextContent:EditText
     private lateinit var editTextHeader:EditText
@@ -49,6 +51,7 @@ class AskQuestionFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
+    private lateinit var profileImageUrl:String
 
     var selectedPicture: Uri? = null
     val db = Firebase.firestore
@@ -73,11 +76,18 @@ class AskQuestionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        getData()
+
         addImageView = view.findViewById(R.id.iv_add_image)
         spinner = view.findViewById(R.id.spinner)
         editTextContent = view.findViewById(R.id.etp_question_content)
         editTextHeader = view.findViewById(R.id.etp_question_header)
         postQuestionBtn = view.findViewById(R.id.btn_post_question)
+        returnForm = view.findViewById(R.id.iv_return_ask_question)
+
+        returnForm.setOnClickListener {
+            Navigation.findNavController(it).popBackStack()
+        }
 
         val options = arrayOf("Android", "IOS", "Kotlin","Java","C++","C#","WinForms","Web")
 
@@ -149,9 +159,9 @@ class AskQuestionFragment : Fragment() {
         postQuestionBtn.setOnClickListener {
             lifecycleScope.launch {
                 formviewModel.askQuestionToPersonal(requireContext(),getEditTextContent(),editTextHeader())
-                formviewModel.askQuestionToSaveGlobal(getEditTextContent(),editTextHeader(),itemSelected,selectedPicture)
+                formviewModel.askQuestionToSaveGlobal(profileImageUrl,getEditTextContent(),editTextHeader(),itemSelected,selectedPicture)
+                Navigation.findNavController(it).popBackStack()
             }
-
         }
     }
 
@@ -162,6 +172,8 @@ class AskQuestionFragment : Fragment() {
     private fun editTextHeader():String{
         return editTextHeader.text.toString()
     }
+
+
 
     /*
     private fun editTextChanged(){
@@ -241,7 +253,7 @@ class AskQuestionFragment : Fragment() {
     }
 
     private fun getData(){
-        db.collection("users").addSnapshotListener{ value,error ->
+        db.collection(FirebaseConstants.COLLECTION_PATH_USERS).addSnapshotListener{ value,error ->
             if(error != null){
                 Toast.makeText(requireContext(), "beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT).show()
             }else{
@@ -257,26 +269,10 @@ class AskQuestionFragment : Fragment() {
 
                             if(uuid == auth.currentUser!!.uid){
 
-                                if(downloadUrl != null){
-                                    Picasso.get().load(downloadUrl).resize(300,250).centerCrop().into(object : Target {
-                                        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                                            val drawable = BitmapDrawable(resources, bitmap)
-                                            //editTextContent.setCompoundDrawablesRelativeWithIntrinsicBounds(null,selectedPicture,null,null)
-
-                                            // Burada drawable değişkeni, dışarıdan yüklenen resmin Drawable nesnesidir
-                                        }
-
-                                        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                                            // Resim yükleme hatası durumunda yapılacak işlemler
-                                        }
-
-                                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                                            // Resim yüklenirken yapılacak işlemler
-                                        }
-                                    })
-                                }else{
-                                    continue
+                                if (downloadUrl != null) {
+                                    profileImageUrl = downloadUrl
                                 }
+
                             }
                         }
                     }

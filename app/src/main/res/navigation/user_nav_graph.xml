@@ -77,7 +77,11 @@
     </fragment>
     <fragment
         android:id="@+id/askQuestionFragment"
-        android:name="devcom.android.AskQuestionFragment"
+        android:name="devcom.android.ui.fragment.form.AskQuestionFragment"
         android:label="fragment_ask_question"
-        tools:layout="@layout/fragment_ask_question" />
+        tools:layout="@layout/fragment_ask_question" >
+        <action
+            android:id="@+id/action_askQuestionFragment_to_form"
+            app:destination="@id/form" />
+    </fragment>
 </navigation>

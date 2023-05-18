@@ -9,7 +9,7 @@ import java.util.*
 
 class AskQuestionsToSaveGlobal(private val auth: FirebaseAuth, private val db: FirebaseFirestore, private val storage: FirebaseStorage) {
 
-    fun askQuestionToSaveGlobal( questionContent: String, questionHeader: String,questionTags: String ,selectedPicture:Uri?, onSucces : () -> Unit, onFailure : () -> Unit) {
+    fun askQuestionToSaveGlobal( profileImageUrl:String,questionContent: String, questionHeader: String,questionTags: String ,selectedPicture:Uri?, onSucces : () -> Unit, onFailure : () -> Unit) {
 
         lateinit var getUsername : String
 
@@ -27,6 +27,7 @@ class AskQuestionsToSaveGlobal(private val auth: FirebaseAuth, private val db: F
 
         if (selectedPicture == null) {
             val questions = hashMapOf<String, Any>(
+                "AskQuestionProfileImage" to profileImageUrl,
                 "QuestionUsername" to getUsername,
                 "QuestionContent" to questionContent,
                 "QuestionHeader" to questionHeader,
@@ -48,6 +49,7 @@ class AskQuestionsToSaveGlobal(private val auth: FirebaseAuth, private val db: F
                     val downloadUrl = it.toString()
 
                     val questions = hashMapOf<String, Any>(
+                        "AskQuestionProfileImage" to profileImageUrl,
                         "QuestionUsername" to getUsername,
                         "QuestionContent" to questionContent,
                         "QuestionHeader" to questionHeader,
@@ -55,8 +57,9 @@ class AskQuestionsToSaveGlobal(private val auth: FirebaseAuth, private val db: F
                         "QuestionImage" to downloadUrl
                     )
 
-                    db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
-                        .add(questions)
+
+                    db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).document(uuid.toString())
+                        .set(questions)
                         .addOnSuccessListener {
                             onSucces()
                         }.addOnFailureListener {

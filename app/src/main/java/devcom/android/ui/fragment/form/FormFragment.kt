@@ -33,7 +33,7 @@ import devcom.android.utils.constants.FirebaseConstants
 
 class FormFragment : Fragment() {
 
-    private val tabTitles = arrayListOf("Popüler Sorular", "Sorular", "Cevapsız Sorular")
+    private val tabTitles = arrayListOf("Popüler Sorular", "Sorular")
 
     val db = Firebase.firestore
     private lateinit var auth : FirebaseAuth
@@ -83,7 +83,7 @@ class FormFragment : Fragment() {
         TabLayoutMediator(tabLayout,viewPager2) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
-        for (i in 0..3){
+        for (i in 0..1){
             val textview = LayoutInflater.from(view.context).inflate(R.layout.tab_titles,null)
                     as TextView
             tabLayout.getTabAt(i)?.customView = textview

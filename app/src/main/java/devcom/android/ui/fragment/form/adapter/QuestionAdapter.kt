@@ -3,6 +3,7 @@ package devcom.android.ui.fragment.form.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import devcom.android.databinding.ItemQuestionRowBinding
 import devcom.android.users.Question
 
@@ -21,6 +22,7 @@ class QuestionAdapter(val questionList : ArrayList<Question>) : RecyclerView.Ada
         holder.binding.tvNickname.text = questionList.get(position).QuestionUsername
         holder.binding.tvQuestionHeader.text = questionList.get(position).QuestionHeader
         holder.binding.tvQuestionIntrodoucten.text = questionList.get(position).QuestionContent
+        Picasso.get().load(questionList.get(position).QuestionImageProfile).resize(200,200).centerCrop().into(holder.binding.ivProfileQuestion)
     }
 
     override fun getItemCount(): Int {

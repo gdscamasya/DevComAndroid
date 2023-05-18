@@ -1,12 +1,10 @@
 package devcom.android.ui.fragment.form
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -74,13 +72,14 @@ class QuestionsFragment : Fragment() {
 
                         for(document in documents){
 
-                            val askingUsername = document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as String
-                            val questionContent = document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as String
-                            val questionHeader = document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as String
-                            val questionImage = document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as String
-                            val questionTags = document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as String
+                            val askingUsername = document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
+                            val questionContent = document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String
+                            val questionHeader = document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
+                            val questionImage = document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
+                            val questionTags = document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
+                            val questionProfileImage = document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String
 
-                            val askingQuestions = Question(askingUsername,questionContent,questionHeader,questionImage,questionTags)
+                            val askingQuestions = Question(questionProfileImage,askingUsername,questionContent,questionHeader,questionImage,questionTags)
                             questionList.add(askingQuestions)
 
                         }
