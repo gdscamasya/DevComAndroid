@@ -23,7 +23,6 @@ private lateinit var auth: FirebaseAuth
 private lateinit var storage: FirebaseStorage
 private lateinit var questionList: ArrayList<Question>
 private lateinit var questionAdapter:QuestionAdapter
-
 private lateinit var questionRecyclerView:RecyclerView
 
 val db = Firebase.firestore

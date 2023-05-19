@@ -103,7 +103,7 @@
             android:id="@+id/iv_up"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginStart="240dp"
+            android:layout_marginStart="165dp"
             app:layout_constraintStart_toEndOf="@+id/iv_answers"
             app:layout_constraintBottom_toBottomOf="@id/iv_views"
             app:srcCompat="@drawable/ic_baseline_thumb_up_off_alt_24"

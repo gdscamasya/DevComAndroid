@@ -107,6 +107,8 @@ class SignInActivity : AppCompatActivity() {
         viewModel.isSignInGoogle.observe(this) { isSignedGoogleIn ->
             if (isSignedGoogleIn) {
                 getDataBase()
+                navigateToAnotherActivity(MainActivity::class.java)
+                this.finish()
             } else {
                 showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
                 touchableScreen(R.id.pb_sign)

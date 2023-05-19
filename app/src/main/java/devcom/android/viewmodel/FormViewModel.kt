@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import devcom.android.logic.usecase.AskQuestionToPersonalSave
 import devcom.android.logic.usecase.AskQuestionsToSaveGlobal
+import devcom.android.logic.usecase.GetData
 
 class FormViewModel(private val askQuestionToPersonalSave: AskQuestionToPersonalSave, private val askQuestionsToSaveGlobal: AskQuestionsToSaveGlobal):ViewModel() {
 
@@ -19,7 +20,6 @@ class FormViewModel(private val askQuestionToPersonalSave: AskQuestionToPersonal
     private val _isAskQuestion = MutableLiveData<Boolean>()
     val isAskQuestion: LiveData<Boolean>
         get() = _isAskQuestion
-
 
     suspend fun askQuestionToPersonal(context: Context, questionContent: String, questionHeader: String){
         askQuestionToPersonalSave.askQuestionToPersonal(context,questionContent, questionHeader,
@@ -36,5 +36,7 @@ class FormViewModel(private val askQuestionToPersonalSave: AskQuestionToPersonal
         onSucces = { _isAskQuestion.value = true },
         onFailure = { _isAskQuestion.value = false })
     }
+
+
 
 }

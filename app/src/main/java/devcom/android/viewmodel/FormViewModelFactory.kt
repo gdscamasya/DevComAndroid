@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import devcom.android.logic.usecase.AskQuestionToPersonalSave
 import devcom.android.logic.usecase.AskQuestionsToSaveGlobal
+import devcom.android.logic.usecase.GetData
 
 class FormViewModelFactory(private val askQuestionToPersonalSave: AskQuestionToPersonalSave, private val askQuestionsToSaveGlobal: AskQuestionsToSaveGlobal) :ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

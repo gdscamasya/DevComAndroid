@@ -13,7 +13,7 @@ import com.squareup.picasso.Target
 
 class GetData(private val auth: FirebaseAuth, private val db: FirebaseFirestore, private val storage: FirebaseStorage) {
 
-     fun getData(onSucces : (String) -> Unit, onFailure : () -> Unit){
+      fun getData(onSucces : (String) -> Unit, onFailure : () -> Unit){
         db.collection("users").addSnapshotListener{ value,error ->
             if(error != null){
                 onFailure()
