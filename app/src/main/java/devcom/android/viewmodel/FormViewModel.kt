@@ -28,7 +28,7 @@ class FormViewModel(private val askQuestionToPersonalSave: AskQuestionToPersonal
             )
     }
 
-    fun askQuestionToSaveGlobal(profileImageUrl: String,
+    suspend fun askQuestionToSaveGlobal(profileImageUrl: String,
         questionContent: String, questionHeader: String,itemSelected: String,
         selectedPicture: Uri?,
     ){

@@ -5,10 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import devcom.android.utils.constants.FirebaseConstants
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.util.*
 
 class AskQuestionsToSaveGlobal(
@@ -17,7 +14,7 @@ class AskQuestionsToSaveGlobal(
     private val storage: FirebaseStorage
 ) {
 
-    fun askQuestionToSaveGlobal(
+    suspend fun askQuestionToSaveGlobal(
         profileImageUrl: String,
         questionContent: String,
         questionHeader: String,
@@ -29,27 +26,26 @@ class AskQuestionsToSaveGlobal(
 
         lateinit var getUsername: String
         val point = 0
-        val uuids = UUID.randomUUID()
-        val imageName = "$uuids.jpg"
-
-        val reference = storage.reference
-        val imageRef = reference.child("questionImages").child(imageName)
 
         suspend fun getDataWait(): Boolean = withContext(Dispatchers.IO) {
-            var success = false
-            val job = launch {
-                GetData(auth, db, storage).getData(
-                    onSucces = { username ->
-                        getUsername = username
-                        success = true
-                    },
-                    onFailure = {
-                        onFailure()
-                    }
-                )
+            val deferred = CompletableDeferred<Boolean>()
+            launch {
+                try {
+                    GetData(auth, db, storage).getData(
+                        onSucces = { username ->
+                            getUsername = username
+                            deferred.complete(true)
+                        },
+                        onFailure = {
+                            onFailure()
+                            deferred.complete(false)
+                        }
+                    )
+                } catch (e: Exception) {
+                    deferred.complete(false)
+                }
             }
-            job.join() // Veri alma işlemi tamamlanana kadar bekle
-            success
+            deferred.await()
         }
 
 
@@ -74,6 +70,12 @@ class AskQuestionsToSaveGlobal(
                             onFailure()
                         }
                 } else {
+                    val uuids = UUID.randomUUID()
+                    val imageName = "$uuids.jpg"
+
+                    val reference = storage.reference
+                    val imageRef = reference.child("questionImages").child(imageName)
+
                     imageRef.putFile(selectedPicture).addOnSuccessListener {
                         //download url -> firestore a aktaracaz
                         val uploadPicRef = storage.reference.child("questionImages").child(imageName)
@@ -81,6 +83,7 @@ class AskQuestionsToSaveGlobal(
                             val downloadUrl = it.toString()
 
                             val questions = hashMapOf<String, Any>(
+                                "Point" to point,
                                 "AskQuestionProfileImage" to profileImageUrl,
                                 "QuestionUsername" to getUsername,
                                 "QuestionContent" to questionContent,

@@ -27,8 +27,7 @@ class AskQuestionToPersonalSave(private val auth: FirebaseAuth, private val db: 
             "QuestionHeader" to questionHeader
         )
 
-        val document = dataStoreRepository.getDataFromDataStore("document")
-        Log.i("docmentsss",document.toString())
+        val document = dataStoreRepository.getDataFromDataStore("document")        
 
         if (document != null) {
             db.collection(FirebaseConstants.COLLECTION_PATH_USERS).document(document)

@@ -311,14 +311,14 @@ class SignInActivity : AppCompatActivity() {
                                 }
 
                                 when (authority) {
-                                    "user" -> {
+                                    "User" -> {
                                         lifecycleScope.launch {
                                             dataStoreRepository.saveDataToDataStore(authority,"Auth")
                                             showToastMessage(dataStoreRepository.getDataFromDataStore("Auth")!!)
                                         }
                                         navigateToAnotherActivity(MainActivity::class.java)
                                     }
-                                    "editor" -> {
+                                    "Editor" -> {
                                         lifecycleScope.launch {
                                             dataStoreRepository.saveDataToDataStore(authority,"Auth")
                                             showToastMessage(dataStoreRepository.getDataFromDataStore("Auth")!!)

@@ -26,7 +26,6 @@ class GetData(private val auth: FirebaseAuth, private val db: FirebaseFirestore,
 
                             val uuid = document.get("uuid") as? String
                             val username = document.get("username") as? String
-                            val downloadUrl = document.get("downloadUrl") as? String
 
                             if(uuid == auth.currentUser!!.uid){
 

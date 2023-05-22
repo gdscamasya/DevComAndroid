@@ -5,11 +5,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import devcom.android.R
+import devcom.android.ui.fragment.form.adapter.QuestionAdapter
+import devcom.android.ui.fragment.form.adapter.TopQuestionAdapter
+import devcom.android.users.Question
+import devcom.android.utils.constants.FirebaseConstants
 
+
+private lateinit var topQuestionList: ArrayList<Question>
+private lateinit var topVotedRecycleView: RecyclerView
+private lateinit var topQuestionAdapter: TopQuestionAdapter
 
 class TopVotedFragment : Fragment() {
 
+    val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +37,58 @@ class TopVotedFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_top_voted, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        topQuestionList = ArrayList()
+        getData()
+
+        topVotedRecycleView = view.findViewById(R.id.topVotedRecycler)
+
+        topVotedRecycleView.layoutManager = LinearLayoutManager(requireContext())
+        topQuestionAdapter = TopQuestionAdapter(topQuestionList)
+        topVotedRecycleView.adapter = topQuestionAdapter
+
+
+    }
+
+
+    private fun getData(){
+
+        db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).orderBy(FirebaseConstants.FILED_QUESTION_POINT,Query.Direction.DESCENDING).limit(10)
+            .addSnapshotListener{ value, error ->
+            if(error != null){
+                Toast.makeText(requireContext(), "beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT).show()
+            }else{
+                if(value != null){
+                    if(!value.isEmpty){
+                        val documents = value.documents
+
+                        topQuestionList.clear()
+
+                        for(document in documents){
+                            val docNUm = document.id
+                            val askingUsername = document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
+                            val questionContent = document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String
+                            val questionHeader = document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
+                            val questionImage = document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
+                            val questionTags = document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
+                            val questionProfileImage = document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String
+                            val questionPoint = document.getLong(FirebaseConstants.FILED_QUESTION_POINT)
+
+                            val askingQuestions = Question(docNUm,questionProfileImage,askingUsername,questionContent,questionHeader,questionImage,questionTags,questionPoint.toString())
+                            topQuestionList.add(askingQuestions)
+
+                        }
+                        topQuestionAdapter.submitDataTopVoted(topQuestionList)
+                    }
+
+                }
+            }
+
+        }
     }
 
 }

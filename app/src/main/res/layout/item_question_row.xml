@@ -1,156 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:background="@drawable/main_button_v1"
-        android:layout_width="match_parent"
-        android:layout_height="210dp"
-        android:layout_marginStart="10dp"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="210dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="10dp"
+    android:background="@drawable/main_button_v1"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_profile_question"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/circle_img"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/Circular"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:hint="@string/nickname"
+        app:layout_constraintStart_toEndOf="@+id/iv_profile_question"
+        app:layout_constraintTop_toTopOf="@id/iv_profile_question" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_blog_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:hint="@string/timer"
+        app:layout_constraintStart_toEndOf="@+id/iv_profile_question"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nickname" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_question_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:hint="@string/Question"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_question_introdoucten"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/iv_profile_question" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_profile_question"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            app:shapeAppearanceOverlay="@style/Circular"
-            android:background="@drawable/circle_img"
-            app:strokeColor="@color/black"
-            app:strokeWidth="1sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_question_introdoucten"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:hint="@string/Question_introdoucten"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_question_header" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_nickname"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:hint="@string/nickname"
-            app:layout_constraintStart_toEndOf="@+id/iv_profile_question"
-            app:layout_constraintTop_toTopOf="@id/iv_profile_question" />
+    <ImageView
+        android:id="@+id/iv_views"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_baseline_remove_red_eye_24" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_blog_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:hint="@string/timer"
-            app:layout_constraintStart_toEndOf="@+id/iv_profile_question"
-            app:layout_constraintTop_toBottomOf="@+id/tv_nickname" />
+    <ImageView
+        android:id="@+id/iv_answers"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_views"
+        app:srcCompat="@drawable/ic_comment" />
 
 
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_save" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_question_header"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:textStyle = "bold"
-            android:hint="@string/Question"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_profile_question"
-            app:layout_constraintBottom_toTopOf="@+id/tv_question_introdoucten"
-             />
+    <TextView
+        android:id="@+id/tv_views"
+        android:layout_width="0dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="4sp"
+        android:layout_marginBottom="3dp"
+        android:text="1000"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_views"
+        app:layout_constraintStart_toEndOf="@+id/iv_views" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_question_introdoucten"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:hint="@string/Question_introdoucten"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_question_header"
-             />
+    <TextView
+        android:id="@+id/tv_answers"
+        android:layout_width="0dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="4sp"
+        android:layout_marginBottom="3dp"
+        android:text="100"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_answers"
+        app:layout_constraintStart_toEndOf="@+id/iv_answers" />
 
-        <ImageView
-            android:id="@+id/iv_views"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="15dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:srcCompat="@drawable/ic_baseline_remove_red_eye_24"
-            />
+    <TextView
+        android:id="@+id/tv_up"
+        android:layout_width="0dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="5dp"
+        android:text="100"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_up"
+        app:layout_constraintStart_toEndOf="@+id/iv_up" />
 
-        <ImageView
-            android:id="@+id/iv_answers"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="5dp"
-            app:layout_constraintStart_toEndOf="@+id/tv_views"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_views"
-            app:srcCompat="@drawable/ic_comment"
-             />
+    <ImageView
+        android:id="@+id/iv_up"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_thumb_up_off_alt_24" />
 
-        <ImageView
-            android:id="@+id/iv_up"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="165dp"
-            app:layout_constraintStart_toEndOf="@+id/iv_answers"
-            app:layout_constraintBottom_toBottomOf="@id/iv_views"
-            app:srcCompat="@drawable/ic_baseline_thumb_up_off_alt_24"
-             />
-
-        <ImageView
-            android:id="@+id/imageView6"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            app:srcCompat="@drawable/ic_save"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-             />
-
-        <TextView
-            android:id="@+id/tv_views"
-            android:layout_width="0dp"
-            android:layout_height="15dp"
-            android:layout_marginStart="4sp"
-            android:layout_marginBottom="3dp"
-            android:text="100"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_views"
-            app:layout_constraintStart_toEndOf="@+id/iv_views" />
-
-        <TextView
-            android:id="@+id/tv_answers"
-            android:layout_width="0dp"
-            android:layout_height="15dp"
-            android:layout_marginStart="4sp"
-            android:layout_marginBottom="3dp"
-            android:text="100"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_answers"
-            app:layout_constraintStart_toEndOf="@+id/iv_answers" />
-
-        <TextView
-            android:id="@+id/tv_up"
-            android:layout_width="0dp"
-            android:layout_height="15dp"
-            android:layout_marginStart="4sp"
-            android:layout_marginBottom="3dp"
-            android:text="100"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_up"
-            app:layout_constraintStart_toEndOf="@+id/iv_up" />
+    <ImageView
+        android:id="@+id/iv_down"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_baseline_thumb_up_24"
+        android:layout_marginEnd="44dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
