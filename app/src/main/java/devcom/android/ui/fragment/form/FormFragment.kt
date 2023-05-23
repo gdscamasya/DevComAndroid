@@ -46,7 +46,7 @@ class FormFragment : Fragment() {
     private lateinit var viewPagerFormAdapter: FormViewPagerAdapter
     private lateinit var profileImageView:ImageView
     private lateinit var addQuestionMenu: ImageView
-
+    val fragments = listOf(TopVotedFragment(),QuestionsFragment())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,13 +83,17 @@ class FormFragment : Fragment() {
         TabLayoutMediator(tabLayout,viewPager2) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
+
         for (i in 0..1){
-            val textview = LayoutInflater.from(view.context).inflate(R.layout.tab_titles,null)
-                    as TextView
+            val textview = LayoutInflater.from(view.context).inflate(R.layout.tab_titles,null) as TextView
             tabLayout.getTabAt(i)?.customView = textview
         }
 
+        viewPagerFormAdapter.setFragments(fragments)
+
+
         getData()
+        getDataQuestions()
         addQuestionSetOnClickListener()
 
     }
@@ -151,11 +155,33 @@ class FormFragment : Fragment() {
                                 }
                             }
                         }
+                        viewPagerFormAdapter.notifyDataSetChanged()
                     }
                 }
             }
 
         }
+    }
+
+    private fun getDataQuestions(){
+        val refCollect = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
+
+        refCollect.addSnapshotListener{ value,error ->
+            if(error != null){
+                Toast.makeText(requireContext(), "beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT).show()
+            }else{
+                if(value != null){
+                    if(!value.isEmpty){
+                        viewPagerFormAdapter.notifyDataSetChanged()
+                    }
+                }
+
+            }
+
+
+        }
+
+
     }
 
 

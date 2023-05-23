@@ -23,6 +23,10 @@ package devcom.android
 2- Debounce arama çubuğu ile ilgili
 3- coroutine
 
+1-Profil resmi yokken foruma soru soramama hatası
+2-Profil resmi değişince veya bir soru beğenince tüm formlarada beğendi olarak veya profil resmi değişmiş olarak güncecellensin
+3-viewPagerler arası geçiş yaparken her seferinde sayfayı yenilesin
+
 
 
  */

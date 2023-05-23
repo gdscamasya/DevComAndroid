@@ -6,24 +6,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import devcom.android.R
-import devcom.android.ui.fragment.form.adapter.QuestionAdapter
+import devcom.android.data.repository.DataStoreRepository
 import devcom.android.ui.fragment.form.adapter.TopQuestionAdapter
 import devcom.android.users.Question
 import devcom.android.utils.constants.FirebaseConstants
+import kotlinx.coroutines.launch
 
 
 private lateinit var topQuestionList: ArrayList<Question>
 private lateinit var topVotedRecycleView: RecyclerView
 private lateinit var topQuestionAdapter: TopQuestionAdapter
+private lateinit var likedQuestionsTop: ArrayList<String?>
+lateinit var likedIndexQuestionsTopVoted: ArrayList<Int?>
 
 class TopVotedFragment : Fragment() {
 
+    lateinit var dataStoreRepository: DataStoreRepository
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,8 +47,15 @@ class TopVotedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        likedIndexQuestionsTopVoted = ArrayList()
+        likedQuestionsTop = ArrayList()
         topQuestionList = ArrayList()
+
         getData()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            checkLiked()
+        }
 
         topVotedRecycleView = view.findViewById(R.id.topVotedRecycler)
 
@@ -52,6 +64,43 @@ class TopVotedFragment : Fragment() {
         topVotedRecycleView.adapter = topQuestionAdapter
 
 
+    }
+
+
+    private suspend fun checkLiked() {
+        dataStoreRepository = DataStoreRepository(requireContext())
+
+        val documents = dataStoreRepository.getDataFromDataStore("document")
+        if (documents != null) {
+            db.collection(FirebaseConstants.COLLECTION_PATH_USERS).document(documents).collection("LikedQuestions")
+                .addSnapshotListener { value, error ->
+                    if (error != null) {
+                        Toast.makeText(requireContext(), "Beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        if (value != null && !value.isEmpty) {
+                            val documents = value.documents
+
+                            likedQuestionsTop.clear()
+
+                            for (document in documents) {
+                                val docNum = document.id
+                                likedQuestionsTop.add(docNum)
+                            }
+
+                            processLikedQuestions()
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun processLikedQuestions() {
+
+        for ((index, question) in topQuestionList.withIndex()) {
+            if (likedQuestionsTop.contains(question.docNum)) {
+                likedIndexQuestionsTopVoted.add(index)
+            }
+        }
     }
 
 
@@ -69,6 +118,7 @@ class TopVotedFragment : Fragment() {
                         topQuestionList.clear()
 
                         for(document in documents){
+
                             val docNUm = document.id
                             val askingUsername = document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
                             val questionContent = document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String

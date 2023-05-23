@@ -81,10 +81,6 @@ class QuestionAdapter(var questionList : ArrayList<Question>) : ListAdapter<Ques
                 dataStoreRepository = DataStoreRepository(holder.itemView.context)
                 val document = dataStoreRepository.getDataFromDataStore("document")
 
-                val likedQuestion = hashMapOf(
-                    "QuestionDocNum" to questionList[position].docNum
-                )
-
                 if (document != null) {
                     db.collection(FirebaseConstants.COLLECTION_PATH_USERS)
                         .document(document)

@@ -10,18 +10,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import devcom.android.data.repository.DataStoreRepository
 import devcom.android.databinding.ItemQuestionRowBinding
+import devcom.android.ui.fragment.form.likedIndexQuestions
+import devcom.android.ui.fragment.form.likedIndexQuestionsTopVoted
 import devcom.android.users.Question
 import devcom.android.utils.constants.FirebaseConstants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TopQuestionAdapter(var topQuestionList : ArrayList<Question>) : ListAdapter<Question,TopQuestionAdapter.TopQuestionHolder>(TopQuestionDiffCallback()){
 
+    lateinit var dataStoreRepository: DataStoreRepository
     val db = Firebase.firestore
     var point : Long = 0
 
     class TopQuestionDiffCallback : DiffUtil.ItemCallback<Question>() {
         override fun areItemsTheSame(oldItem: Question, newItem: Question): Boolean {
-            return oldItem.QuestionPoint == newItem.QuestionPoint
+            return oldItem.QuestionContent == newItem.QuestionContent
         }
 
         override fun areContentsTheSame(oldItem: Question, newItem: Question): Boolean {
@@ -50,11 +57,40 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>) : ListAdapte
         Picasso.get().load(topQuestionList.get(position).QuestionImageProfile).resize(200,200).centerCrop().into(holder.binding.ivProfileQuestion)
         holder.binding.tvUp.text = topQuestionList.get(position).QuestionPoint
 
+        for(liking in likedIndexQuestionsTopVoted){
+            if(position == liking){
+                holder.binding.ivUp.visibility = View.INVISIBLE
+                holder.binding.ivDown.visibility = View.VISIBLE
+            }
+        }
+
         holder.itemView.setOnClickListener{
 
         }
         holder.binding.ivUp.setOnClickListener {
             val collectRef = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
+
+            CoroutineScope(Dispatchers.Main).launch{
+                dataStoreRepository = DataStoreRepository(holder.itemView.context)
+                val document = dataStoreRepository.getDataFromDataStore("document")
+
+                if (document != null) {
+                    db.collection(FirebaseConstants.COLLECTION_PATH_USERS)
+                        .document(document)
+                        .collection("LikedQuestions").document(topQuestionList[position].docNum!!)
+                        .set(emptyMap<String,Any>())
+                        .addOnSuccessListener {
+                            Toast.makeText(holder.itemView.context, "likedQuestion", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            // Hata durumunda yapılacak işlemler
+                        }
+                }
+            }
+
+
+
+
 
             collectRef.whereEqualTo(FirebaseConstants.FIELD_QUESTION_HEADER,topQuestionList.get(position).QuestionHeader)
                 .get()
