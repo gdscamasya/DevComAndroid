@@ -23,6 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
+
+private lateinit var formViewPagerAdapater:FormViewPagerAdapter
 class QuestionAdapter(var questionList : ArrayList<Question>) : ListAdapter<Question, QuestionAdapter.AskQuestionHolder>(QuestionDiffCallback()) {
 
     lateinit var dataStoreRepository: DataStoreRepository
@@ -88,6 +90,7 @@ class QuestionAdapter(var questionList : ArrayList<Question>) : ListAdapter<Ques
                         .set(emptyMap<String,Any>())
                         .addOnSuccessListener {
                             Toast.makeText(holder.itemView.context, "likedQuestion", Toast.LENGTH_SHORT).show()
+                            updateViewPager()
                         }
                         .addOnFailureListener {
                             // Hata durumunda yapılacak işlemler
@@ -120,6 +123,10 @@ class QuestionAdapter(var questionList : ArrayList<Question>) : ListAdapter<Ques
                 }
 
         }
+    }
+
+    private fun updateViewPager(){
+        formViewPagerAdapater.notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

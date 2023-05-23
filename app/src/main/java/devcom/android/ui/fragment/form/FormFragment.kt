@@ -89,9 +89,6 @@ class FormFragment : Fragment() {
             tabLayout.getTabAt(i)?.customView = textview
         }
 
-        viewPagerFormAdapter.setFragments(fragments)
-
-
         getData()
         getDataQuestions()
         addQuestionSetOnClickListener()

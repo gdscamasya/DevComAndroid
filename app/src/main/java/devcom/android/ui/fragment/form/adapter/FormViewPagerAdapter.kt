@@ -8,23 +8,16 @@ import devcom.android.ui.fragment.form.UnAnsweredFragment
 
 class FormViewPagerAdapter(fragment:Fragment):FragmentStateAdapter(fragment) {
 
-    private val fragmentList = mutableListOf<Fragment>()
-
-
-    fun setFragments(fragments: List<Fragment>) {
-        fragmentList.clear()
-        fragmentList.addAll(fragments)
-        notifyDataSetChanged()
-    }
-
     override fun getItemCount(): Int {
-        return fragmentList.size
+        return 2
     }
 
     override fun createFragment(position: Int): Fragment {
-        return fragmentList[position]
+        return when (position) {
+            0 -> TopVotedFragment()
+            1 -> QuestionsFragment()
+            else -> throw IllegalArgumentException("Invalid position $position")
+        }
     }
-
-
 
 }
