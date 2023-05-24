@@ -1,9 +1,11 @@
 package devcom.android.ui.fragment.form.adapter
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,8 @@ import com.squareup.picasso.Picasso
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.databinding.ItemQuestionRowBinding
 import devcom.android.logic.usecase.uuid
+import devcom.android.ui.fragment.form.FormFragment
+import devcom.android.ui.fragment.form.FormFragmentDirections
 import devcom.android.ui.fragment.form.likedIndexQuestions
 
 import devcom.android.users.Question
@@ -24,7 +28,7 @@ import kotlinx.coroutines.launch
 
 
 
-private lateinit var formViewPagerAdapater:FormViewPagerAdapter
+
 class QuestionAdapter(var questionList : ArrayList<Question>) : ListAdapter<Question, QuestionAdapter.AskQuestionHolder>(QuestionDiffCallback()) {
 
     lateinit var dataStoreRepository: DataStoreRepository
@@ -73,6 +77,9 @@ class QuestionAdapter(var questionList : ArrayList<Question>) : ListAdapter<Ques
 
         holder.itemView.setOnClickListener{
 
+            val action = FormFragmentDirections.actionFormToInsideTheQuestionFragment(questionList.get(position).docNum)
+            Navigation.findNavController(holder.itemView).navigate(action)
+
         }
 
         holder.binding.ivUp.setOnClickListener {
@@ -90,7 +97,6 @@ class QuestionAdapter(var questionList : ArrayList<Question>) : ListAdapter<Ques
                         .set(emptyMap<String,Any>())
                         .addOnSuccessListener {
                             Toast.makeText(holder.itemView.context, "likedQuestion", Toast.LENGTH_SHORT).show()
-                            updateViewPager()
                         }
                         .addOnFailureListener {
                             // Hata durumunda yapılacak işlemler
@@ -125,13 +131,8 @@ class QuestionAdapter(var questionList : ArrayList<Question>) : ListAdapter<Ques
         }
     }
 
-    private fun updateViewPager(){
-        formViewPagerAdapater.notifyDataSetChanged()
-    }
-
     override fun getItemCount(): Int {
         return questionList.size
     }
-
 
 }

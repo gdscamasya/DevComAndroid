@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_form_to_askQuestionFragment"
             app:destination="@id/askQuestionFragment" />
+        <action
+            android:id="@+id/action_form_to_insideTheQuestionFragment"
+            app:destination="@id/insideTheQuestionFragment" />
     </fragment>
     <fragment
         android:id="@+id/addBlogFragment"
@@ -83,5 +86,18 @@
         <action
             android:id="@+id/action_askQuestionFragment_to_form"
             app:destination="@id/form" />
+    </fragment>
+    <fragment
+        android:id="@+id/insideTheQuestionFragment"
+        android:name="devcom.android.ui.fragment.form.InsideTheQuestionFragment"
+        android:label="fragment_inside_the_question"
+        tools:layout="@layout/fragment_inside_the_question" >
+        <action
+            android:id="@+id/action_insideTheQuestionFragment_to_form"
+            app:destination="@id/form" />
+        <argument
+            android:name="docId"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>
