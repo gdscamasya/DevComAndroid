@@ -3,6 +3,7 @@ package devcom.android.ui.fragment.form
 import android.content.Context
 import android.media.Image
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.search.SearchBar
@@ -29,6 +32,9 @@ import devcom.android.ui.fragment.form.adapter.FormViewPagerAdapter
 import devcom.android.ui.fragment.home.HomeFragmentDirections
 import devcom.android.ui.fragment.profile.ProfileFragmentDirections
 import devcom.android.utils.constants.FirebaseConstants
+import devcom.android.utils.extensions.visible
+import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 
 class FormFragment : Fragment() {
@@ -46,7 +52,7 @@ class FormFragment : Fragment() {
     private lateinit var viewPagerFormAdapter: FormViewPagerAdapter
     private lateinit var profileImageView: ImageView
     private lateinit var addQuestionMenu: ImageView
-    val fragments = listOf(TopVotedFragment(), QuestionsFragment())
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +76,9 @@ class FormFragment : Fragment() {
         profileImageView = view.findViewById(R.id.iv_profile_forum)
         addQuestionMenu = view.findViewById(R.id.vector_menu)
         searchBar = view.findViewById(R.id.searcher)
-        bottomNav.visibility = View.VISIBLE
+
+        bottomNav.visible()
+
         auth = Firebase.auth
 
         profileImageView.setOnClickListener {
@@ -80,25 +88,41 @@ class FormFragment : Fragment() {
 
 
         viewPager2.adapter = viewPagerFormAdapter
+        viewPager2.offscreenPageLimit = 2
 
-        for (i in 0..1) {
-            val textview =
-                LayoutInflater.from(view.context).inflate(R.layout.tab_titles, null) as TextView
+        val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                when(position){
+                    0 ->{
+                        TopVotedFragment()
+
+                    }
+
+                    1 ->{
+                        QuestionsFragment()
+
+                    }
+                }
+                // Sayfa değiştiğinde yapılacak işlemler
+                // Verilerin yüklenmesi, güncellenmesi vb.
+                // position parametresi ile mevcut sayfanın konumu alınabilir
+                // İlgili sayfa için gerekli işlemleri yapabilirsiniz
+            }
+        }
+
+
+        viewPager2.registerOnPageChangeCallback(pageChangeCallback)
+
+        TabLayoutMediator(tabLayout,viewPager2) { tab, position ->
+            tab.text = tabTitles[position]
+        }.attach()
+        for (i in 0..3){
+            val textview = LayoutInflater.from(view.context).inflate(R.layout.tab_titles,null)
+                    as TextView
             tabLayout.getTabAt(i)?.customView = textview
         }
 
-        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-            tab.text = tabTitles[position]
-        }.attach()
-
-
-
-
-
-
-
         getData()
-        getDataQuestions()
         addQuestionSetOnClickListener()
 
     }
@@ -164,34 +188,13 @@ class FormFragment : Fragment() {
                             }
                         }
                     }
-                    viewPagerFormAdapter.notifyDataSetChanged()
+
                 }
             }
 
         }
     }
 
-    private fun getDataQuestions() {
-        val refCollect = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
-
-        refCollect.addSnapshotListener { value, error ->
-            if (error != null) {
-                Toast.makeText(requireContext(), "beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                if (value != null) {
-                    if (!value.isEmpty) {
-                        viewPagerFormAdapter.notifyDataSetChanged()
-                    }
-                }
-
-            }
-
-
-        }
-
-
-    }
 
 
 }

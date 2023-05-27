@@ -1,6 +1,7 @@
 package devcom.android.ui.fragment.form
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,11 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import devcom.android.R
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.ui.fragment.form.adapter.TopQuestionAdapter
@@ -28,7 +31,8 @@ lateinit var likedIndexQuestionsTopVoted: ArrayList<Int?>
 
 class TopVotedFragment : Fragment() {
 
-    lateinit var dataStoreRepository: DataStoreRepository
+
+    private lateinit var dataStoreRepository: DataStoreRepository
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +50,8 @@ class TopVotedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i("PageChange","TopVoted Sayfasına gitti")
+
 
         likedIndexQuestionsTopVoted = ArrayList()
         likedQuestionsTop = ArrayList()
@@ -67,7 +73,7 @@ class TopVotedFragment : Fragment() {
     }
 
 
-    private suspend fun checkLiked() {
+     private suspend fun checkLiked() {
         dataStoreRepository = DataStoreRepository(requireContext())
 
         val documents = dataStoreRepository.getDataFromDataStore("document")
@@ -104,7 +110,8 @@ class TopVotedFragment : Fragment() {
     }
 
 
-    private fun getData(){
+     fun getData(){
+         Log.i("PageChange","TopVoted Sayfasına gitti GetData()")
 
         db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).orderBy(FirebaseConstants.FILED_QUESTION_POINT,Query.Direction.DESCENDING).limit(10)
             .addSnapshotListener{ value, error ->
@@ -125,7 +132,7 @@ class TopVotedFragment : Fragment() {
                             val questionHeader = document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
                             val questionImage = document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
                             val questionTags = document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
-                            val questionProfileImage = document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String
+                            val questionProfileImage = document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String?
                             val questionPoint = document.getLong(FirebaseConstants.FILED_QUESTION_POINT)
 
                             val askingQuestions = Question(docNUm,questionProfileImage,askingUsername,questionContent,questionHeader,questionImage,questionTags,questionPoint.toString())

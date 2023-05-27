@@ -6,10 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import devcom.android.databinding.ItemInsideQuestionRowBinding
+import devcom.android.users.Answer
 import devcom.android.users.InsideQuestion
 import devcom.android.users.Question
 
-class InsideTheQuestionAdapter(var insideQuestionList: ArrayList<InsideQuestion?>) : androidx.recyclerview.widget.ListAdapter<Question,InsideTheQuestionAdapter.InsideQuestionHolder>(QuestionInsideDiffCallback()) {
+class InsideTheQuestionAdapter(private var insideQuestionList: ArrayList<Any?>) : androidx.recyclerview.widget.ListAdapter<Question,InsideTheQuestionAdapter.InsideQuestionHolder>(QuestionInsideDiffCallback()) {
 
 
     class QuestionInsideDiffCallback : DiffUtil.ItemCallback<Question>() {
@@ -41,9 +42,23 @@ class InsideTheQuestionAdapter(var insideQuestionList: ArrayList<InsideQuestion?
     }
 
     override fun onBindViewHolder(holder: InsideQuestionHolder, position: Int) {
-        holder.binding.tvNicknameInside.text = insideQuestionList.get(position)?.questionUsername
-        holder.binding.tvQuestionInsideIntrodoucten.text = insideQuestionList.get(position)?.questionContent
-        Picasso.get().load(insideQuestionList.get(position)?.questionImageUri).resize(200,200).centerCrop().into(holder.binding.ivProfileInsideQuestion)
+        val item = insideQuestionList[position]
+        if(item is InsideQuestion){
+            val insideQuestion = item as InsideQuestion
+            holder.binding.tvNicknameInside.text = insideQuestion.questionUsername
+            holder.binding.tvQuestionInsideIntrodoucten.text = insideQuestion.questionContent
+            if(insideQuestion.questionImageUri != null){
+                Picasso.get().load(insideQuestion.questionImageUri).resize(200,200).centerCrop().into(holder.binding.ivProfileInsideQuestion)
+            }
+        }else if(item is Answer){
+            val answer = item as Answer
+            holder.binding.tvNicknameInside.text = answer.answerUsername
+            holder.binding.tvQuestionInsideIntrodoucten.text = answer.answerContent
+            if(answer.answerProfileImage != null){
+                Picasso.get().load(answer.answerProfileImage).resize(200,200).centerCrop().into(holder.binding.ivProfileInsideQuestion)
+            }
+        }
+
     }
 
 

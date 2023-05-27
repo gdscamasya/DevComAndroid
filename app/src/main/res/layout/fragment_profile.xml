@@ -36,7 +36,7 @@ tools:context=".ui.fragment.profile.ProfileFragment">
     app:layout_constraintHorizontal_bias="0.461"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@drawable/top_backgorund" />
+    app:srcCompat="@drawable/top_background" />
 
 <TextView
     android:id="@+id/tv_title"

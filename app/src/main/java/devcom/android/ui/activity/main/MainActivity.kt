@@ -33,8 +33,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.fcv_main_host)
         bottomNav.setupWithNavController(navController)
 
-        //val navGraph = findViewById<FragmentContainerView>(R.id.fcv_main_host)
-        //val mainNavGraph = NavGraph(NavGraphNavigator(userNavGraph))
+
     }
 
 
@@ -45,20 +44,5 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-
-
-    /*override fun onBackPressed() {
-        navController.previousBackStackEntry?.let {
-            val destinationFragment = it.destination.id
-            if (childFragmentList.contains(destinationFragment)){
-                navView.menu[childFragmentMenuList[childFragmentList.indexOf(destinationFragment)]].isChecked = true
-            }
-        }
-
-        super.onBackPressed()
-    }
-
-     */
 
 

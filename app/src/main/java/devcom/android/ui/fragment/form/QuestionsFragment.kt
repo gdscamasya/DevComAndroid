@@ -7,35 +7,41 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import devcom.android.R
 import devcom.android.data.repository.DataStoreRepository
-import devcom.android.ui.fragment.form.adapter.QuestionAdapter
+import devcom.android.logic.usecase.AnswerQuestionToSaveGlobal
+import devcom.android.logic.usecase.AnswerQuestionToSavePersonal
+import devcom.android.logic.usecase.CheckLikedQuestions
+import devcom.android.logic.usecase.LikedQuestion
+import devcom.android.ui.fragment.form.adapter.QuestionRecyclerAdapter
 import devcom.android.users.Question
 import devcom.android.utils.constants.FirebaseConstants
+import devcom.android.viewmodel.AnswerViewModel
+import devcom.android.viewmodel.AnswerViewModelFactory
+import devcom.android.viewmodel.QuestionViewModel
+import devcom.android.viewmodel.QuestionViewModelFactory
 import kotlinx.coroutines.launch
 
-private lateinit var auth: FirebaseAuth
-private lateinit var storage: FirebaseStorage
+
+
 private lateinit var questionList: ArrayList<Question>
-private lateinit var questionAdapter:QuestionAdapter
+private lateinit var questionRecyclerAdapter:QuestionRecyclerAdapter
 private lateinit var questionRecyclerView:RecyclerView
+private lateinit var questionViewModel: QuestionViewModel
 private lateinit var likedQuestions: ArrayList<String?>
 lateinit var likedIndexQuestions: ArrayList<Int?>
 
 
 class QuestionsFragment : Fragment() {
 
-    lateinit var dataStoreRepository: DataStoreRepository
+    private lateinit var dataStoreRepository: DataStoreRepository
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +59,8 @@ class QuestionsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        auth = Firebase.auth
-        storage = Firebase.storage
+        Log.i("PageChange","QuestionFragment Sayfasına gitti")
+
 
         likedQuestions = ArrayList()
         likedIndexQuestions = ArrayList()
@@ -62,15 +68,28 @@ class QuestionsFragment : Fragment() {
 
         getData()
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            checkLiked()
-        }
+        val questionViewModelFactory = QuestionViewModelFactory(LikedQuestion(db),CheckLikedQuestions(db))
+        questionViewModel = ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
+
+
 
         questionRecyclerView = view.findViewById(R.id.rv_question)
 
         questionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        questionAdapter = QuestionAdapter(questionList)
-        questionRecyclerView.adapter = questionAdapter
+        questionRecyclerAdapter = QuestionRecyclerAdapter(questionList,object : RecyclerViewItemClickListener{
+            override fun onClick(param: Any?) {
+                val action = FormFragmentDirections.actionFormToInsideTheQuestionFragment(param as String?)
+                Navigation.findNavController(requireView()).navigate(action)
+            }
+
+        },object : RecyclerViewItemClickListener{
+            override fun onClick(param: Any?) {
+                questionViewModel.likedQuestions(requireView(),requireContext(),questionList,param as Int)
+            }
+
+        })
+        questionRecyclerView.adapter = questionRecyclerAdapter
+
 
     }
 
@@ -88,41 +107,8 @@ class QuestionsFragment : Fragment() {
 
      */
 
-    private suspend fun checkLiked() {
-        dataStoreRepository = DataStoreRepository(requireContext())
 
-        val documents = dataStoreRepository.getDataFromDataStore("document")
-        if (documents != null) {
-            db.collection(FirebaseConstants.COLLECTION_PATH_USERS).document(documents).collection("LikedQuestions")
-                .addSnapshotListener { value, error ->
-                    if (error != null) {
-                        Toast.makeText(requireContext(), "Beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT).show()
-                    } else {
-                        if (value != null && !value.isEmpty) {
-                            val documents = value.documents
 
-                            likedQuestions.clear()
-
-                            for (document in documents) {
-                                val docNum = document.id
-                                likedQuestions.add(docNum)
-                            }
-
-                            processLikedQuestions()
-                        }
-                    }
-                }
-        }
-    }
-
-    private fun processLikedQuestions() {
-
-            for ((index, question) in questionList.withIndex()) {
-                if (likedQuestions.contains(question.docNum)) {
-                    likedIndexQuestions.add(index)
-                }
-            }
-    }
 
 
     private fun getData(){
@@ -152,11 +138,19 @@ class QuestionsFragment : Fragment() {
                             questionList.add(askingQuestions)
 
                         }
-                        questionAdapter.submitData(questionList)
+                        questionRecyclerAdapter.submitData(questionList)
                     }
                 }
             }
         }
     }
+
+
+
+}
+
+
+interface RecyclerViewItemClickListener {
+    fun onClick(param: Any?)
 
 }

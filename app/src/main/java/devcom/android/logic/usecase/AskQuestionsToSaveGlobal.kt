@@ -15,7 +15,7 @@ class AskQuestionsToSaveGlobal(
 ) {
 
     suspend fun askQuestionToSaveGlobal(
-        profileImageUrl: String,
+        profileImageUrl: String? = null,
         questionContent: String,
         questionHeader: String,
         questionTags: String,
@@ -53,22 +53,46 @@ class AskQuestionsToSaveGlobal(
             val result = getDataWait()
             if (result) {
                 if (selectedPicture == null) {
-                    val questions = hashMapOf<String, Any>(
-                        "Point" to point,
-                        "AskQuestionProfileImage" to profileImageUrl,
-                        "QuestionUsername" to getUsername,
-                        "QuestionContent" to questionContent,
-                        "QuestionHeader" to questionHeader,
-                        "QuestionTags" to questionTags
-                    )
+                    if(profileImageUrl != null){
 
-                    db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).document(uuid.toString())
-                        .set(questions)
-                        .addOnSuccessListener {
-                            onSucces()
-                        }.addOnFailureListener {
-                            onFailure()
-                        }
+                        val questions = hashMapOf<String, Any>(
+                            "Point" to point,
+                            "AskQuestionProfileImage" to profileImageUrl,
+                            "QuestionUsername" to getUsername,
+                            "QuestionContent" to questionContent,
+                            "QuestionHeader" to questionHeader,
+                            "QuestionTags" to questionTags
+                        )
+
+                        db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).document(uuid.toString())
+                            .set(questions)
+                            .addOnSuccessListener {
+                                onSucces()
+                            }.addOnFailureListener {
+                                onFailure()
+                            }
+
+                    }else{
+
+                        val questions = hashMapOf<String, Any>(
+                            "Point" to point,
+                            "QuestionUsername" to getUsername,
+                            "QuestionContent" to questionContent,
+                            "QuestionHeader" to questionHeader,
+                            "QuestionTags" to questionTags
+                        )
+
+                        db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).document(uuid.toString())
+                            .set(questions)
+                            .addOnSuccessListener {
+                                onSucces()
+                            }.addOnFailureListener {
+                                onFailure()
+                            }
+
+                    }
+
+
                 } else {
                     val uuids = UUID.randomUUID()
                     val imageName = "$uuids.jpg"
@@ -81,26 +105,49 @@ class AskQuestionsToSaveGlobal(
                         val uploadPicRef = storage.reference.child("questionImages").child(imageName)
                         uploadPicRef.downloadUrl.addOnSuccessListener {
                             val downloadUrl = it.toString()
+                            if(profileImageUrl != null){
+                                val questions = hashMapOf<String, Any>(
+                                    "Point" to point,
+                                    "AskQuestionProfileImage" to profileImageUrl,
+                                    "QuestionUsername" to getUsername,
+                                    "QuestionContent" to questionContent,
+                                    "QuestionHeader" to questionHeader,
+                                    "QuestionTags" to questionTags,
+                                    "QuestionImage" to downloadUrl
+                                )
 
-                            val questions = hashMapOf<String, Any>(
-                                "Point" to point,
-                                "AskQuestionProfileImage" to profileImageUrl,
-                                "QuestionUsername" to getUsername,
-                                "QuestionContent" to questionContent,
-                                "QuestionHeader" to questionHeader,
-                                "QuestionTags" to questionTags,
-                                "QuestionImage" to downloadUrl
-                            )
+
+                                db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
+                                    .document(uuid.toString())
+                                    .set(questions)
+                                    .addOnSuccessListener {
+                                        onSucces()
+                                    }.addOnFailureListener {
+                                        onFailure()
+                                    }
+                            }else{
+                                val questions = hashMapOf<String, Any>(
+                                    "Point" to point,
+                                    "QuestionUsername" to getUsername,
+                                    "QuestionContent" to questionContent,
+                                    "QuestionHeader" to questionHeader,
+                                    "QuestionTags" to questionTags,
+                                    "QuestionImage" to downloadUrl
+                                )
 
 
-                            db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
-                                .document(uuid.toString())
-                                .set(questions)
-                                .addOnSuccessListener {
-                                    onSucces()
-                                }.addOnFailureListener {
-                                    onFailure()
-                                }
+                                db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
+                                    .document(uuid.toString())
+                                    .set(questions)
+                                    .addOnSuccessListener {
+                                        onSucces()
+                                    }.addOnFailureListener {
+                                        onFailure()
+                                    }
+                            }
+
+
+
 
                         }
                     }.addOnFailureListener {
@@ -108,6 +155,7 @@ class AskQuestionsToSaveGlobal(
                     }
                 }
             } else {
+                onFailure()
                 // Veri alınamadı, hata durumunu işleyin
             }
         }

@@ -51,7 +51,7 @@ class AskQuestionFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
-    private lateinit var profileImageUrl:String
+    private var profileImageUrl: String? = null
 
     var selectedPicture: Uri? = null
     val db = Firebase.firestore
@@ -174,32 +174,6 @@ class AskQuestionFragment : Fragment() {
     }
 
 
-
-    /*
-    private fun editTextChanged(){
-        editTextContent.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val imageView = ImageView(requireContext())
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                if(setAddImageViewSetOnClickListener()){
-
-                }
-            }
-
-        }
-
-
-        )
-    }
-
-     */
-
     private fun setAddImageViewSetOnClickListener(){
         addImageView.setOnClickListener {
             if(ContextCompat.checkSelfPermission(requireContext(),
@@ -264,7 +238,6 @@ class AskQuestionFragment : Fragment() {
                         for(document in documents){
 
                             val uuid = document.get("uuid") as? String
-                            val username = document.get("username") as? String
                             val downloadUrl = document.get("downloadUrl") as? String
 
                             if(uuid == auth.currentUser!!.uid){

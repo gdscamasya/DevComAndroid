@@ -1,7 +1,6 @@
 package devcom.android.logic.usecase
 
 import android.content.Context
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import devcom.android.data.repository.DataStoreRepository
@@ -13,7 +12,7 @@ import java.util.UUID
 
 class AskQuestionToPersonalSave(private val auth: FirebaseAuth, private val db: FirebaseFirestore){
 //Kişinin sormuş olduğu soruları user -> documents -> collections -> HerQuestion -> Documents -> field şeklinde kayıt ediyoruz
-     lateinit var dataStoreRepository: DataStoreRepository
+     private lateinit var dataStoreRepository: DataStoreRepository
 
      suspend fun askQuestionToPersonal(context: Context, questionContent: String, questionHeader: String, onSucces : () -> Unit, onFailure : () -> Unit){
 

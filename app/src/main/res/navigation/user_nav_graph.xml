@@ -99,5 +99,21 @@
             android:name="docId"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_insideTheQuestionFragment_to_answerQuestion"
+            app:destination="@id/answerQuestion" />
+    </fragment>
+    <fragment
+        android:id="@+id/answerQuestion"
+        android:name="devcom.android.ui.fragment.form.AnswerQuestionFragment"
+        android:label="fragment_answer_question"
+        tools:layout="@layout/fragment_answer_question" >
+        <action
+            android:id="@+id/action_answerQuestion_to_insideTheQuestionFragment"
+            app:destination="@id/insideTheQuestionFragment" />
+        <argument
+            android:name="docIdInQuestion"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>
