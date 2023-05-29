@@ -17,9 +17,8 @@ import com.squareup.picasso.Picasso
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.databinding.ItemQuestionRowBinding
 import devcom.android.ui.fragment.form.FormFragmentDirections
-import devcom.android.ui.fragment.form.likedIndexQuestions
 import devcom.android.ui.fragment.form.likedIndexQuestionsTopVoted
-import devcom.android.users.Question
+import devcom.android.data.Question
 import devcom.android.utils.constants.FirebaseConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +52,7 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>) : ListAdapte
 
     class TopQuestionDiffCallback : DiffUtil.ItemCallback<Question>() {
         override fun areItemsTheSame(oldItem: Question, newItem: Question): Boolean {
-            return oldItem.QuestionContent == newItem.QuestionContent
+            return oldItem.questionContent == newItem.questionContent
         }
 
         override fun areContentsTheSame(oldItem: Question, newItem: Question): Boolean {
@@ -76,21 +75,21 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>) : ListAdapte
     }
 
     override fun onBindViewHolder(holder: TopQuestionHolder, position: Int) {
-        holder.binding.tvNickname.text = topQuestionList.get(position).QuestionUsername
+        holder.binding.tvNickname.text = topQuestionList.get(position).questionUsername
         setMaxCharacterLimit(holder.binding.tvQuestionHeader,100)
-        holder.binding.tvQuestionHeader.text = topQuestionList.get(position).QuestionHeader
+        holder.binding.tvQuestionHeader.text = topQuestionList.get(position).questionHeader
         setMaxCharacterLimit(holder.binding.tvQuestionIntrodoucten,100)
-        holder.binding.tvQuestionIntrodoucten.text = topQuestionList.get(position).QuestionContent
+        holder.binding.tvQuestionIntrodoucten.text = topQuestionList.get(position).questionContent
 
-        if(topQuestionList.get(position).QuestionImageProfile != null){
-            Picasso.get().load(topQuestionList.get(position).QuestionImageProfile).resize(200,200).centerCrop().into(holder.binding.ivProfileQuestion)
+        if(topQuestionList.get(position).questionImageProfile != null){
+            Picasso.get().load(topQuestionList.get(position).questionImageProfile).resize(200,200).centerCrop().into(holder.binding.ivProfileQuestion)
         }
-        holder.binding.tvUp.text = topQuestionList.get(position).QuestionPoint
+        holder.binding.tvUp.text = topQuestionList.get(position).questionPoint
 
         for(liking in likedIndexQuestionsTopVoted){
             if(position == liking){
-                holder.binding.ivUp.visibility = View.INVISIBLE
-                holder.binding.ivDown.visibility = View.VISIBLE
+                holder.binding.ivLiking.visibility = View.INVISIBLE
+                holder.binding.ivLiked.visibility = View.VISIBLE
             }
         }
 
@@ -100,7 +99,7 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>) : ListAdapte
         }
 
 
-        holder.binding.ivUp.setOnClickListener {
+        holder.binding.ivLiking.setOnClickListener {
             val collectRef = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
 
             CoroutineScope(Dispatchers.Main).launch{
@@ -121,7 +120,7 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>) : ListAdapte
                 }
             }
 
-            collectRef.whereEqualTo(FirebaseConstants.FIELD_QUESTION_HEADER,topQuestionList.get(position).QuestionHeader)
+            collectRef.whereEqualTo(FirebaseConstants.FIELD_QUESTION_HEADER,topQuestionList.get(position).questionHeader)
                 .get()
                 .addOnSuccessListener {documents ->
                     for(document in documents){
@@ -136,9 +135,9 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>) : ListAdapte
                         document.reference.update(updates)
 
                         holder.binding.tvUp.text = point.toString()
-                        holder.binding.ivUp.visibility = View.INVISIBLE
-                        holder.binding.ivDown.visibility = View.VISIBLE
-                        topQuestionList[position].QuestionPoint = point.toString()
+                        holder.binding.ivLiking.visibility = View.INVISIBLE
+                        holder.binding.ivLiked.visibility = View.VISIBLE
+                        topQuestionList[position].questionPoint = point.toString()
 
                     }
                 }.addOnFailureListener {

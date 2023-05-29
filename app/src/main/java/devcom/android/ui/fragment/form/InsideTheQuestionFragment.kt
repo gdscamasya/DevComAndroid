@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -20,8 +19,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import devcom.android.R
 import devcom.android.ui.fragment.form.adapter.InsideTheQuestionAdapter
-import devcom.android.users.Answer
-import devcom.android.users.InsideQuestion
+import devcom.android.data.Answer
+import devcom.android.data.InsideQuestion
 import devcom.android.utils.constants.FirebaseConstants
 
 

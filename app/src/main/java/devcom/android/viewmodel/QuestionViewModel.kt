@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import devcom.android.logic.usecase.CheckLikedQuestions
 import devcom.android.logic.usecase.LikedQuestion
-import devcom.android.users.Question
+import devcom.android.data.Question
 
 class QuestionViewModel(
     private val likedQuestion: LikedQuestion,
@@ -18,7 +18,9 @@ class QuestionViewModel(
     val isLikedQuestion: LiveData<Boolean>
         get() = _isLikedQuestion
 
-
+    private val _isCheckLikedQuestions = MutableLiveData<Boolean>()
+    val isCheckLikedQuestions: LiveData<Boolean>
+        get() = _isCheckLikedQuestions
 
 
     fun likedQuestions(
@@ -38,16 +40,17 @@ class QuestionViewModel(
 
     }
 
-    suspend fun checkLikedQuestions(
-        view: View,
-        context: Context,
-        likedQuestion: ArrayList<String?>,
-        questionList: ArrayList<Question>,
-        likeIndexQuestionList: ArrayList<Int?>
+     fun checkLikedQuestions(
+         view: View,
+         context: Context,
+         questionList: ArrayList<Question>,
     ) {
-        checkLikedQuestions.checkLiked(view,context, likedQuestion, questionList, likeIndexQuestionList)
-
-    }
-
+        checkLikedQuestions.checkLiked(
+            view,
+            context,
+            questionList,
+            onSuccess = { _isCheckLikedQuestions.value = true },
+            onFailure = { _isCheckLikedQuestions.value = false })
+     }
 
 }

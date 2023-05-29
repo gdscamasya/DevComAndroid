@@ -6,16 +6,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import devcom.android.databinding.ItemInsideQuestionRowBinding
-import devcom.android.users.Answer
-import devcom.android.users.InsideQuestion
-import devcom.android.users.Question
+import devcom.android.data.Answer
+import devcom.android.data.InsideQuestion
+import devcom.android.data.Question
 
 class InsideTheQuestionAdapter(private var insideQuestionList: ArrayList<Any?>) : androidx.recyclerview.widget.ListAdapter<Question,InsideTheQuestionAdapter.InsideQuestionHolder>(QuestionInsideDiffCallback()) {
 
 
     class QuestionInsideDiffCallback : DiffUtil.ItemCallback<Question>() {
         override fun areItemsTheSame(oldItem: Question, newItem: Question): Boolean {
-            return oldItem.QuestionContent == newItem.QuestionContent
+            return oldItem.questionContent == newItem.questionContent
         }
 
         override fun areContentsTheSame(oldItem: Question, newItem: Question): Boolean {

@@ -99,6 +99,10 @@
         <action
             android:id="@+id/action_insideTheQuestionFragment_to_answerQuestion"
             app:destination="@id/answerQuestion" />
+        <argument
+            android:name="docId"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/answerQuestion"
@@ -108,5 +112,9 @@
         <action
             android:id="@+id/action_answerQuestion_to_insideTheQuestionFragment"
             app:destination="@id/insideTheQuestionFragment" />
+        <argument
+            android:name="docIdInQuestion"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

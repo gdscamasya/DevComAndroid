@@ -7,8 +7,7 @@ import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 import devcom.android.R
 import devcom.android.data.repository.DataStoreRepository
-import devcom.android.ui.fragment.form.likedIndexQuestions
-import devcom.android.users.Question
+import devcom.android.data.Question
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.invisible
 import devcom.android.utils.extensions.visible
@@ -23,6 +22,7 @@ class LikedQuestion(private val db: FirebaseFirestore) {
     private lateinit var liking: ImageView
     private lateinit var unLiking: ImageView
 
+
     private var point: Long = 0
     fun likedQuestions(
         view: View,
@@ -30,13 +30,12 @@ class LikedQuestion(private val db: FirebaseFirestore) {
         questionList: ArrayList<Question>,
         position: Int,
         onSuccess: () -> Unit,
-        onFailure: () -> Unit,
+        onFailure: () -> Unit
     ) {
 
         pointText = view.findViewById(R.id.tv_up)
-
-        liking = view.findViewById(R.id.iv_up)
-        unLiking = view.findViewById(R.id.iv_down)
+        liking = view.findViewById(R.id.iv_liking)
+        unLiking = view.findViewById(R.id.iv_liked)
 
 
 
@@ -63,7 +62,7 @@ class LikedQuestion(private val db: FirebaseFirestore) {
 
         collectRef.whereEqualTo(
             FirebaseConstants.FIELD_QUESTION_HEADER,
-            questionList.get(position).QuestionHeader
+            questionList.get(position).questionHeader
         )
             .get()
             .addOnSuccessListener { documents ->
@@ -81,7 +80,7 @@ class LikedQuestion(private val db: FirebaseFirestore) {
                     pointText.text = point.toString()
                     liking.invisible()
                     unLiking.visible()
-                    questionList[position].QuestionPoint = point.toString()
+                    questionList[position].questionPoint = point.toString()
 
                 }
                 onSuccess()

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import devcom.android.databinding.MainBlogPagerowBinding
-import devcom.android.users.User
+import devcom.android.data.User
 
 class BlogRecyclerAdapter(private val userList: List<User>):RecyclerView.Adapter<BlogRecyclerAdapter.BlogHolder>() {
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,17 +15,8 @@ import com.squareup.picasso.Picasso
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.databinding.ItemQuestionRowBinding
 import devcom.android.ui.fragment.form.RecyclerViewItemClickListener
-import devcom.android.ui.fragment.form.likedIndexQuestions
 
-import devcom.android.users.Question
-import devcom.android.utils.constants.FirebaseConstants
-import devcom.android.utils.extensions.invisible
-import devcom.android.utils.extensions.visible
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
-
+import devcom.android.data.Question
 
 
 class QuestionRecyclerAdapter(var questionList : ArrayList<Question>, val itemViewListener : RecyclerViewItemClickListener, val likeClickListener : RecyclerViewItemClickListener) : ListAdapter<Question, QuestionRecyclerAdapter.AskQuestionHolder>(QuestionDiffCallback()) {
@@ -57,7 +47,7 @@ class QuestionRecyclerAdapter(var questionList : ArrayList<Question>, val itemVi
 
     class QuestionDiffCallback : DiffUtil.ItemCallback<Question>() {
         override fun areItemsTheSame(oldItem: Question, newItem: Question): Boolean {
-            return oldItem.QuestionContent == newItem.QuestionContent
+            return oldItem.questionContent == newItem.questionContent
         }
 
         override fun areContentsTheSame(oldItem: Question, newItem: Question): Boolean {
@@ -79,22 +69,21 @@ class QuestionRecyclerAdapter(var questionList : ArrayList<Question>, val itemVi
     }
 
     override fun onBindViewHolder(holder: AskQuestionHolder, position: Int) {
-        holder.binding.tvNickname.text = questionList.get(position).QuestionUsername
-        setMaxCharacterLimit(holder.binding.tvQuestionHeader,100)
-        holder.binding.tvQuestionHeader.text = questionList.get(position).QuestionHeader
-        setMaxCharacterLimit(holder.binding.tvQuestionIntrodoucten,100)
-        holder.binding.tvQuestionIntrodoucten.text = questionList.get(position).QuestionContent
-        if(questionList.get(position).QuestionImageProfile != null){
-            Picasso.get().load(questionList.get(position).QuestionImageProfile).resize(200,200).centerCrop().into(holder.binding.ivProfileQuestion)
-        }
-        holder.binding.tvUp.text = questionList.get(position).QuestionPoint
+        holder.binding.tvNickname.text = questionList.get(position).questionUsername
 
-        for(liking in likedIndexQuestions){
-            if(position == liking){
-                holder.binding.ivUp.invisible()
-                holder.binding.ivDown.visible()
-            }
+        setMaxCharacterLimit(holder.binding.tvQuestionHeader,100)
+        holder.binding.tvQuestionHeader.text = questionList.get(position).questionHeader
+
+        setMaxCharacterLimit(holder.binding.tvQuestionIntrodoucten,100)
+        holder.binding.tvQuestionIntrodoucten.text = questionList.get(position).questionContent
+
+        if(questionList.get(position).questionImageProfile != null){
+            Picasso.get().load(questionList.get(position).questionImageProfile).resize(200,200).centerCrop().into(holder.binding.ivProfileQuestion)
         }
+        holder.binding.tvUp.text = questionList.get(position).questionPoint
+
+        holder.binding.ivLiking.visibility = if (questionList.get(position).likingViewVisible) View.INVISIBLE else View.VISIBLE
+        holder.binding.ivLiked.visibility = if (questionList.get(position).likingViewVisible) View.VISIBLE else View.INVISIBLE
 
 
         holder.itemView.setOnClickListener{
@@ -103,7 +92,7 @@ class QuestionRecyclerAdapter(var questionList : ArrayList<Question>, val itemVi
 
         }
 
-        holder.binding.ivUp.setOnClickListener {
+        holder.binding.ivLiking.setOnClickListener {
 
             likeClickListener.onClick(position)
 
