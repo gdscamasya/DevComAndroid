@@ -131,7 +131,6 @@ class SignInActivity : AppCompatActivity() {
                     navigateToAnotherActivity(MainActivity::class.java)
                     this.finish()
                 }
-
                 is Resource.Error ->{
                     showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
                     touchableScreen(R.id.pb_sign)

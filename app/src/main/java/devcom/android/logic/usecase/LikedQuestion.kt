@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import devcom.android.R
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.data.Question
+import devcom.android.ui.fragment.form.questionRecyclerAdapter
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.invisible
 import devcom.android.utils.extensions.visible
@@ -78,9 +79,10 @@ class LikedQuestion(private val db: FirebaseFirestore) {
                     document.reference.update(updates)
 
                     pointText.text = point.toString()
-                    liking.invisible()
-                    unLiking.visible()
+
+                    questionList.get(position).likingViewVisible = true
                     questionList[position].questionPoint = point.toString()
+                    questionRecyclerAdapter.notifyItemChanged(position)
 
                 }
                 onSuccess()

@@ -1,6 +1,7 @@
 package devcom.android.viewmodel
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

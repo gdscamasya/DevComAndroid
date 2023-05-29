@@ -19,12 +19,14 @@ import devcom.android.databinding.ItemQuestionRowBinding
 import devcom.android.ui.fragment.form.FormFragmentDirections
 import devcom.android.ui.fragment.form.likedIndexQuestionsTopVoted
 import devcom.android.data.Question
+import devcom.android.ui.fragment.form.RecyclerViewItemClickListener
+import devcom.android.ui.fragment.form.TopRecyclerViewItemClickListener
 import devcom.android.utils.constants.FirebaseConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TopQuestionAdapter(var topQuestionList : ArrayList<Question>) : ListAdapter<Question,TopQuestionAdapter.TopQuestionHolder>(TopQuestionDiffCallback()){
+class TopQuestionAdapter(var topQuestionList : ArrayList<Question>, private val itemViewListener : TopRecyclerViewItemClickListener, private val likeClickListener : TopRecyclerViewItemClickListener) : ListAdapter<Question,TopQuestionAdapter.TopQuestionHolder>(TopQuestionDiffCallback()){
 
     lateinit var dataStoreRepository: DataStoreRepository
     val db = Firebase.firestore
@@ -94,12 +96,15 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>) : ListAdapte
         }
 
         holder.itemView.setOnClickListener{
-            val action = FormFragmentDirections.actionFormToInsideTheQuestionFragment(topQuestionList.get(position).docNum)
-            Navigation.findNavController(holder.itemView).navigate(action)
+
+            itemViewListener.onClick(topQuestionList.get(position).docNum)
+
         }
 
 
         holder.binding.ivLiking.setOnClickListener {
+
+            //likeClickListener.onClick(position)
             val collectRef = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
 
             CoroutineScope(Dispatchers.Main).launch{

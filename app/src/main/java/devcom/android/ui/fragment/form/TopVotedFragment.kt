@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.Query
@@ -64,7 +65,18 @@ class TopVotedFragment : Fragment() {
         topVotedRecycleView = view.findViewById(R.id.topVotedRecycler)
 
         topVotedRecycleView.layoutManager = LinearLayoutManager(requireContext())
-        topQuestionAdapter = TopQuestionAdapter(topQuestionList)
+        topQuestionAdapter = TopQuestionAdapter(topQuestionList, object : TopRecyclerViewItemClickListener{
+            override fun onClick(param: Any?) {
+                val action = FormFragmentDirections.actionFormToInsideTheQuestionFragment(param as String?)
+                Navigation.findNavController(requireView()).navigate(action)
+            }
+
+        },object : TopRecyclerViewItemClickListener{
+            override fun onClick(param: Any?) {
+
+            }
+
+        })
         topVotedRecycleView.adapter = topQuestionAdapter
 
 
@@ -172,5 +184,10 @@ class TopVotedFragment : Fragment() {
 
             }
     }
+
+}
+
+interface TopRecyclerViewItemClickListener {
+    fun onClick(param: Any?)
 
 }

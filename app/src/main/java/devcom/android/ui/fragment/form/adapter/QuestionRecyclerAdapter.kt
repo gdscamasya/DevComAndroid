@@ -19,7 +19,7 @@ import devcom.android.ui.fragment.form.RecyclerViewItemClickListener
 import devcom.android.data.Question
 
 
-class QuestionRecyclerAdapter(var questionList : ArrayList<Question>, val itemViewListener : RecyclerViewItemClickListener, val likeClickListener : RecyclerViewItemClickListener) : ListAdapter<Question, QuestionRecyclerAdapter.AskQuestionHolder>(QuestionDiffCallback()) {
+class QuestionRecyclerAdapter(var questionList : ArrayList<Question>, private val itemViewListener : RecyclerViewItemClickListener, private val likeClickListener : RecyclerViewItemClickListener) : ListAdapter<Question, QuestionRecyclerAdapter.AskQuestionHolder>(QuestionDiffCallback()) {
 
     lateinit var dataStoreRepository: DataStoreRepository
     val db = Firebase.firestore

@@ -26,7 +26,7 @@ import devcom.android.viewmodel.QuestionViewModelFactory
 
 
 private lateinit var questionList: ArrayList<Question>
-private lateinit var questionRecyclerAdapter: QuestionRecyclerAdapter
+lateinit var questionRecyclerAdapter: QuestionRecyclerAdapter
 private lateinit var questionRecyclerView: RecyclerView
 private lateinit var questionViewModel: QuestionViewModel
 
@@ -65,8 +65,6 @@ class QuestionsFragment : Fragment() {
             ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
 
 
-
-
         questionRecyclerView = view.findViewById(R.id.rv_question)
 
         questionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -90,6 +88,11 @@ class QuestionsFragment : Fragment() {
             })
         questionRecyclerView.adapter = questionRecyclerAdapter
 
+        questionViewModel.checkLikedQuestions(
+            requireView(),
+            requireContext(),
+            questionList
+        )
 
     }
 
@@ -113,10 +116,11 @@ class QuestionsFragment : Fragment() {
     private fun observeCheckLikedQuestion() {
         questionViewModel.isCheckLikedQuestions.observe(viewLifecycleOwner) { isCheckLikedQuestion ->
             if (isCheckLikedQuestion) {
-                showToastMessageFragment("başarılı check LikedQuestion FireStore")
-            } else {
-                showToastMessageFragment("başarısız check LikedQuestion FireStore")
-
+               for(question in questionList){
+                   val questionIndex = questionList.indexOf(question)
+                   question.likingViewVisible = true
+                   questionRecyclerAdapter.notifyItemChanged(questionIndex)
+               }
             }
 
         }
@@ -194,9 +198,7 @@ class QuestionsFragment : Fragment() {
             }
     }
 
-
 }
-
 
 interface RecyclerViewItemClickListener {
     fun onClick(param: Any?)

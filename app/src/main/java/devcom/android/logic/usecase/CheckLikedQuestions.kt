@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import devcom.android.R
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.data.Question
+import devcom.android.ui.fragment.form.questionRecyclerAdapter
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.invisible
 import devcom.android.utils.extensions.visible
@@ -43,7 +44,6 @@ class CheckLikedQuestions(private val db: FirebaseFirestore) {
                      .collection("LikedQuestions")
                      .addSnapshotListener { value, error ->
                          if (error != null) {
-                             onFailure()
                              return@addSnapshotListener
                          } else {
                              if (value != null && !value.isEmpty) {
@@ -67,9 +67,11 @@ class CheckLikedQuestions(private val db: FirebaseFirestore) {
                                      for(liking in likedQuestions){
                                          for(question in questionList){
                                              if(liking == question.docNum){
-                                                //val questionIndex = questionList.indexOf(question)
-                                                 Log.i("içerideyiz",question.likingViewVisible.toString())
-                                                question.likingViewVisible = true
+                                                 val questionIndex = questionList.indexOf(question)
+                                                 question.likingViewVisible = true
+                                                 questionRecyclerAdapter.notifyItemChanged(questionIndex)
+                                             }else{
+                                                 onFailure()
                                              }
                                          }
                                      }
@@ -77,7 +79,7 @@ class CheckLikedQuestions(private val db: FirebaseFirestore) {
 
 
 
-                                 onSuccess()
+
                              }
                          }
                      }
