@@ -32,7 +32,7 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>, private val 
     val db = Firebase.firestore
     var point : Long = 0
 
-    fun setMaxCharacterLimit(textView: TextView, maxLimit: Int) {
+    private fun setMaxCharacterLimit(textView: TextView, maxLimit: Int) {
         textView.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // Değişiklik öncesi
@@ -54,7 +54,7 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>, private val 
 
     class TopQuestionDiffCallback : DiffUtil.ItemCallback<Question>() {
         override fun areItemsTheSame(oldItem: Question, newItem: Question): Boolean {
-            return oldItem.questionContent == newItem.questionContent
+            return oldItem.questionPoint == newItem.questionPoint
         }
 
         override fun areContentsTheSame(oldItem: Question, newItem: Question): Boolean {
@@ -86,14 +86,12 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>, private val 
         if(topQuestionList.get(position).questionImageProfile != null){
             Picasso.get().load(topQuestionList.get(position).questionImageProfile).resize(200,200).centerCrop().into(holder.binding.ivProfileQuestion)
         }
+
         holder.binding.tvUp.text = topQuestionList.get(position).questionPoint
 
-        for(liking in likedIndexQuestionsTopVoted){
-            if(position == liking){
-                holder.binding.ivLiking.visibility = View.INVISIBLE
-                holder.binding.ivLiked.visibility = View.VISIBLE
-            }
-        }
+        holder.binding.ivLiking.visibility = if (topQuestionList.get(position).likingViewVisible) View.INVISIBLE else View.VISIBLE
+        holder.binding.ivLiked.visibility = if (topQuestionList.get(position).likingViewVisible) View.VISIBLE else View.INVISIBLE
+
 
         holder.itemView.setOnClickListener{
 
@@ -104,50 +102,7 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>, private val 
 
         holder.binding.ivLiking.setOnClickListener {
 
-            //likeClickListener.onClick(position)
-            val collectRef = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
-
-            CoroutineScope(Dispatchers.Main).launch{
-                dataStoreRepository = DataStoreRepository(holder.itemView.context)
-                val document = dataStoreRepository.getDataFromDataStore("document")
-
-                if (document != null) {
-                    db.collection(FirebaseConstants.COLLECTION_PATH_USERS)
-                        .document(document)
-                        .collection("LikedQuestions").document(topQuestionList[position].docNum!!)
-                        .set(emptyMap<String,Any>())
-                        .addOnSuccessListener {
-                            Toast.makeText(holder.itemView.context, "likedQuestion", Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener {
-                            // Hata durumunda yapılacak işlemler
-                        }
-                }
-            }
-
-            collectRef.whereEqualTo(FirebaseConstants.FIELD_QUESTION_HEADER,topQuestionList.get(position).questionHeader)
-                .get()
-                .addOnSuccessListener {documents ->
-                    for(document in documents){
-                        point = document.getLong("Point")!!
-
-                        point++
-
-                        val updates = hashMapOf<String,Any>(
-                            "Point" to point
-                        )
-
-                        document.reference.update(updates)
-
-                        holder.binding.tvUp.text = point.toString()
-                        holder.binding.ivLiking.visibility = View.INVISIBLE
-                        holder.binding.ivLiked.visibility = View.VISIBLE
-                        topQuestionList[position].questionPoint = point.toString()
-
-                    }
-                }.addOnFailureListener {
-                    Toast.makeText(holder.itemView.context, "Bir şeyler Ters gitti..", Toast.LENGTH_SHORT).show()
-                }
+            likeClickListener.onClick(position)
 
         }
     }

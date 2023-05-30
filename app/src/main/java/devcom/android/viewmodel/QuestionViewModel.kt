@@ -28,13 +28,15 @@ class QuestionViewModel(
         view: View,
         context: Context,
         questionList: ArrayList<Question>,
-        position: Int
+        position: Int,
+        listName: String
     ) {
         likedQuestion.likedQuestions(
             view,
             context,
             questionList,
             position,
+            listName,
             onSuccess = { _isLikedQuestion.value = true },
             onFailure = { _isLikedQuestion.value = false })
 
@@ -45,13 +47,13 @@ class QuestionViewModel(
          view: View,
          context: Context,
          questionList: ArrayList<Question>,
+         listName: String
     ) {
         checkLikedQuestions.checkLiked(
             view,
             context,
             questionList,
-            onSuccess = { _isCheckLikedQuestions.value = true },
-            onFailure = { _isCheckLikedQuestions.value = false })
+            listName)
      }
 
 }

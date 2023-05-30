@@ -9,6 +9,7 @@ import devcom.android.R
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.data.Question
 import devcom.android.ui.fragment.form.questionRecyclerAdapter
+import devcom.android.ui.fragment.form.topQuestionAdapter
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.invisible
 import devcom.android.utils.extensions.visible
@@ -30,6 +31,7 @@ class LikedQuestion(private val db: FirebaseFirestore) {
         context: Context,
         questionList: ArrayList<Question>,
         position: Int,
+        listName: String,
         onSuccess: () -> Unit,
         onFailure: () -> Unit
     ) {
@@ -39,8 +41,8 @@ class LikedQuestion(private val db: FirebaseFirestore) {
         unLiking = view.findViewById(R.id.iv_liked)
 
 
-
         val collectRef = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
+            .document(questionList[position].docNum!!)
 
 
         CoroutineScope(Dispatchers.Main).launch {
@@ -61,38 +63,33 @@ class LikedQuestion(private val db: FirebaseFirestore) {
             }
         }
 
-        collectRef.whereEqualTo(
-            FirebaseConstants.FIELD_QUESTION_HEADER,
-            questionList.get(position).questionHeader
-        )
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    point = document.getLong("Point")!!
+        collectRef.get().addOnSuccessListener {
 
-                    point++
+            point = it.getLong("Point")!!
 
-                    val updates = hashMapOf<String, Any>(
-                        "Point" to point
-                    )
+            point++
 
-                    document.reference.update(updates)
+            val updates = hashMapOf<String, Any>(
+                "Point" to point
+            )
 
-                    pointText.text = point.toString()
+            it.reference.update(updates)
 
-                    questionList.get(position).likingViewVisible = true
-                    questionList[position].questionPoint = point.toString()
-                    questionRecyclerAdapter.notifyItemChanged(position)
+            pointText.text = point.toString()
+            questionList[position].questionPoint = point.toString()
 
-                }
-                onSuccess()
-            }.addOnFailureListener {
-                onFailure()
-            }
+            questionList.get(position).likingViewVisible = true
+
+
+            questionRecyclerAdapter.notifyItemChanged(position)
+            topQuestionAdapter.notifyItemChanged(position)
+
+
+        }.addOnFailureListener {
+            onFailure()
+        }
 
     }
-
-
 
 
 }

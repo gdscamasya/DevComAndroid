@@ -25,7 +25,7 @@ import devcom.android.viewmodel.QuestionViewModel
 import devcom.android.viewmodel.QuestionViewModelFactory
 
 
-private lateinit var questionList: ArrayList<Question>
+lateinit var questionList: ArrayList<Question>
 lateinit var questionRecyclerAdapter: QuestionRecyclerAdapter
 private lateinit var questionRecyclerView: RecyclerView
 private lateinit var questionViewModel: QuestionViewModel
@@ -81,7 +81,8 @@ class QuestionsFragment : Fragment() {
                         requireView(),
                         requireContext(),
                         questionList,
-                        param as Int
+                        param as Int,
+                        "Questions"
                     )
                 }
 
@@ -91,7 +92,8 @@ class QuestionsFragment : Fragment() {
         questionViewModel.checkLikedQuestions(
             requireView(),
             requireContext(),
-            questionList
+            questionList,
+            "Questions"
         )
 
     }

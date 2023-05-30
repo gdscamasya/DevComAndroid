@@ -4,6 +4,11 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import devcom.android.data.Question
+import devcom.android.ui.fragment.form.questionList
+import devcom.android.ui.fragment.form.questionRecyclerAdapter
+import devcom.android.ui.fragment.form.topQuestionAdapter
+import devcom.android.ui.fragment.form.topQuestionList
 import devcom.android.utils.constants.FirebaseConstants
 import kotlinx.coroutines.*
 import java.util.*
@@ -92,6 +97,11 @@ class AskQuestionsToSaveGlobal(
 
                     }
 
+                    questionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
+                    topQuestionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
+                    topQuestionAdapter.submitDataTopVoted(topQuestionList)
+                    questionRecyclerAdapter.submitData(questionList)
+
 
                 } else {
                     val uuids = UUID.randomUUID()
@@ -147,12 +157,16 @@ class AskQuestionsToSaveGlobal(
                             }
 
 
-
+                            questionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
+                            topQuestionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
+                            topQuestionAdapter.submitDataTopVoted(topQuestionList)
+                            questionRecyclerAdapter.submitData(questionList)
 
                         }
                     }.addOnFailureListener {
                         onFailure()
                     }
+
                 }
             } else {
                 onFailure()

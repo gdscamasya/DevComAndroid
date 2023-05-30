@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -18,20 +20,25 @@ import devcom.android.R
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.ui.fragment.form.adapter.TopQuestionAdapter
 import devcom.android.data.Question
+import devcom.android.logic.usecase.CheckLikedQuestions
+import devcom.android.logic.usecase.LikedQuestion
 import devcom.android.utils.constants.FirebaseConstants
+import devcom.android.viewmodel.QuestionViewModel
+import devcom.android.viewmodel.QuestionViewModelFactory
 import kotlinx.coroutines.launch
 
 
-private lateinit var topQuestionList: ArrayList<Question>
+lateinit var topQuestionList: ArrayList<Question>
 private lateinit var topVotedRecycleView: RecyclerView
-private lateinit var topQuestionAdapter: TopQuestionAdapter
+lateinit var topQuestionAdapter: TopQuestionAdapter
 private lateinit var likedQuestionsTop: ArrayList<String?>
 lateinit var likedIndexQuestionsTopVoted: ArrayList<Int?>
+private lateinit var topQuestionViewModel: QuestionViewModel
 
 class TopVotedFragment : Fragment() {
 
+    private lateinit var swipeRefreshTopLayout: SwipeRefreshLayout
 
-    private lateinit var dataStoreRepository: DataStoreRepository
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,10 +65,10 @@ class TopVotedFragment : Fragment() {
 
         getData()
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            checkLiked()
-        }
+        val questionViewModelFactory = QuestionViewModelFactory(LikedQuestion(db), CheckLikedQuestions(db))
+        topQuestionViewModel = ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
 
+        swipeRefreshTopLayout = view.findViewById(R.id.swipeRefreshTopLayout)
         topVotedRecycleView = view.findViewById(R.id.topVotedRecycler)
 
         topVotedRecycleView.layoutManager = LinearLayoutManager(requireContext())
@@ -73,58 +80,35 @@ class TopVotedFragment : Fragment() {
 
         },object : TopRecyclerViewItemClickListener{
             override fun onClick(param: Any?) {
-
+                topQuestionViewModel.likedQuestions(
+                    requireView(),
+                    requireContext(),
+                    topQuestionList,
+                    param as Int,
+                    "TopQuestions"
+                )
             }
 
         })
         topVotedRecycleView.adapter = topQuestionAdapter
 
+        topQuestionViewModel.checkLikedQuestions(
+            requireView(),
+            requireContext(),
+            topQuestionList,
+            "TopQuestions"
+        )
 
+        setOnRefreshListener()
     }
 
-
-    private suspend fun checkLiked() {
-        dataStoreRepository = DataStoreRepository(requireContext())
-
-        val documents = dataStoreRepository.getDataFromDataStore("document")
-        if (documents != null) {
-            db.collection(FirebaseConstants.COLLECTION_PATH_USERS).document(documents)
-                .collection("LikedQuestions")
-                .addSnapshotListener { value, error ->
-                    if (error != null) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Beklenmedik bir hata oluştu.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        if (value != null && !value.isEmpty) {
-                            val documents = value.documents
-
-                            likedQuestionsTop.clear()
-
-                            for (document in documents) {
-                                val docNum = document.id
-                                likedQuestionsTop.add(docNum)
-                            }
-
-                            processLikedQuestions()
-                        }
-                    }
-                }
+    private fun setOnRefreshListener(){
+        swipeRefreshTopLayout.setOnRefreshListener {
+            getData()
+            topQuestionAdapter.submitDataTopVoted(topQuestionList)
+            swipeRefreshTopLayout.isRefreshing = false
         }
     }
-
-    private fun processLikedQuestions() {
-
-        for ((index, question) in topQuestionList.withIndex()) {
-            if (likedQuestionsTop.contains(question.docNum)) {
-                likedIndexQuestionsTopVoted.add(index)
-            }
-        }
-    }
-
-
     fun getData() {
         Log.i("PageChange", "TopVoted Sayfasına gitti GetData()")
 

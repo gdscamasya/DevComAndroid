@@ -76,9 +76,6 @@ class InsideTheQuestionFragment : Fragment() {
             answerQuestionSetOnClickListener(docId)
         }
 
-
-
-
     }
 
     private fun answerQuestionSetOnClickListener(docId: String?){
@@ -115,7 +112,6 @@ class InsideTheQuestionFragment : Fragment() {
             }.addOnFailureListener{
                 Toast.makeText(requireContext(), "Bir şeyler ters Gitti..", Toast.LENGTH_SHORT).show()
             }
-
 
         }
 
