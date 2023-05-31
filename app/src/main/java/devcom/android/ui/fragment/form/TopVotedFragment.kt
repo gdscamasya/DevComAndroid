@@ -31,8 +31,7 @@ import kotlinx.coroutines.launch
 lateinit var topQuestionList: ArrayList<Question>
 private lateinit var topVotedRecycleView: RecyclerView
 lateinit var topQuestionAdapter: TopQuestionAdapter
-private lateinit var likedQuestionsTop: ArrayList<String?>
-lateinit var likedIndexQuestionsTopVoted: ArrayList<Int?>
+
 private lateinit var topQuestionViewModel: QuestionViewModel
 
 class TopVotedFragment : Fragment() {
@@ -56,14 +55,14 @@ class TopVotedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i("PageChange", "TopVoted Sayfasına gitti")
 
 
-        likedIndexQuestionsTopVoted = ArrayList()
-        likedQuestionsTop = ArrayList()
-        topQuestionList = ArrayList()
+        createEmptyArrayList()
 
         getData()
+
+        Log.i("TopQuestionListSize64satır", topQuestionList.size.toString())
+
 
         val questionViewModelFactory = QuestionViewModelFactory(LikedQuestion(db), CheckLikedQuestions(db))
         topQuestionViewModel = ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
@@ -88,9 +87,10 @@ class TopVotedFragment : Fragment() {
                     "TopQuestions"
                 )
             }
-
         })
+
         topVotedRecycleView.adapter = topQuestionAdapter
+        Log.i("TopQuestionListSize92satır", topQuestionList.size.toString())
 
         topQuestionViewModel.checkLikedQuestions(
             requireView(),
@@ -101,15 +101,22 @@ class TopVotedFragment : Fragment() {
 
         setOnRefreshListener()
     }
+    private fun createEmptyArrayList(){
+        topQuestionList = ArrayList()
+    }
 
     private fun setOnRefreshListener(){
         swipeRefreshTopLayout.setOnRefreshListener {
+
+            createEmptyArrayList()
             getData()
-            topQuestionAdapter.submitDataTopVoted(topQuestionList)
+            topVotedRecycleView.adapter = topQuestionAdapter
+
             swipeRefreshTopLayout.isRefreshing = false
         }
     }
-    fun getData() {
+
+    private fun getData() {
         Log.i("PageChange", "TopVoted Sayfasına gitti GetData()")
 
         db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
@@ -161,12 +168,27 @@ class TopVotedFragment : Fragment() {
 
                             }
                             topQuestionAdapter.submitDataTopVoted(topQuestionList)
+                            Log.i("TopQuestionListSizeGetDataSubmitDataSonra", topQuestionList.size.toString())
+
                         }
 
                     }
                 }
 
             }
+    }
+
+
+    fun refresh(){
+
+        createEmptyArrayList()
+
+        getData()
+        Log.i("TopQuestionListSize", topQuestionList.size.toString())
+
+        //topVotedRecycleView.adapter = topQuestionAdapter
+
+
     }
 
 }

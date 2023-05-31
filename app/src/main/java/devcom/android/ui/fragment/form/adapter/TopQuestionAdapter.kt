@@ -17,7 +17,6 @@ import com.squareup.picasso.Picasso
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.databinding.ItemQuestionRowBinding
 import devcom.android.ui.fragment.form.FormFragmentDirections
-import devcom.android.ui.fragment.form.likedIndexQuestionsTopVoted
 import devcom.android.data.Question
 import devcom.android.ui.fragment.form.RecyclerViewItemClickListener
 import devcom.android.ui.fragment.form.TopRecyclerViewItemClickListener

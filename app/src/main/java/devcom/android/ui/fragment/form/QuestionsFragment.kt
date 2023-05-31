@@ -54,8 +54,7 @@ class QuestionsFragment : Fragment() {
         Log.i("PageChange", "QuestionFragment Sayfasına gitti")
 
 
-
-        questionList = ArrayList()
+        createEmptyArrayList()
 
         getData()
 
@@ -96,6 +95,10 @@ class QuestionsFragment : Fragment() {
             "Questions"
         )
 
+    }
+
+    private fun createEmptyArrayList(){
+        questionList = ArrayList()
     }
 
     private fun observeLiveData() {
@@ -198,6 +201,16 @@ class QuestionsFragment : Fragment() {
                     }
                 }
             }
+    }
+
+    fun refresh(){
+
+        createEmptyArrayList()
+
+        getData()
+
+        questionRecyclerView.adapter = topQuestionAdapter
+
     }
 
 }

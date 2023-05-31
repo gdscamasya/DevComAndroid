@@ -1,9 +1,7 @@
 package devcom.android.ui.fragment.form
 
 import android.content.Context
-import android.media.Image
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +11,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.search.SearchBar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
@@ -29,12 +24,8 @@ import com.squareup.picasso.Picasso
 import devcom.android.R
 import devcom.android.ui.activity.main.MainActivity
 import devcom.android.ui.fragment.form.adapter.FormViewPagerAdapter
-import devcom.android.ui.fragment.home.HomeFragmentDirections
-import devcom.android.ui.fragment.profile.ProfileFragmentDirections
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.visible
-import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 
 class FormFragment : Fragment() {
@@ -70,8 +61,8 @@ class FormFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewPagerFormAdapter = FormViewPagerAdapter(this)
         viewPager2 = view.findViewById(R.id.view_pager_form)
+        viewPagerFormAdapter = FormViewPagerAdapter(childFragmentManager,lifecycle)
         tabLayout = view.findViewById(R.id.tab_layout_form)
         profileImageView = view.findViewById(R.id.iv_profile_forum)
         addQuestionMenu = view.findViewById(R.id.vector_menu)
@@ -88,30 +79,13 @@ class FormFragment : Fragment() {
 
 
         viewPager2.adapter = viewPagerFormAdapter
-        viewPager2.offscreenPageLimit = 2
-
-        val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+        viewPager2.registerOnPageChangeCallback(object :ViewPager2.OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {
-                when(position){
-                    0 ->{
-                        TopVotedFragment()
-
-                    }
-
-                    1 ->{
-                        QuestionsFragment()
-
-                    }
-                }
-                // Sayfa değiştiğinde yapılacak işlemler
-                // Verilerin yüklenmesi, güncellenmesi vb.
-                // position parametresi ile mevcut sayfanın konumu alınabilir
-                // İlgili sayfa için gerekli işlemleri yapabilirsiniz
+                super.onPageSelected(position)
+                refreshFragment(position)
             }
-        }
+        })
 
-
-        viewPager2.registerOnPageChangeCallback(pageChangeCallback)
 
         TabLayoutMediator(tabLayout,viewPager2) { tab, position ->
             tab.text = tabTitles[position]
@@ -196,6 +170,27 @@ class FormFragment : Fragment() {
     }
 
 
+
+
+    private fun refreshFragment(position: Int) {
+        when (position) {
+            0 -> {
+                // İlk fragment yeniden yükleniyor
+                val fragment = viewPagerFormAdapter.createFragment(position)
+                if (fragment is TopVotedFragment) {
+                    fragment.refresh()
+                }
+            }
+
+            1 -> {
+                // İkinci fragment yeniden yükleniyor
+                val fragment = viewPagerFormAdapter.createFragment(position)
+                if (fragment is QuestionsFragment) {
+                    fragment.refresh()
+                }
+            }
+        }
+    }
 
 }
 
