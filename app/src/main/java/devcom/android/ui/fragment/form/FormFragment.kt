@@ -71,6 +71,7 @@ class FormFragment : Fragment() {
         bottomNav.visible()
 
         auth = Firebase.auth
+        getData()
 
         profileImageView.setOnClickListener {
             val action = FormFragmentDirections.actionFormToProfileFragment()
@@ -96,7 +97,6 @@ class FormFragment : Fragment() {
             tabLayout.getTabAt(i)?.customView = textview
         }
 
-        getData()
         addQuestionSetOnClickListener()
 
     }

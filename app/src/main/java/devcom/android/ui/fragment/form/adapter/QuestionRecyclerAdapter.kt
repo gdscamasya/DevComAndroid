@@ -2,6 +2,7 @@ package devcom.android.ui.fragment.form.adapter
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,46 +20,21 @@ import devcom.android.ui.fragment.form.RecyclerViewItemClickListener
 import devcom.android.data.Question
 
 
-class QuestionRecyclerAdapter(var questionList : ArrayList<Question>, private val itemViewListener : RecyclerViewItemClickListener, private val likeClickListener : RecyclerViewItemClickListener) : ListAdapter<Question, QuestionRecyclerAdapter.AskQuestionHolder>(QuestionDiffCallback()) {
+class QuestionRecyclerAdapter( private val itemViewListener : RecyclerViewItemClickListener, private val likeClickListener : RecyclerViewItemClickListener) : RecyclerView.Adapter<QuestionRecyclerAdapter.AskQuestionHolder>() {
 
-    lateinit var dataStoreRepository: DataStoreRepository
-    val db = Firebase.firestore
-    var point : Long = 0
+    private var questionList = ArrayList<Question>()
+    fun setData(newTopQuestionList : ArrayList<Question>){
 
-    fun setMaxCharacterLimit(textView: TextView, maxLimit: Int) {
-        textView.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Değişiklik öncesi
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Değişiklik sırasında
-                if (s?.length ?: 0 > maxLimit) {
-                    val trimmedText = s?.substring(0, maxLimit)
-                    textView.text = trimmedText
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // Değişiklik sonrası
-            }
-        })
-    }
-
-    class QuestionDiffCallback : DiffUtil.ItemCallback<Question>() {
-        override fun areItemsTheSame(oldItem: Question, newItem: Question): Boolean {
-            return oldItem.questionContent == newItem.questionContent
+        for(questions in questionList){
+            Log.i("questionlarr",questions.toString())
         }
 
-        override fun areContentsTheSame(oldItem: Question, newItem: Question): Boolean {
-            return oldItem == newItem
-        }
-    }
+        val diffUtil = QuestionDiffUtil(questionList,newTopQuestionList)
+        val diffResult = DiffUtil.calculateDiff(diffUtil)
+        questionList = newTopQuestionList
+        diffResult.dispatchUpdatesTo(this)
 
-    fun submitData(newQuestionList: List<Question>) {
-        submitList(newQuestionList)
     }
-
     class AskQuestionHolder(val binding: ItemQuestionRowBinding) : RecyclerView.ViewHolder(binding.root){
 
     }
@@ -101,6 +77,26 @@ class QuestionRecyclerAdapter(var questionList : ArrayList<Question>, private va
 
     override fun getItemCount(): Int {
         return questionList.size
+    }
+
+    private fun setMaxCharacterLimit(textView: TextView, maxLimit: Int) {
+        textView.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Değişiklik öncesi
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Değişiklik sırasında
+                if (s?.length ?: 0 > maxLimit) {
+                    val trimmedText = s?.substring(0, maxLimit)
+                    textView.text = trimmedText
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // Değişiklik sonrası
+            }
+        })
     }
 
 }

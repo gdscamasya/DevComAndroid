@@ -7,7 +7,7 @@ import com.google.firebase.storage.FirebaseStorage
 import devcom.android.data.Question
 import devcom.android.ui.fragment.form.questionList
 import devcom.android.ui.fragment.form.questionRecyclerAdapter
-import devcom.android.ui.fragment.form.topQuestionAdapter
+import devcom.android.ui.fragment.form.topQuestionRecyclerAdapter
 import devcom.android.ui.fragment.form.topQuestionList
 import devcom.android.utils.constants.FirebaseConstants
 import kotlinx.coroutines.*
@@ -99,8 +99,8 @@ class AskQuestionsToSaveGlobal(
 
                     questionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
                     topQuestionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
-                    topQuestionAdapter.submitDataTopVoted(topQuestionList)
-                    questionRecyclerAdapter.submitData(questionList)
+                    topQuestionRecyclerAdapter.setData(topQuestionList)
+                    questionRecyclerAdapter.setData(questionList)
 
 
                 } else {
@@ -159,8 +159,8 @@ class AskQuestionsToSaveGlobal(
 
                             questionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
                             topQuestionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
-                            topQuestionAdapter.submitDataTopVoted(topQuestionList)
-                            questionRecyclerAdapter.submitData(questionList)
+                            topQuestionRecyclerAdapter.setData(topQuestionList)
+                            questionRecyclerAdapter.setData(questionList)
 
                         }
                     }.addOnFailureListener {

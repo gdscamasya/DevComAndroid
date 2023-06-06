@@ -2,17 +2,14 @@ package devcom.android.logic.usecase
 
 import android.content.Context
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 import devcom.android.R
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.data.Question
 import devcom.android.ui.fragment.form.questionRecyclerAdapter
-import devcom.android.ui.fragment.form.topQuestionAdapter
+import devcom.android.ui.fragment.form.topQuestionRecyclerAdapter
 import devcom.android.utils.constants.FirebaseConstants
-import devcom.android.utils.extensions.invisible
-import devcom.android.utils.extensions.visible
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,10 +18,6 @@ class LikedQuestion(private val db: FirebaseFirestore) {
 
     lateinit var dataStoreRepository: DataStoreRepository
     private lateinit var pointText: TextView
-    private lateinit var liking: ImageView
-    private lateinit var unLiking: ImageView
-
-
     private var point: Long = 0
     fun likedQuestions(
         view: View,
@@ -37,8 +30,7 @@ class LikedQuestion(private val db: FirebaseFirestore) {
     ) {
 
         pointText = view.findViewById(R.id.tv_up)
-        liking = view.findViewById(R.id.iv_liking)
-        unLiking = view.findViewById(R.id.iv_liked)
+
 
 
         val collectRef = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
@@ -81,8 +73,11 @@ class LikedQuestion(private val db: FirebaseFirestore) {
             questionList.get(position).likingViewVisible = true
 
 
-            questionRecyclerAdapter.notifyItemChanged(position)
-            topQuestionAdapter.notifyItemChanged(position)
+            if(listName == "QuestionList"){
+                questionRecyclerAdapter.setData(questionList)
+            }else if(listName == "TopQuestionList"){
+                topQuestionRecyclerAdapter.setData(questionList)
+            }
 
 
         }.addOnFailureListener {

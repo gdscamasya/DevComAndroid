@@ -21,6 +21,8 @@
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profileFragment_to_HomePage"
+            app:popUpTo="@+id/HomePage"
+            app:popUpToInclusive = "true"
             app:destination="@id/HomePage" />
         <action
             android:id="@+id/action_profileFragment_to_addAnnouncentsFragment"

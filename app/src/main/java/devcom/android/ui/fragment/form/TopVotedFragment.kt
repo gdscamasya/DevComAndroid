@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +16,6 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import devcom.android.R
-import devcom.android.data.repository.DataStoreRepository
 import devcom.android.ui.fragment.form.adapter.TopQuestionAdapter
 import devcom.android.data.Question
 import devcom.android.logic.usecase.CheckLikedQuestions
@@ -25,16 +23,15 @@ import devcom.android.logic.usecase.LikedQuestion
 import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.viewmodel.QuestionViewModel
 import devcom.android.viewmodel.QuestionViewModelFactory
-import kotlinx.coroutines.launch
 
 
 lateinit var topQuestionList: ArrayList<Question>
-private lateinit var topVotedRecycleView: RecyclerView
-lateinit var topQuestionAdapter: TopQuestionAdapter
-
+lateinit var topQuestionRecyclerAdapter: TopQuestionAdapter
+private lateinit var topQuestionRecycleView: RecyclerView
 private lateinit var topQuestionViewModel: QuestionViewModel
 
 class TopVotedFragment : Fragment() {
+
 
     private lateinit var swipeRefreshTopLayout: SwipeRefreshLayout
 
@@ -56,69 +53,58 @@ class TopVotedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val questionViewModelFactory =
+            QuestionViewModelFactory(LikedQuestion(db), CheckLikedQuestions(db))
+        topQuestionViewModel =
+            ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
 
-        createEmptyArrayList()
+        topQuestionList = ArrayList()
 
         getData()
 
-        Log.i("TopQuestionListSize64satır", topQuestionList.size.toString())
-
-
-        val questionViewModelFactory = QuestionViewModelFactory(LikedQuestion(db), CheckLikedQuestions(db))
-        topQuestionViewModel = ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
 
         swipeRefreshTopLayout = view.findViewById(R.id.swipeRefreshTopLayout)
-        topVotedRecycleView = view.findViewById(R.id.topVotedRecycler)
+        topQuestionRecycleView = view.findViewById(R.id.topVotedRecycler)
 
-        topVotedRecycleView.layoutManager = LinearLayoutManager(requireContext())
-        topQuestionAdapter = TopQuestionAdapter(topQuestionList, object : TopRecyclerViewItemClickListener{
+        topQuestionRecycleView.layoutManager = LinearLayoutManager(requireContext())
+        topQuestionRecyclerAdapter = TopQuestionAdapter(object : TopRecyclerViewItemClickListener {
             override fun onClick(param: Any?) {
-                val action = FormFragmentDirections.actionFormToInsideTheQuestionFragment(param as String?)
+                //if Form Item navigate to InsideTheQuestionFragment
+                val action =
+                    FormFragmentDirections.actionFormToInsideTheQuestionFragment(param as String?)
                 Navigation.findNavController(requireView()).navigate(action)
             }
 
-        },object : TopRecyclerViewItemClickListener{
+        }, object : TopRecyclerViewItemClickListener {
             override fun onClick(param: Any?) {
+                //if Click Like Button update TopQuestionRecyclerAdapter
                 topQuestionViewModel.likedQuestions(
                     requireView(),
                     requireContext(),
                     topQuestionList,
                     param as Int,
-                    "TopQuestions"
+                    "TopQuestionList"
                 )
             }
         })
+        topQuestionRecycleView.adapter = topQuestionRecyclerAdapter
 
-        topVotedRecycleView.adapter = topQuestionAdapter
-        Log.i("TopQuestionListSize92satır", topQuestionList.size.toString())
-
-        topQuestionViewModel.checkLikedQuestions(
-            requireView(),
-            requireContext(),
-            topQuestionList,
-            "TopQuestions"
-        )
 
         setOnRefreshListener()
     }
-    private fun createEmptyArrayList(){
-        topQuestionList = ArrayList()
-    }
 
-    private fun setOnRefreshListener(){
+
+    private fun setOnRefreshListener() {
+        //Refresh Data and change View
         swipeRefreshTopLayout.setOnRefreshListener {
-
-            createEmptyArrayList()
             getData()
-            topVotedRecycleView.adapter = topQuestionAdapter
 
             swipeRefreshTopLayout.isRefreshing = false
         }
     }
 
     private fun getData() {
-        Log.i("PageChange", "TopVoted Sayfasına gitti GetData()")
-
+        //Get Questions data with limited 10 question
         db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
             .orderBy(FirebaseConstants.FILED_QUESTION_POINT, Query.Direction.DESCENDING).limit(10)
             .addSnapshotListener { value, error ->
@@ -167,8 +153,18 @@ class TopVotedFragment : Fragment() {
                                 topQuestionList.add(askingQuestions)
 
                             }
-                            topQuestionAdapter.submitDataTopVoted(topQuestionList)
-                            Log.i("TopQuestionListSizeGetDataSubmitDataSonra", topQuestionList.size.toString())
+                            topQuestionRecyclerAdapter.setData(topQuestionList)
+
+                            topQuestionViewModel.checkLikedQuestions(
+                                requireView(), requireContext(),
+                                topQuestionList, "TopQuestionList"
+                            )
+
+                            //if user was liked item, view visible Liking Button
+                            Log.i(
+                                "TopQuestionListSizeGetDataSubmitDataSonra",
+                                topQuestionList.size.toString()
+                            )
 
                         }
 
@@ -179,15 +175,9 @@ class TopVotedFragment : Fragment() {
     }
 
 
-    fun refresh(){
-
-        createEmptyArrayList()
-
-        getData()
-        Log.i("TopQuestionListSize", topQuestionList.size.toString())
-
-        //topVotedRecycleView.adapter = topQuestionAdapter
-
+    fun refresh() {
+        //When slide ViewPager2 Refresh contents on page
+        //getData()
 
     }
 

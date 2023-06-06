@@ -3,16 +3,14 @@ package devcom.android.logic.usecase
 import android.content.Context
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
+import android.widget.Toast
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import devcom.android.R
 import devcom.android.data.repository.DataStoreRepository
 import devcom.android.data.Question
 import devcom.android.ui.fragment.form.questionRecyclerAdapter
-import devcom.android.ui.fragment.form.topQuestionAdapter
+import devcom.android.ui.fragment.form.topQuestionRecyclerAdapter
 import devcom.android.utils.constants.FirebaseConstants
-import devcom.android.utils.extensions.invisible
-import devcom.android.utils.extensions.visible
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +18,6 @@ import kotlinx.coroutines.launch
 class CheckLikedQuestions(private val db: FirebaseFirestore) {
 
     lateinit var dataStoreRepository: DataStoreRepository
-    private lateinit var likedIndexQuestions: ArrayList<Int?>
     private lateinit var likedQuestions: ArrayList<String?>
 
     fun checkLiked(
@@ -35,59 +32,65 @@ class CheckLikedQuestions(private val db: FirebaseFirestore) {
             dataStoreRepository = DataStoreRepository(context)
             val documents = dataStoreRepository.getDataFromDataStore("document")
 
+            Log.i("documentName",documents.toString())
+
             likedQuestions = ArrayList()
-            likedIndexQuestions = ArrayList()
 
             if (documents != null) {
                 db.collection(FirebaseConstants.COLLECTION_PATH_USERS).document(documents)
                     .collection("LikedQuestions")
                     .addSnapshotListener { value, error ->
+
                         if (error != null) {
-                            return@addSnapshotListener
+                            Toast.makeText(context, "sadoaw", Toast.LENGTH_SHORT).show()
                         } else {
-                            if (value != null && !value.isEmpty) {
-                                val documenter = value.documents
 
-                                likedQuestions.clear()
+                            if (value != null) {
+                                if (!value.isEmpty) {
+                                    val documenter = value.documents
 
 
-                                for (document in documenter) {
-                                    val docNum = document.id
-                                    likedQuestions.add(docNum) ///users -> 4vX7ac7koaOTmu1LznCB -> LikedQuestions -> document.id
-                                }
+                                    likedQuestions.clear()
 
-                                for ((index, question) in questionList.withIndex()) {
-                                    if (likedQuestions.contains(question.docNum)) {
-                                        likedIndexQuestions.add(index)
-                                    }
-                                }
+                                    //User get liking questions with document.id
+                                    getDocumentId(documenter)
 
-                                if (questionList.isNotEmpty()) {
-                                    for (liking in likedQuestions) {
+                                    if (questionList.isNotEmpty()){
+
+                                        for (question in questionList){
+                                            Log.i("allQuestionListFirst",question.toString())
+                                        }
+
                                         for (question in questionList) {
-                                            if (liking == question.docNum) {
-
-                                                val questionIndex = questionList.indexOf(question)
+                                            if (likedQuestions.contains(question.docNum)) {
                                                 question.likingViewVisible = true
-
-
-                                                questionRecyclerAdapter.notifyItemChanged(questionIndex)
-
-                                                topQuestionAdapter.notifyItemChanged(questionIndex)
-
-
                                             }
+                                        }
+
+                                        for (question in questionList){
+                                            Log.i("allQuestionListSecond",question.toString())
+                                        }
+                                        if(listName == "QuestionList"){
+                                            questionRecyclerAdapter.setData(questionList)
+                                        }else if(listName == "TopQuestionList"){
+                                            topQuestionRecyclerAdapter.setData(questionList)
+
                                         }
                                     }
                                 }
-
-
                             }
                         }
                     }
             }
         }
 
+    }
+
+    private fun getDocumentId(documentId: MutableList<DocumentSnapshot>) {
+        for (document in documentId) {
+            val docNum = document.id
+            likedQuestions.add(docNum) ///users -> 4vX7ac7koaOTmu1LznCB -> LikedQuestions -> document.id
+        }
     }
 
 }

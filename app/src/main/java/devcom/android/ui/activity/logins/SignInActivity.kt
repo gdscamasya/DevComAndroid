@@ -155,7 +155,6 @@ class SignInActivity : AppCompatActivity() {
     private fun registerSetOnClickListener() {
         binding.btnRegister.setOnClickListener {
             navigateToAnotherActivity(SignUpActivity::class.java)
-
         }
     }
 
@@ -306,21 +305,18 @@ class SignInActivity : AppCompatActivity() {
                             if (uuid == auth.currentUser!!.uid) {
                                 lifecycleScope.launch {
                                     dataStoreRepository.saveDataToDataStore(document.id,"document")
-                                    showToastMessage(dataStoreRepository.getDataFromDataStore("document")!!)
                                 }
 
                                 when (authority) {
                                     "User" -> {
                                         lifecycleScope.launch {
                                             dataStoreRepository.saveDataToDataStore(authority,"Auth")
-                                            showToastMessage(dataStoreRepository.getDataFromDataStore("Auth")!!)
                                         }
                                         navigateToAnotherActivity(MainActivity::class.java)
                                     }
                                     "Editor" -> {
                                         lifecycleScope.launch {
                                             dataStoreRepository.saveDataToDataStore(authority,"Auth")
-                                            showToastMessage(dataStoreRepository.getDataFromDataStore("Auth")!!)
                                         }
                                         navigateToAnotherActivity(MainActivity::class.java)
                                     }

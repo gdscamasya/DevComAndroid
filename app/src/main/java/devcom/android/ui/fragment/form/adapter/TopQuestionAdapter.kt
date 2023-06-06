@@ -25,11 +25,80 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TopQuestionAdapter(var topQuestionList : ArrayList<Question>, private val itemViewListener : TopRecyclerViewItemClickListener, private val likeClickListener : TopRecyclerViewItemClickListener) : ListAdapter<Question,TopQuestionAdapter.TopQuestionHolder>(TopQuestionDiffCallback()){
+class TopQuestionAdapter(
 
-    lateinit var dataStoreRepository: DataStoreRepository
-    val db = Firebase.firestore
-    var point : Long = 0
+    private val itemViewListener: TopRecyclerViewItemClickListener,
+    private val likeClickListener: TopRecyclerViewItemClickListener
+) :
+    RecyclerView.Adapter<TopQuestionAdapter.TopQuestionHolder>() {
+
+    private var topQuestionList: ArrayList<Question> = ArrayList()
+    fun getTopQuestionList(): ArrayList<Question> {
+        return topQuestionList
+    }
+
+    fun setTopQuestionList(newTopQuestionList: ArrayList<Question>) {
+        topQuestionList = newTopQuestionList
+    }
+
+    fun setData(newTopQuestionList: ArrayList<Question>) {
+        val diffUtil = TopQuestionDiffUtil(getTopQuestionList(), newTopQuestionList)
+        val diffResult = DiffUtil.calculateDiff(diffUtil)
+        setTopQuestionList(newTopQuestionList)
+        diffResult.dispatchUpdatesTo(this)
+
+    }
+
+    class TopQuestionHolder(val binding: ItemQuestionRowBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopQuestionHolder {
+        val binding =
+            ItemQuestionRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return TopQuestionHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: TopQuestionHolder, position: Int) {
+        holder.binding.tvNickname.text = topQuestionList.get(position).questionUsername
+        setMaxCharacterLimit(holder.binding.tvQuestionHeader, 100)
+        holder.binding.tvQuestionHeader.text = topQuestionList.get(position).questionHeader
+        setMaxCharacterLimit(holder.binding.tvQuestionIntrodoucten, 100)
+        holder.binding.tvQuestionIntrodoucten.text = topQuestionList.get(position).questionContent
+
+        if (topQuestionList.get(position).questionImageProfile != null) {
+            Picasso.get().load(topQuestionList.get(position).questionImageProfile).resize(200, 200)
+                .centerCrop().into(holder.binding.ivProfileQuestion)
+        }
+
+        holder.binding.tvUp.text = topQuestionList.get(position).questionPoint
+
+        holder.binding.ivLiking.visibility =
+            if (topQuestionList.get(position).likingViewVisible) View.INVISIBLE else View.VISIBLE
+        holder.binding.ivLiked.visibility =
+            if (topQuestionList.get(position).likingViewVisible) View.VISIBLE else View.INVISIBLE
+
+
+        holder.itemView.setOnClickListener {
+
+            itemViewListener.onClick(topQuestionList.get(position).docNum)
+
+        }
+
+
+        holder.binding.ivLiking.setOnClickListener {
+
+            likeClickListener.onClick(position)
+
+        }
+    }
+
+
+
+    override fun getItemCount(): Int {
+        return topQuestionList.size
+    }
 
     private fun setMaxCharacterLimit(textView: TextView, maxLimit: Int) {
         textView.addTextChangedListener(object : TextWatcher {
@@ -49,65 +118,6 @@ class TopQuestionAdapter(var topQuestionList : ArrayList<Question>, private val 
                 // Değişiklik sonrası
             }
         })
-    }
-
-    class TopQuestionDiffCallback : DiffUtil.ItemCallback<Question>() {
-        override fun areItemsTheSame(oldItem: Question, newItem: Question): Boolean {
-            return oldItem.questionPoint == newItem.questionPoint
-        }
-
-        override fun areContentsTheSame(oldItem: Question, newItem: Question): Boolean {
-            return oldItem == newItem
-        }
-    }
-
-    fun submitDataTopVoted(newQuestionList: List<Question>) {
-        submitList(newQuestionList)
-    }
-
-
-    class TopQuestionHolder(val binding:ItemQuestionRowBinding) : RecyclerView.ViewHolder(binding.root){
-
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopQuestionHolder {
-        val binding = ItemQuestionRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return TopQuestionHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: TopQuestionHolder, position: Int) {
-        holder.binding.tvNickname.text = topQuestionList.get(position).questionUsername
-        setMaxCharacterLimit(holder.binding.tvQuestionHeader,100)
-        holder.binding.tvQuestionHeader.text = topQuestionList.get(position).questionHeader
-        setMaxCharacterLimit(holder.binding.tvQuestionIntrodoucten,100)
-        holder.binding.tvQuestionIntrodoucten.text = topQuestionList.get(position).questionContent
-
-        if(topQuestionList.get(position).questionImageProfile != null){
-            Picasso.get().load(topQuestionList.get(position).questionImageProfile).resize(200,200).centerCrop().into(holder.binding.ivProfileQuestion)
-        }
-
-        holder.binding.tvUp.text = topQuestionList.get(position).questionPoint
-
-        holder.binding.ivLiking.visibility = if (topQuestionList.get(position).likingViewVisible) View.INVISIBLE else View.VISIBLE
-        holder.binding.ivLiked.visibility = if (topQuestionList.get(position).likingViewVisible) View.VISIBLE else View.INVISIBLE
-
-
-        holder.itemView.setOnClickListener{
-
-            itemViewListener.onClick(topQuestionList.get(position).docNum)
-
-        }
-
-
-        holder.binding.ivLiking.setOnClickListener {
-
-            likeClickListener.onClick(position)
-
-        }
-    }
-
-    override fun getItemCount(): Int {
-        return topQuestionList.size
     }
 
 }

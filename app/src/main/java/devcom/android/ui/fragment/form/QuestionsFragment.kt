@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import devcom.android.R
@@ -33,7 +34,8 @@ private lateinit var questionViewModel: QuestionViewModel
 
 class QuestionsFragment : Fragment() {
 
-    private lateinit var dataStoreRepository: DataStoreRepository
+    private lateinit var swipeRefreshQuestionLayout: SwipeRefreshLayout
+
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,102 +53,58 @@ class QuestionsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.i("PageChange", "QuestionFragment Sayfasına gitti")
-
-
-        createEmptyArrayList()
-
-        getData()
 
         val questionViewModelFactory =
             QuestionViewModelFactory(LikedQuestion(db), CheckLikedQuestions(db))
         questionViewModel =
             ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
 
+        questionList = ArrayList()
 
+        getData()
+
+        swipeRefreshQuestionLayout = view.findViewById(R.id.swipeRefreshQuestionLayout)
         questionRecyclerView = view.findViewById(R.id.rv_question)
-
         questionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         questionRecyclerAdapter =
-            QuestionRecyclerAdapter(questionList, object : RecyclerViewItemClickListener {
+            QuestionRecyclerAdapter(object : RecyclerViewItemClickListener {
+                //if Form Item navigate to InsideTheQuestionFragment
                 override fun onClick(param: Any?) {
-                    val action = FormFragmentDirections.actionFormToInsideTheQuestionFragment(param as String?)
+                    val action =
+                        FormFragmentDirections.actionFormToInsideTheQuestionFragment(param as String?)
                     Navigation.findNavController(requireView()).navigate(action)
                 }
 
             }, object : RecyclerViewItemClickListener {
+                //if Click Like Button update QuestionRecyclerAdapter
                 override fun onClick(param: Any?) {
                     questionViewModel.likedQuestions(
                         requireView(),
                         requireContext(),
                         questionList,
                         param as Int,
-                        "Questions"
+                        "QuestionList"
                     )
                 }
 
             })
         questionRecyclerView.adapter = questionRecyclerAdapter
 
-        questionViewModel.checkLikedQuestions(
-            requireView(),
-            requireContext(),
-            questionList,
-            "Questions"
-        )
-
+        refreshSetOnListener()
     }
 
-    private fun createEmptyArrayList(){
-        questionList = ArrayList()
-    }
 
-    private fun observeLiveData() {
-        observeIsLikedQuestions()
-        observeCheckLikedQuestion()
-    }
-
-    private fun observeIsLikedQuestions() {
-        questionViewModel.isLikedQuestion.observe(viewLifecycleOwner) { isNowLikedQuestion ->
-            if (isNowLikedQuestion) {
-                showToastMessageFragment("başarılı add LikedQuestion FireStore")
-            } else {
-                showToastMessageFragment("başarısız add LikedQuestion FireStore")
-
-            }
-
-        }
-    }
-
-    private fun observeCheckLikedQuestion() {
-        questionViewModel.isCheckLikedQuestions.observe(viewLifecycleOwner) { isCheckLikedQuestion ->
-            if (isCheckLikedQuestion) {
-               for(question in questionList){
-                   val questionIndex = questionList.indexOf(question)
-                   question.likingViewVisible = true
-                   questionRecyclerAdapter.notifyItemChanged(questionIndex)
-               }
-            }
-
+    private fun refreshSetOnListener(){
+        swipeRefreshQuestionLayout.setOnRefreshListener {
+            getData()
+            swipeRefreshQuestionLayout.isRefreshing = false
         }
     }
 
 
-    /* private fun refreshSetOnListener(){
-        swipeRefreshLayout.setOnRefreshListener {
-            questionList.clear()
-            if(questionList.isEmpty()){
-                getData()
-            }
-            questionAdapter = QuestionAdapter(questionList)
-            questionRecyclerView.adapter = questionAdapter
-            swipeRefreshLayout.isRefreshing = false
-        }
-    }
-
-     */
 
     private fun getData() {
+        //Get Questions data with not limitation
 
         db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
             .addSnapshotListener { value, error ->
@@ -193,23 +151,30 @@ class QuestionsFragment : Fragment() {
                                     likingViewVisible = false
                                 )
                                 questionList.add(askingQuestions)
-
                             }
 
-                            questionRecyclerAdapter.submitData(questionList)
+                            questionRecyclerAdapter.setData(questionList)
+
+                            questionViewModel.checkLikedQuestions(
+                                requireView(), requireContext(),
+                                questionList, "QuestionList"
+                            )
+
+                            for (questions in questionList) {
+                                Log.i("questionListListener", questions.toString())
+
+                            }
+                            //if user was liked item, view visible Liking Button
+
                         }
                     }
                 }
             }
     }
 
-    fun refresh(){
-
-        createEmptyArrayList()
-
-        getData()
-
-        questionRecyclerView.adapter = topQuestionAdapter
+    fun refresh() {
+        //When slide ViewPager2 Refresh contents on page
+        //getData()
 
     }
 

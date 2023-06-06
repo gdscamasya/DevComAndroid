@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.fcv_main_host)
         bottomNav.setupWithNavController(navController)
 
-
     }
 
 
