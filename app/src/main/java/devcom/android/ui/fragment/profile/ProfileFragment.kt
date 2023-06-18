@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -36,6 +37,7 @@ import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.showToastMessageFragment
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class ProfileFragment : Fragment() {
@@ -173,32 +175,94 @@ class ProfileFragment : Fragment() {
                 //download url -> firestore a aktaracaz
                 val uploadPicRef = storage.reference.child("profileImages").child(imageName)
                 uploadPicRef.downloadUrl.addOnSuccessListener {
+
                     val downloadUrl = it.toString()
-                    val collecRef = db.collection(FirebaseConstants.COLLECTION_PATH_USERS)
+                    val collectRef = db.collection(FirebaseConstants.COLLECTION_PATH_USERS)
 
                     val updates = hashMapOf<String,Any>(
                         "downloadUrl" to downloadUrl
                     )
 
-
-
-                    collecRef.whereEqualTo(FirebaseConstants.FIELD_UUID,auth.currentUser!!.uid)
+                    collectRef.whereEqualTo(FirebaseConstants.FIELD_UUID,auth.currentUser!!.uid)
                         .get()
                         .addOnSuccessListener {documents ->
-                            for(documentt in documents){
-                                if(!documentt.contains("donwloadUrl")){
-                                    documentt.reference.update(updates)
-                                }
+                            for(document in documents){
+                                    getDocumentId(document.id,downloadUrl)
+                                    document.reference.update(updates)
                             }
                         }.addOnFailureListener {
                             showToastMessageFragment("Bir şeyler ters gitti, tekrar deneyiniz")
                         }
+
+
+
                 }
 
             }.addOnFailureListener{
                 showToastMessageFragment("Bir şeyler ters gitti,lütfen tekrar deneyiniz")
             }
         }
+    }
+
+    private fun getDocumentId(documentId : String, downloadUrl : String){
+        db.collection(FirebaseConstants.COLLECTION_PATH_USERS).document(documentId).collection("HerAnswers").get().addOnSuccessListener { documents ->
+            if(documents != null){
+                for(document in documents){
+                    Log.i("AnswerId",document.id)
+                    questionAnswerId(document.id,downloadUrl)
+                }
+            }
+        }
+
+        db.collection(FirebaseConstants.COLLECTION_PATH_USERS).document(documentId).collection("HerQuestion").get().addOnSuccessListener { documents ->
+            for(document in documents){
+                getQuestionId(document.id,downloadUrl)
+            }
+        }
+    }
+
+    private fun getQuestionId(questionId: String, downloadUrl:String){
+
+        val updates = hashMapOf<String,Any>(
+            "AskQuestionProfileImage" to downloadUrl
+        )
+
+        db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).get().addOnSuccessListener {documents ->
+            if(documents != null){
+                for(document in documents){
+                    if(document.id == questionId){
+                        document.reference.update(updates)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun questionAnswerId(questionAnswerId : String, downloadUrl : String){
+
+        val updates = hashMapOf<String,Any>(
+            "AnswerProfileImage" to downloadUrl
+        )
+
+        db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).get().addOnSuccessListener{documents ->
+            if(documents != null){
+                for(document in documents){
+                    val subCollectionRef = document.reference.collection(FirebaseConstants.COLLECTION_PATH_ANSWERS)
+
+                    subCollectionRef.get().addOnSuccessListener{subDocuments ->
+                        if(subDocuments != null){
+                            for (subDocument in subDocuments){
+                                if(subDocument.id == questionAnswerId){
+                                    subDocument.reference.update(updates)
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
     }
     private fun setProfileImageSetOnClickListener(){
         profileImageView.setOnClickListener {
