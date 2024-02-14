@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -34,6 +35,7 @@ import devcom.android.data.repository.DataStoreRepository
 import devcom.android.ui.activity.logins.SignInActivity
 import devcom.android.ui.activity.main.MainActivity
 import devcom.android.utils.constants.FirebaseConstants
+import devcom.android.utils.extensions.navigateToAnotherActivity
 import devcom.android.utils.extensions.showToastMessageFragment
 import kotlinx.coroutines.launch
 import java.util.*
@@ -42,13 +44,14 @@ import kotlin.collections.HashMap
 
 class ProfileFragment : Fragment() {
 
+    private var documentId:String? = null
     private var authorityStatus:String? = null
     private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
     private lateinit var dataStoreRepository: DataStoreRepository
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
-    var selectedPicture: Uri? = null
+    private var selectedPicture: Uri? = null
 
 
     private lateinit var bottomNav:BottomNavigationView
@@ -56,6 +59,7 @@ class ProfileFragment : Fragment() {
     private lateinit var profileImageView: ImageView
     private lateinit var addPostImageView: ImageView
     private lateinit var returnImageView: ImageView
+    private lateinit var deleteAccount: LinearLayout
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +87,7 @@ class ProfileFragment : Fragment() {
         addPostImageView = view.findViewById(R.id.iv_add_post)
         usernameProfileScope = view.findViewById(R.id.tv_username)
         profileImageView = view.findViewById(R.id.iv_profile2)
+        deleteAccount = view.findViewById(R.id.line_account_delete)
         bottomNav.visibility = View.VISIBLE
 
         returnImageView.setOnClickListener {
@@ -90,6 +95,11 @@ class ProfileFragment : Fragment() {
         }
 
         dataStoreRepository = DataStoreRepository(requireContext())
+
+        lifecycleScope.launch {
+            documentId = dataStoreRepository.getDataFromDataStore("document")
+        }
+
         checkAuthority()
 
         signOutSetOnClickListener()
@@ -98,6 +108,25 @@ class ProfileFragment : Fragment() {
         getData()
         registerLauncher()
         setProfileImageSetOnClickListener()
+        deleteAccount()
+    }
+
+    private fun deleteAccount(){
+        deleteAccount.setOnClickListener {
+            if(auth.currentUser != null){
+                auth.currentUser!!.delete()
+
+                if(documentId != null){
+                    db.collection("users").document(documentId!!).delete()
+                }
+
+                val intent = Intent(activity,SignInActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+
+
+            }
+        }
     }
 
     private fun addPostSetOnClickListener(){

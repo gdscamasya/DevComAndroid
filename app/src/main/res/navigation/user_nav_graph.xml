@@ -33,6 +33,9 @@
         <action
             android:id="@+id/action_profileFragment_to_addBlogFragment"
             app:destination="@id/addBlogFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_signInActivity"
+            app:destination="@id/signInActivity" />
     </fragment>
     <fragment
         android:id="@+id/event"
@@ -119,4 +122,9 @@
             app:argType="string"
             app:nullable="true" />
     </fragment>
+    <activity
+        android:id="@+id/signInActivity"
+        android:name="devcom.android.ui.activity.logins.SignInActivity"
+        android:label="activity_sign_in"
+        tools:layout="@layout/activity_sign_in" />
 </navigation>

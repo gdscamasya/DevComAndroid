@@ -18,12 +18,23 @@
             android:layout_height="wrap_content">
 
 
+            <ProgressBar
+                android:id="@+id/pb_loadingAnswer"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:theme="@style/Theme.AppCompat"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_header"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/top_background" />
@@ -63,6 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="500dp"
                 android:gravity="center"
+                android:background="@null"
                 android:hint="Cevabınızı buraya yazabilirsiniz"
                 android:inputType="textMultiLine"
                 android:maxLines="26"
@@ -86,17 +98,50 @@
                 android:textColor="@color/backgroundWhite"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/etp_answer_content" />
+                app:layout_constraintTop_toBottomOf="@id/linearLayout_Images" />
 
-            <ImageView
-                android:id="@+id/iv_add_image"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/ic_baseline_add_photo_alternate_24"
-                app:layout_constraintBottom_toBottomOf="@+id/etp_answer_content"
-                app:layout_constraintStart_toStartOf="@+id/etp_answer_content" />
+            <LinearLayout
+                android:id="@+id/linearLayout_Images"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/etp_answer_content"
+                app:layout_constraintStart_toStartOf="@+id/etp_answer_content">
+
+                <RelativeLayout
+                    android:id="@+id/rv_pickUpImages"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_sign_in_custom"
+                     >
+
+                    <View
+                        android:id="@+id/iv_add_image"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/ic_baseline_add_photo_alternate_24" />
+
+                </RelativeLayout>
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/viewPager_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                   />
+
+
+
+            </LinearLayout>
+
+            
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

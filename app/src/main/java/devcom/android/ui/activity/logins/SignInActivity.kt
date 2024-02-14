@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.facebook.CallbackManager
@@ -84,9 +86,10 @@ class SignInActivity : AppCompatActivity() {
         signInSetOnClickListener()
         googleLoginSetOnClickListener()
         facebookLoginSetOnClickListener()
-        observeLiveData()
+        observeReceived()
 
     }
+
 
     /*
     public override fun onStart() {
@@ -104,27 +107,15 @@ class SignInActivity : AppCompatActivity() {
 
      */
 
-    private fun observeIsSignInGoogle() {
-        viewModel.isSignInGoogle.observe(this) { isSignedGoogleIn ->
-            if (isSignedGoogleIn) {
-                getDataBase()
-                navigateToAnotherActivity(MainActivity::class.java)
-                this.finish()
-            } else {
-                showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
-                touchableScreen(R.id.pb_sign)
-            }
-        }
-    }
 
-    private fun observeIsExistsEmailFacebook() {
+
+    private fun observeReceived() {
+
         viewModel.isExistsEmailFacebook.observe(this) { ExistsEmailFacebook ->
             showSnackBarToMessage(binding.root, ExistsEmailFacebook)
             touchableScreen(R.id.pb_sign)
         }
-    }
 
-    private fun observeIsSignInFacebook() {
         viewModel.isSignInFacebook.observe(this) { response ->
             when (response) {
                 is Resource.Success -> {
@@ -139,12 +130,18 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
         }
-    }
 
-    private fun observeLiveData() {
-        observeIsExistsEmailFacebook()
-        observeIsSignInGoogle()
-        observeIsSignInFacebook()
+        viewModel.isSignInGoogle.observe(this) { isSignedGoogleIn ->
+            if (isSignedGoogleIn) {
+                getDataBase()
+                navigateToAnotherActivity(MainActivity::class.java)
+                touchableScreen(R.id.pb_sign)
+                this.finish()
+            } else {
+                showSnackBarToMessage(binding.root, getString(R.string.something_went_wrong))
+                touchableScreen(R.id.pb_sign)
+            }
+        }
 
     }
 
@@ -262,26 +259,26 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun updateUI(account: GoogleSignInAccount) {
-        try{
-                Log.i("statusAccount",account.email!!)
-                val email = account.email
+        try {
+            Log.i("statusAccount", account.email!!)
+            val email = account.email
 
-                if (email != null) {
-                    auth.fetchSignInMethodsForEmail(email).addOnSuccessListener {
-                        if (it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("password") || it.signInMethods!![0].equals(
-                                "facebook.com"
-                            ))
-                        ) {
-                            showSnackBarToMessage(binding.root, getString(R.string.used_same_email))
-                            touchableScreen(R.id.pb_sign)
-                        } else {
-                            viewModel.signInGoogle(account)
-                        }
+            if (email != null) {
+                auth.fetchSignInMethodsForEmail(email).addOnSuccessListener {
+                    if (it.signInMethods!!.size > 0 && (it.signInMethods!![0].equals("password") || it.signInMethods!![0].equals(
+                            "facebook.com"
+                        ))
+                    ) {
+                        showSnackBarToMessage(binding.root, getString(R.string.used_same_email))
+                        touchableScreen(R.id.pb_sign)
+                    } else {
+                        viewModel.signInGoogle(account)
                     }
                 }
+            }
 
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             showSnackBarToMessage(binding.root, "Bir şeyler ters gitti..")
             touchableScreen(R.id.pb_sign)
@@ -295,14 +292,14 @@ class SignInActivity : AppCompatActivity() {
         if (requestCode == RC_SIGN_IN) {
             val accountTask = GoogleSignIn.getSignedInAccountFromIntent(data)
 
-            if(accountTask.isSuccessful){
+            if (accountTask.isSuccessful) {
                 val getAccount = accountTask.getResult(ApiException::class.java)
 
-                if(getAccount != null){
+                if (getAccount != null) {
                     updateUI(getAccount)
                 }
 
-            }else{
+            } else {
                 showSnackBarToMessage(binding.root, "Bir şeyler ters gitti..-OnActivityResult")
                 touchableScreen(R.id.pb_sign)
             }

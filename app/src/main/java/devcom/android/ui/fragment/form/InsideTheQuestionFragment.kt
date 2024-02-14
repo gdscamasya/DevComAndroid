@@ -1,6 +1,8 @@
 package devcom.android.ui.fragment.form
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -24,9 +27,6 @@ import devcom.android.data.InsideQuestion
 import devcom.android.utils.constants.FirebaseConstants
 
 
-
-
-
 class InsideTheQuestionFragment : Fragment() {
 
     var db = Firebase.firestore
@@ -38,9 +38,18 @@ class InsideTheQuestionFragment : Fragment() {
     private lateinit var insideTheQuestionList: ArrayList<Any?>
     private lateinit var answerQuestionImageView:ImageView
     private lateinit var returnInsideQuestionImageView:ImageView
+    private lateinit var refreshInsideQuestion: SwipeRefreshLayout
+    private var fragmentContext: Context? = null
+    private var docId: String? = null
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        fragmentContext = context
+    }
 
-
-
+    override fun onDetach() {
+        super.onDetach()
+        fragmentContext = null
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,6 +65,7 @@ class InsideTheQuestionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         auth = Firebase.auth
         storage = Firebase.storage
 
@@ -65,19 +75,27 @@ class InsideTheQuestionFragment : Fragment() {
         questionTitle = view.findViewById(R.id.tv_question_inside_header)
         answerQuestionImageView = view.findViewById(R.id.iv_answer_in_question)
         returnInsideQuestionImageView = view.findViewById(R.id.iv_return_inside_question)
+        refreshInsideQuestion = view.findViewById(R.id.swipeRefreshInsideQuestionLayout)
 
         returnInsideQuestionImageView.setOnClickListener {
             Navigation.findNavController(it).popBackStack()
         }
 
         arguments?.let {
-            val docId = InsideTheQuestionFragmentArgs.fromBundle(it).docId
+            docId = InsideTheQuestionFragmentArgs.fromBundle(it).docId
             getData(docId)
             answerQuestionSetOnClickListener(docId)
         }
 
+        setRefreshLayout()
     }
 
+    private fun setRefreshLayout(){
+        refreshInsideQuestion.setOnRefreshListener {
+            //getAnswerData(docId)
+            refreshInsideQuestion.isRefreshing = false
+        }
+    }
     private fun answerQuestionSetOnClickListener(docId: String?){
         answerQuestionImageView.setOnClickListener{
             val action = InsideTheQuestionFragmentDirections.actionInsideTheQuestionFragmentToAnswerQuestion(docId)
@@ -88,7 +106,8 @@ class InsideTheQuestionFragment : Fragment() {
 
     private fun getData(docId: String?){
 
-        val documentRef = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
+        val documentRef = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS) //Question Document ->
+
         if (docId != null) {
             documentRef.document(docId).get().addOnSuccessListener {
                 if(it.exists()){
@@ -106,9 +125,6 @@ class InsideTheQuestionFragment : Fragment() {
                 }else{
                     Toast.makeText(requireContext(), "belge bulunamadı", Toast.LENGTH_SHORT).show()
                 }
-
-
-
             }.addOnFailureListener{
                 Toast.makeText(requireContext(), "Bir şeyler ters Gitti..", Toast.LENGTH_SHORT).show()
             }
@@ -117,13 +133,40 @@ class InsideTheQuestionFragment : Fragment() {
 
     }
 
+    //It retrieves all the answers to a question from Firebase.
     private fun getAnswerData(docId: String?){
         val docInCollectRef = db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
 
         if(docId != null){
+             docInCollectRef.document(docId).collection(FirebaseConstants.COLLECTION_PATH_ANSWERS).get().addOnSuccessListener { querySnapshot ->
+                 val context = fragmentContext ?: return@addOnSuccessListener
+
+                 for (document in querySnapshot.documents) {
+                     val answerContent = document.getString(FirebaseConstants.FIELD_ANSWER_CONTENT)
+                     val answerUsername = document.getString(FirebaseConstants.FIELD_ANSWER_USERNAME)
+                     val answerProfileImage = document.getString(FirebaseConstants.FIELD_ANSWER_PROFILE_IMAGE)
+                     val answerAddingImage = document.get(FirebaseConstants.FIELD_ANSWER_ADDING_IMAGE) as ArrayList<*>
+
+                     Log.i("AnswerAddingImage", answerAddingImage.toString())
+
+                     val answer = Answer(answerUsername, answerProfileImage, answerContent,answerAddingImage)
+                     insideTheQuestionList.add(answer)
+                 }
+                 insideTheQuestionRecyclerView.layoutManager = LinearLayoutManager(context)
+                 insideTheQuestionAdapter = InsideTheQuestionAdapter(insideTheQuestionList)
+                 insideTheQuestionRecyclerView.adapter = insideTheQuestionAdapter
+                 insideTheQuestionAdapter.submitData(insideTheQuestionList)
+
+
+             } .addOnFailureListener { e ->
+                 val context = fragmentContext ?: return@addOnFailureListener
+                 Toast.makeText(context, "Hata oluştu: ${e.message}", Toast.LENGTH_SHORT).show()
+             }
+            /*
             docInCollectRef.document(docId).collection(FirebaseConstants.COLLECTION_PATH_ANSWERS).addSnapshotListener{ value, error ->
+                val context = fragmentContext ?: return@addSnapshotListener
                 if(error != null){
-                    Toast.makeText(requireContext(), "error bulundu", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "error bulundu", Toast.LENGTH_SHORT).show()
                 }else{
                     if(value != null){
                         val documents = value.documents
@@ -132,22 +175,25 @@ class InsideTheQuestionFragment : Fragment() {
                             val answerContent = document.getString(FirebaseConstants.FIELD_ANSWER_CONTENT)
                             val answerUsername = document.getString(FirebaseConstants.FIELD_ANSWER_USERNAME)
                             val answerProfileImage = document.getString(FirebaseConstants.FIELD_ANSWER_PROFILE_IMAGE)
+                            //val answerAddingImage = document.getString(FirebaseConstants.FIELD_ANSWER_ADDING_IMAGE)
 
                             val answer = Answer(answerUsername,answerProfileImage,answerContent)
                             insideTheQuestionList.add(answer)
-
                         }
 
-                        insideTheQuestionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                        insideTheQuestionRecyclerView.layoutManager = LinearLayoutManager(context)
                         insideTheQuestionAdapter = InsideTheQuestionAdapter(insideTheQuestionList)
                         insideTheQuestionRecyclerView.adapter = insideTheQuestionAdapter
 
                     }else{
-                        Toast.makeText(requireContext(), "belge bulunamadı", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "belge bulunamadı", Toast.LENGTH_SHORT).show()
                     }
                 }
 
             }
+
+             */
+
         }
 
     }

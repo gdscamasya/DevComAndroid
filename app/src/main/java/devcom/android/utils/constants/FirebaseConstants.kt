@@ -21,7 +21,7 @@ object FirebaseConstants {
     const val FIELD_ANSWER_CONTENT = "AnswerContent"
     const val FIELD_ANSWER_USERNAME = "AnswerUsername"
     const val FIELD_ANSWER_PROFILE_IMAGE = "AnswerProfileImage"
-
+    const val FIELD_ANSWER_ADDING_IMAGE = "AnswerImgUrlList"
 
 
 

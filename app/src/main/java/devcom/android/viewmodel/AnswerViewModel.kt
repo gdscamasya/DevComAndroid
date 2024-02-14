@@ -21,19 +21,24 @@ class AnswerViewModel(
     val isAnswerQuestionGlobal: LiveData<Boolean>
         get() = _isAnswerQuestionGlobal
 
-    suspend fun answerQuestionToPersonal(context: Context, questionContent: String) {
-        answerQuestionToSavePersonal.answerQuestionToSavePersonal(context, questionContent,
+    suspend fun answerQuestionToPersonal(
+        context: Context,
+        questionContent: String,
+        chooseImageList: ArrayList<Uri>?
+    ) {
+        answerQuestionToSavePersonal.answerQuestionToSavePersonal(context, questionContent, chooseImageList,
             onSucces = { _isAnswerQuestionPersonal.value = true },
             onFailure = { _isAnswerQuestionPersonal.value = false }
         )
     }
 
-    suspend fun answerQuestionToGlobal(profileImageUrl: String?,
-        docId: String, questionContent: String
+    suspend fun answerQuestionToGlobal(
+        profileImageUrl: String?,
+        docId: String, questionContent: String, chooseImageList: ArrayList<Uri>?
     ) {
-        answerQuestionToSaveGlobal.answerQuestionToSaveGlobal(profileImageUrl,docId, questionContent,
-            onSucces = { _isAnswerQuestionGlobal.value = true },
-            onFailure = { _isAnswerQuestionGlobal.value = false })
+        answerQuestionToSaveGlobal.answerQuestionToSaveGlobal(profileImageUrl,docId, questionContent, chooseImageList,
+            onSucces = { _isAnswerQuestionGlobal.value = true }
+        ) { _isAnswerQuestionGlobal.value = false }
     }
 
 }
