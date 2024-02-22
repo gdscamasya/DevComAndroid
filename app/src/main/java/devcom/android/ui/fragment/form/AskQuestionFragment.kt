@@ -156,8 +156,8 @@ class AskQuestionFragment : Fragment() {
     private fun postQuestionBtnSetOnClickListener(){
         postQuestionBtn.setOnClickListener {
             lifecycleScope.launch {
-                formviewModel.askQuestionToSaveGlobal(profileImageUrl,getEditTextContent(),editTextHeader(),itemSelected,selectedPicture)
-                formviewModel.askQuestionToPersonal(requireContext(),getEditTextContent(),editTextHeader())
+                formviewModel.askQuestionToSaveGlobal(profileImageUrl,getEditTextContent(),editTextHeader(),itemSelected,selectedPicture,false)
+                formviewModel.askQuestionToPersonal(requireContext(),getEditTextContent(),editTextHeader(),false)
                 Navigation.findNavController(it).popBackStack()
             }
         }

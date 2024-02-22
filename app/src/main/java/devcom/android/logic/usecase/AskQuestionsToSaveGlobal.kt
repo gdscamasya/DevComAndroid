@@ -25,6 +25,7 @@ class AskQuestionsToSaveGlobal(
         questionHeader: String,
         questionTags: String,
         selectedPicture: Uri?,
+        pending: Boolean,
         onSucces: () -> Unit,
         onFailure: () -> Unit
     ) {
@@ -66,7 +67,8 @@ class AskQuestionsToSaveGlobal(
                             "QuestionUsername" to getUsername,
                             "QuestionContent" to questionContent,
                             "QuestionHeader" to questionHeader,
-                            "QuestionTags" to questionTags
+                            "QuestionTags" to questionTags,
+                            "QuestionPending" to pending
                         )
 
                         db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).document(uuid.toString())
@@ -84,7 +86,8 @@ class AskQuestionsToSaveGlobal(
                             "QuestionUsername" to getUsername,
                             "QuestionContent" to questionContent,
                             "QuestionHeader" to questionHeader,
-                            "QuestionTags" to questionTags
+                            "QuestionTags" to questionTags,
+                            "QuestionPending" to pending
                         )
 
                         db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).document(uuid.toString())
@@ -123,7 +126,8 @@ class AskQuestionsToSaveGlobal(
                                     "QuestionContent" to questionContent,
                                     "QuestionHeader" to questionHeader,
                                     "QuestionTags" to questionTags,
-                                    "QuestionImage" to downloadUrl
+                                    "QuestionImage" to downloadUrl,
+                                    "QuestionPending" to pending
                                 )
 
 
@@ -142,7 +146,8 @@ class AskQuestionsToSaveGlobal(
                                     "QuestionContent" to questionContent,
                                     "QuestionHeader" to questionHeader,
                                     "QuestionTags" to questionTags,
-                                    "QuestionImage" to downloadUrl
+                                    "QuestionImage" to downloadUrl,
+                                    "QuestionPending" to pending
                                 )
 
 

@@ -14,7 +14,7 @@ class AskQuestionToPersonalSave(private val auth: FirebaseAuth, private val db: 
 //Kişinin sormuş olduğu soruları user -> documents -> collections -> HerQuestion -> Documents -> field şeklinde kayıt ediyoruz
      private lateinit var dataStoreRepository: DataStoreRepository
 
-     suspend fun askQuestionToPersonal(context: Context, questionContent: String, questionHeader: String, onSucces : () -> Unit, onFailure : () -> Unit){
+     suspend fun askQuestionToPersonal(context: Context, questionContent: String, questionHeader: String,pending: Boolean, onSucces : () -> Unit, onFailure : () -> Unit){
 
          val uuidIn = UUID.randomUUID()
          uuid = uuidIn.toString()
@@ -23,7 +23,8 @@ class AskQuestionToPersonalSave(private val auth: FirebaseAuth, private val db: 
 
         val questionList = hashMapOf(
             "QuestionContent" to questionContent,
-            "QuestionHeader" to questionHeader
+            "QuestionHeader" to questionHeader,
+            "QuestionPending" to pending
         )
 
         val document = dataStoreRepository.getDataFromDataStore("document")        

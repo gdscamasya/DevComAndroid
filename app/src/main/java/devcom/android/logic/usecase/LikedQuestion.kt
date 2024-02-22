@@ -1,6 +1,7 @@
 package devcom.android.logic.usecase
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -48,6 +49,7 @@ class LikedQuestion(private val db: FirebaseFirestore) {
                     .set(emptyMap<String, Any>())
                     .addOnSuccessListener {
                         onSuccess()
+                        Log.i("LikedQuestionUpdateUI","Succes")
                     }
                     .addOnFailureListener {
                         onFailure()

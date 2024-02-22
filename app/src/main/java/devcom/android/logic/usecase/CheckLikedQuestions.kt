@@ -32,8 +32,6 @@ class CheckLikedQuestions(private val db: FirebaseFirestore) {
             dataStoreRepository = DataStoreRepository(context)
             val documents = dataStoreRepository.getDataFromDataStore("document")
 
-            Log.i("documentName",documents.toString())
-
             likedQuestions = ArrayList()
 
             if (documents != null) {
@@ -42,7 +40,7 @@ class CheckLikedQuestions(private val db: FirebaseFirestore) {
                     .addSnapshotListener { value, error ->
 
                         if (error != null) {
-                            Toast.makeText(context, "sadoaw", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Something wrong please try again..", Toast.LENGTH_SHORT).show()
                         } else {
 
                             if (value != null) {
@@ -57,9 +55,6 @@ class CheckLikedQuestions(private val db: FirebaseFirestore) {
 
                                     if (questionList.isNotEmpty()){
 
-                                        for (question in questionList){
-                                            Log.i("allQuestionListFirst",question.toString())
-                                        }
 
                                         for (question in questionList) {
                                             if (likedQuestions.contains(question.docNum)) {
@@ -67,9 +62,6 @@ class CheckLikedQuestions(private val db: FirebaseFirestore) {
                                             }
                                         }
 
-                                        for (question in questionList){
-                                            Log.i("allQuestionListSecond",question.toString())
-                                        }
                                         if(listName == "QuestionList"){
                                             questionRecyclerAdapter.setData(questionList)
                                         }else if(listName == "TopQuestionList"){

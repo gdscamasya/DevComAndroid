@@ -25,14 +25,13 @@ class QuestionRecyclerAdapter( private val itemViewListener : RecyclerViewItemCl
     private var questionList = ArrayList<Question>()
     fun setData(newTopQuestionList : ArrayList<Question>){
 
-        for(questions in questionList){
-            Log.i("questionlarr",questions.toString())
-        }
-
         val diffUtil = QuestionDiffUtil(questionList,newTopQuestionList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
-        questionList = newTopQuestionList
+        //questionList = newTopQuestionList
         diffResult.dispatchUpdatesTo(this)
+        for(question in questionList){
+            Log.i("Qqesersd",question.toString())
+        }
 
     }
     class AskQuestionHolder(val binding: ItemQuestionRowBinding) : RecyclerView.ViewHolder(binding.root){
