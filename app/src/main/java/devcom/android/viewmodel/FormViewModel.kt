@@ -21,8 +21,8 @@ class FormViewModel(private val askQuestionToPersonalSave: AskQuestionToPersonal
     val isAskQuestion: LiveData<Boolean>
         get() = _isAskQuestion
 
-    suspend fun askQuestionToPersonal(context: Context, questionContent: String, questionHeader: String){
-        askQuestionToPersonalSave.askQuestionToPersonal(context,questionContent, questionHeader,
+    suspend fun askQuestionToPersonal(context: Context, questionContent: String, questionHeader: String,pending: Boolean){
+        askQuestionToPersonalSave.askQuestionToPersonal(context,questionContent, questionHeader,pending,
             onSucces = { _isAskQuestionPersonal.value = true},
             onFailure = { _isAskQuestionPersonal.value = false}
             )
@@ -30,9 +30,9 @@ class FormViewModel(private val askQuestionToPersonalSave: AskQuestionToPersonal
 
     suspend fun askQuestionToSaveGlobal(profileImageUrl: String?,
         questionContent: String, questionHeader: String,itemSelected: String,
-        selectedPicture: Uri?,
+        selectedPicture: Uri?,pending: Boolean
     ){
-        askQuestionsToSaveGlobal.askQuestionToSaveGlobal(profileImageUrl,questionContent, questionHeader,itemSelected, selectedPicture,
+        askQuestionsToSaveGlobal.askQuestionToSaveGlobal(profileImageUrl,questionContent, questionHeader,itemSelected, selectedPicture,pending,
         onSucces = { _isAskQuestion.value = true },
         onFailure = { _isAskQuestion.value = false })
     }

@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,16 +26,18 @@ import devcom.android.utils.constants.FirebaseConstants
 import devcom.android.utils.extensions.showToastMessageFragment
 import devcom.android.viewmodel.QuestionViewModel
 import devcom.android.viewmodel.QuestionViewModelFactory
+import kotlinx.coroutines.launch
 
 
 lateinit var questionList: ArrayList<Question>
 lateinit var questionRecyclerAdapter: QuestionRecyclerAdapter
-private lateinit var questionRecyclerView: RecyclerView
-private lateinit var questionViewModel: QuestionViewModel
+
 
 
 class QuestionsFragment : Fragment() {
 
+    private lateinit var questionRecyclerView: RecyclerView
+    private lateinit var questionViewModel: QuestionViewModel
     private lateinit var swipeRefreshQuestionLayout: SwipeRefreshLayout
 
     val db = Firebase.firestore
@@ -89,8 +93,21 @@ class QuestionsFragment : Fragment() {
 
             })
         questionRecyclerView.adapter = questionRecyclerAdapter
-
+        observeLiveData()
         refreshSetOnListener()
+    }
+
+    private fun observeLiveData(){
+        questionViewModel.isLikedQuestion.observe(viewLifecycleOwner, Observer {LikedQuestion ->
+            LikedQuestion?.let {
+                if(LikedQuestion){
+                    updateUI()
+                }
+            }
+        })
+    }
+    private fun updateUI() {
+        getData()
     }
 
 
@@ -100,8 +117,6 @@ class QuestionsFragment : Fragment() {
             swipeRefreshQuestionLayout.isRefreshing = false
         }
     }
-
-
 
     private fun getData() {
         //Get Questions data with not limitation
@@ -123,48 +138,49 @@ class QuestionsFragment : Fragment() {
 
                             for (document in documents) {
 
-                                val docNum = document.id
-                                val askingUsername =
-                                    document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
-                                val questionContent =
-                                    document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String
-                                val questionHeader =
-                                    document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
-                                val questionImage =
-                                    document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
-                                val questionTags =
-                                    document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
-                                val questionProfileImage =
-                                    document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String
-                                val questionPoint =
-                                    document.getLong(FirebaseConstants.FILED_QUESTION_POINT)
+                                val pending = document.get(FirebaseConstants.FILED_QUESTION_PENDING) as? Boolean
+                                Toast.makeText(requireContext(), "Pending = $pending", Toast.LENGTH_SHORT).show()
 
-                                val askingQuestions = Question(
-                                    docNum,
-                                    questionProfileImage,
-                                    askingUsername,
-                                    questionContent,
-                                    questionHeader,
-                                    questionImage,
-                                    questionTags,
-                                    questionPoint.toString(),
-                                    likingViewVisible = false
-                                )
-                                questionList.add(askingQuestions)
+                                if(pending == false){
+                                    continue
+                                }else{
+                                    val docNum = document.id
+                                    val askingUsername =
+                                        document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
+                                    val questionContent =
+                                        document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String
+                                    val questionHeader =
+                                        document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
+                                    val questionImage =
+                                        document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
+                                    val questionTags =
+                                        document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
+                                    val questionProfileImage =
+                                        document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String
+                                    val questionPoint =
+                                        document.getLong(FirebaseConstants.FILED_QUESTION_POINT)
+
+                                    val askingQuestions = Question(
+                                        docNum,
+                                        questionProfileImage,
+                                        askingUsername,
+                                        questionContent,
+                                        questionHeader,
+                                        questionImage,
+                                        questionTags,
+                                        questionPoint.toString(),
+                                        likingViewVisible = false
+                                    )
+                                    questionList.add(askingQuestions)
+                                }
+
                             }
-
-                            questionRecyclerAdapter.setData(questionList)
 
                             questionViewModel.checkLikedQuestions(
                                 requireView(), requireContext(),
                                 questionList, "QuestionList"
                             )
 
-                            for (questions in questionList) {
-                                Log.i("questionListListener", questions.toString())
-
-                            }
-                            //if user was liked item, view visible Liking Button
 
                         }
                     }

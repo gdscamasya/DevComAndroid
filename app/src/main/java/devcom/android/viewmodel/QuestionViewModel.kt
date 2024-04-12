@@ -39,8 +39,6 @@ class QuestionViewModel(
             listName,
             onSuccess = { _isLikedQuestion.value = true },
             onFailure = { _isLikedQuestion.value = false })
-
-
     }
 
      fun checkLikedQuestions(

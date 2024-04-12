@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -87,18 +88,30 @@ class TopVotedFragment : Fragment() {
                 )
             }
         })
+
+
         topQuestionRecycleView.adapter = topQuestionRecyclerAdapter
 
-
+        observeLiveData()
         setOnRefreshListener()
     }
 
-
+    private fun observeLiveData(){
+        topQuestionViewModel.isLikedQuestion.observe(viewLifecycleOwner, Observer {LikedQuestion ->
+            LikedQuestion?.let {
+                if(LikedQuestion){
+                    updateUI()
+                }
+            }
+        })
+    }
+    private fun updateUI() {
+        getData()
+    }
     private fun setOnRefreshListener() {
         //Refresh Data and change View
         swipeRefreshTopLayout.setOnRefreshListener {
             getData()
-
             swipeRefreshTopLayout.isRefreshing = false
         }
     }
@@ -122,55 +135,59 @@ class TopVotedFragment : Fragment() {
                             topQuestionList.clear()
 
                             for (document in documents) {
+                                val pending =
+                                    document.get(FirebaseConstants.FILED_QUESTION_PENDING) as? Boolean
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Pending = $pending",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
-                                val docNUm = document.id
-                                val askingUsername =
-                                    document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
-                                val questionContent =
-                                    document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String
-                                val questionHeader =
-                                    document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
-                                val questionImage =
-                                    document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
-                                val questionTags =
-                                    document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
-                                val questionProfileImage =
-                                    document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String?
-                                val questionPoint =
-                                    document.getLong(FirebaseConstants.FILED_QUESTION_POINT)
+                                if (pending == false) {
+                                    continue
+                                } else {
+                                    val docNUm = document.id
+                                    val askingUsername =
+                                        document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
+                                    val questionContent =
+                                        document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String
+                                    val questionHeader =
+                                        document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
+                                    val questionImage =
+                                        document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
+                                    val questionTags =
+                                        document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
+                                    val questionProfileImage =
+                                        document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String?
+                                    val questionPoint =
+                                        document.getLong(FirebaseConstants.FILED_QUESTION_POINT)
 
-                                val askingQuestions = Question(
-                                    docNUm,
-                                    questionProfileImage,
-                                    askingUsername,
-                                    questionContent,
-                                    questionHeader,
-                                    questionImage,
-                                    questionTags,
-                                    questionPoint.toString(),
-                                    likingViewVisible = false
+                                    val askingQuestions = Question(
+                                        docNUm,
+                                        questionProfileImage,
+                                        askingUsername,
+                                        questionContent,
+                                        questionHeader,
+                                        questionImage,
+                                        questionTags,
+                                        questionPoint.toString(),
+                                        likingViewVisible = false
+                                    )
+                                    topQuestionList.add(askingQuestions)
+
+                                }
+
+                                topQuestionViewModel.checkLikedQuestions(
+                                    requireView(), requireContext(),
+                                    topQuestionList, "TopQuestionList"
                                 )
-                                topQuestionList.add(askingQuestions)
 
                             }
-                            topQuestionRecyclerAdapter.setData(topQuestionList)
-
-                            topQuestionViewModel.checkLikedQuestions(
-                                requireView(), requireContext(),
-                                topQuestionList, "TopQuestionList"
-                            )
-
-                            //if user was liked item, view visible Liking Button
-                            Log.i(
-                                "TopQuestionListSizeGetDataSubmitDataSonra",
-                                topQuestionList.size.toString()
-                            )
 
                         }
-
                     }
-                }
 
+                }
             }
     }
 
