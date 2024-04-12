@@ -1,13 +1,12 @@
 package devcom.android.logic.usecase
 
 import android.os.Bundle
-import android.util.Log
 import com.facebook.AccessToken
 import com.facebook.GraphRequest
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import devcom.android.users.User
+import devcom.android.data.User
 import devcom.android.utils.constants.FirebaseConstants
 
 class SignInFacebook(private val auth: FirebaseAuth, private val db: FirebaseFirestore) {

@@ -7,39 +7,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import devcom.android.R
 import devcom.android.data.repository.DataStoreRepository
-import devcom.android.ui.fragment.form.adapter.QuestionAdapter
-import devcom.android.users.Question
+import devcom.android.logic.usecase.CheckLikedQuestions
+import devcom.android.logic.usecase.LikedQuestion
+import devcom.android.ui.fragment.form.adapter.QuestionRecyclerAdapter
+import devcom.android.data.Question
 import devcom.android.utils.constants.FirebaseConstants
-import kotlinx.coroutines.launch
+import devcom.android.utils.extensions.showToastMessageFragment
+import devcom.android.viewmodel.QuestionViewModel
+import devcom.android.viewmodel.QuestionViewModelFactory
 
-private lateinit var auth: FirebaseAuth
-private lateinit var storage: FirebaseStorage
-private lateinit var questionList: ArrayList<Question>
-private lateinit var questionAdapter:QuestionAdapter
-private lateinit var questionRecyclerView:RecyclerView
-private lateinit var likedQuestions: ArrayList<String?>
-lateinit var likedIndexQuestions: ArrayList<Int?>
+
+lateinit var questionList: ArrayList<Question>
+lateinit var questionRecyclerAdapter: QuestionRecyclerAdapter
+private lateinit var questionRecyclerView: RecyclerView
+private lateinit var questionViewModel: QuestionViewModel
 
 
 class QuestionsFragment : Fragment() {
 
-    lateinit var dataStoreRepository: DataStoreRepository
+    private lateinit var swipeRefreshQuestionLayout: SwipeRefreshLayout
+
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
-       super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
 
     }
 
@@ -53,110 +53,134 @@ class QuestionsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        auth = Firebase.auth
-        storage = Firebase.storage
 
-        likedQuestions = ArrayList()
-        likedIndexQuestions = ArrayList()
+        val questionViewModelFactory =
+            QuestionViewModelFactory(LikedQuestion(db), CheckLikedQuestions(db))
+        questionViewModel =
+            ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
+
         questionList = ArrayList()
 
         getData()
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            checkLiked()
-        }
-
+        swipeRefreshQuestionLayout = view.findViewById(R.id.swipeRefreshQuestionLayout)
         questionRecyclerView = view.findViewById(R.id.rv_question)
-
         questionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        questionAdapter = QuestionAdapter(questionList)
-        questionRecyclerView.adapter = questionAdapter
+        questionRecyclerAdapter =
+            QuestionRecyclerAdapter(object : RecyclerViewItemClickListener {
+                //if Form Item navigate to InsideTheQuestionFragment
+                override fun onClick(param: Any?) {
+                    val action =
+                        FormFragmentDirections.actionFormToInsideTheQuestionFragment(param as String?)
+                    Navigation.findNavController(requireView()).navigate(action)
+                }
 
+            }, object : RecyclerViewItemClickListener {
+                //if Click Like Button update QuestionRecyclerAdapter
+                override fun onClick(param: Any?) {
+                    questionViewModel.likedQuestions(
+                        requireView(),
+                        requireContext(),
+                        questionList,
+                        param as Int,
+                        "QuestionList"
+                    )
+                }
+
+            })
+        questionRecyclerView.adapter = questionRecyclerAdapter
+
+        refreshSetOnListener()
     }
 
-    /* private fun refreshSetOnListener(){
-        swipeRefreshLayout.setOnRefreshListener {
-            questionList.clear()
-            if(questionList.isEmpty()){
-                getData()
-            }
-            questionAdapter = QuestionAdapter(questionList)
-            questionRecyclerView.adapter = questionAdapter
-            swipeRefreshLayout.isRefreshing = false
+
+    private fun refreshSetOnListener(){
+        swipeRefreshQuestionLayout.setOnRefreshListener {
+            getData()
+            swipeRefreshQuestionLayout.isRefreshing = false
         }
     }
 
-     */
 
-    private suspend fun checkLiked() {
-        dataStoreRepository = DataStoreRepository(requireContext())
 
-        val documents = dataStoreRepository.getDataFromDataStore("document")
-        if (documents != null) {
-            db.collection(FirebaseConstants.COLLECTION_PATH_USERS).document(documents).collection("LikedQuestions")
-                .addSnapshotListener { value, error ->
-                    if (error != null) {
-                        Toast.makeText(requireContext(), "Beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT).show()
-                    } else {
-                        if (value != null && !value.isEmpty) {
+    private fun getData() {
+        //Get Questions data with not limitation
+
+        db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Toast.makeText(
+                        requireContext(),
+                        "beklenmedik bir hata oluştu.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    if (value != null) {
+                        if (!value.isEmpty) {
                             val documents = value.documents
 
-                            likedQuestions.clear()
+                            questionList.clear()
 
                             for (document in documents) {
+
                                 val docNum = document.id
-                                likedQuestions.add(docNum)
+                                val askingUsername =
+                                    document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
+                                val questionContent =
+                                    document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String
+                                val questionHeader =
+                                    document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
+                                val questionImage =
+                                    document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
+                                val questionTags =
+                                    document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
+                                val questionProfileImage =
+                                    document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String
+                                val questionPoint =
+                                    document.getLong(FirebaseConstants.FILED_QUESTION_POINT)
+
+                                val askingQuestions = Question(
+                                    docNum,
+                                    questionProfileImage,
+                                    askingUsername,
+                                    questionContent,
+                                    questionHeader,
+                                    questionImage,
+                                    questionTags,
+                                    questionPoint.toString(),
+                                    likingViewVisible = false
+                                )
+                                questionList.add(askingQuestions)
                             }
 
-                            processLikedQuestions()
+                            questionRecyclerAdapter.setData(questionList)
+
+                            questionViewModel.checkLikedQuestions(
+                                requireView(), requireContext(),
+                                questionList, "QuestionList"
+                            )
+
+                            for (questions in questionList) {
+                                Log.i("questionListListener", questions.toString())
+
+                            }
+                            //if user was liked item, view visible Liking Button
+
                         }
                     }
                 }
-        }
-    }
-
-    private fun processLikedQuestions() {
-
-            for ((index, question) in questionList.withIndex()) {
-                if (likedQuestions.contains(question.docNum)) {
-                    likedIndexQuestions.add(index)
-                }
             }
     }
 
+    fun refresh() {
+        //When slide ViewPager2 Refresh contents on page
+        //getData()
 
-    private fun getData(){
-
-        db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).addSnapshotListener{ value, error ->
-            if(error != null){
-                Toast.makeText(requireContext(), "beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT).show()
-            }else{
-                if(value != null){
-                    if(!value.isEmpty){
-                        val documents = value.documents
-
-                        questionList.clear()
-
-                        for(document in documents){
-
-                            val docNum = document.id
-                            val askingUsername = document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
-                            val questionContent = document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String
-                            val questionHeader = document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
-                            val questionImage = document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
-                            val questionTags = document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
-                            val questionProfileImage = document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String
-                            val questionPoint = document.getLong(FirebaseConstants.FILED_QUESTION_POINT)
-
-                            val askingQuestions = Question(docNum,questionProfileImage,askingUsername,questionContent,questionHeader,questionImage,questionTags,questionPoint.toString())
-                            questionList.add(askingQuestions)
-
-                        }
-                        questionAdapter.submitData(questionList)
-                    }
-                }
-            }
-        }
     }
+
+}
+
+interface RecyclerViewItemClickListener {
+    fun onClick(param: Any?)
 
 }

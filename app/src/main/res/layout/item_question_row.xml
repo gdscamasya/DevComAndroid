@@ -21,6 +21,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/circle_img"
+        android:padding="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/Circular"
@@ -79,19 +80,23 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="40dp"
         android:layout_marginBottom="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_question_introdoucten"
         app:srcCompat="@drawable/ic_baseline_remove_red_eye_24" />
 
     <ImageView
         android:id="@+id/iv_answers"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="40dp"
         android:layout_marginBottom="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_views"
+        app:layout_constraintStart_toEndOf="@+id/iv_views"
+        app:layout_constraintTop_toBottomOf="@+id/tv_question_introdoucten"
         app:srcCompat="@drawable/ic_comment" />
 
 
@@ -106,57 +111,62 @@
     <TextView
         android:id="@+id/tv_views"
         android:layout_width="0dp"
-        android:layout_height="15dp"
-        android:layout_marginStart="4sp"
-        android:layout_marginBottom="3dp"
-        android:text="1000"
-        android:textSize="10sp"
+        android:layout_height="18dp"
+        android:layout_marginStart="8sp"
+        android:layout_marginBottom="5dp"
+        android:text="100"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_views"
+        app:layout_constraintEnd_toStartOf="@+id/iv_answers"
         app:layout_constraintStart_toEndOf="@+id/iv_views" />
 
     <TextView
         android:id="@+id/tv_answers"
         android:layout_width="0dp"
-        android:layout_height="15dp"
-        android:layout_marginStart="4sp"
-        android:layout_marginBottom="3dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="8sp"
+        android:layout_marginBottom="5dp"
         android:text="100"
-        android:textSize="10sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_answers"
+        app:layout_constraintEnd_toStartOf="@+id/iv_liking"
         app:layout_constraintStart_toEndOf="@+id/iv_answers" />
 
     <TextView
         android:id="@+id/tv_up"
         android:layout_width="0dp"
-        android:layout_height="15dp"
-        android:layout_marginStart="4dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="8dp"
         android:layout_marginBottom="5dp"
-        android:text="100"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@id/iv_up"
-        app:layout_constraintStart_toEndOf="@+id/iv_up" />
+        android:text="12"
+        android:textColor="#F6882E"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_liking"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_liking" />
 
     <ImageView
-        android:id="@+id/iv_up"
+        android:id="@+id/iv_liking"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginEnd="44dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="50dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_question_introdoucten"
         app:srcCompat="@drawable/ic_baseline_thumb_up_off_alt_24" />
 
     <ImageView
-        android:id="@+id/iv_down"
+        android:id="@+id/iv_liked"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_baseline_thumb_up_24"
         android:layout_marginEnd="44dp"
         android:layout_marginBottom="16dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:srcCompat="@drawable/ic_baseline_thumb_up_24" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

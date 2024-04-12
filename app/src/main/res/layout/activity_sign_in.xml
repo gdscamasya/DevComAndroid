@@ -60,7 +60,7 @@
                 android:background="@drawable/edit_text_custom"
                 android:ems="10"
                 android:gravity="center"
-                android:hint="@string/nickname_text"
+                android:hint="@string/Email_adres"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

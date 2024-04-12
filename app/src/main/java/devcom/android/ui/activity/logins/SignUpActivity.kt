@@ -34,9 +34,9 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
 
     val db = Firebase.firestore
-    val fb = LoginManager.getInstance()
 
-    val callbackManager = CallbackManager.Factory.create();
+    private val fb = LoginManager.getInstance()
+    private val callbackManager = CallbackManager.Factory.create();
     private val permission = listOf("email", "public_profile")
 
     private companion object {

@@ -16,33 +16,27 @@ class MainViewModel(
 ) : ViewModel() {
 
     private val _isSignInGoogle = MutableLiveData<Boolean>()
-    val isSignInGoogle: LiveData<Boolean>
-        get() = _isSignInGoogle
+    val isSignInGoogle: LiveData<Boolean> = _isSignInGoogle
 
     private val _isSignUp = MutableLiveData<Boolean>()
-    val isSignUp: LiveData<Boolean>
-        get() = _isSignUp
-
+    val isSignUp: LiveData<Boolean> = _isSignUp
+    //get() = _isSignUp
     private val _isSignedFacebookIn = MutableLiveData<Resource<Void>>()
-    val isSignInFacebook: LiveData<Resource<Void>>
-        get() = _isSignedFacebookIn
+    val isSignInFacebook: LiveData<Resource<Void>> = _isSignedFacebookIn
 
     private val _isExistsEmail = MutableLiveData<String>()
-    val isExistsEmail: LiveData<String>
-        get() = _isExistsEmail
+    val isExistsEmail: LiveData<String> = _isExistsEmail
 
     private val _isExistsEmailFacebook = MutableLiveData<String>()
-    val isExistsEmailFacebook: LiveData<String>
-        get() = _isExistsEmailFacebook
+    val isExistsEmailFacebook: LiveData<String> = _isExistsEmailFacebook
 
     private val _isExistsUsername = MutableLiveData<String>()
-    val isExistsUsername: LiveData<String>
-        get() = _isExistsUsername
-
-
+    val isExistsUsername: LiveData<String> = _isExistsUsername
     fun signInGoogle(account: GoogleSignInAccount) {
         signInGoogle.signInGoogle(account,
-            onSuccess = { _isSignInGoogle.value = true },
+            onSuccess = {
+                _isSignInGoogle.value = true
+            },
             onFailure = { _isSignInGoogle.value = false })
     }
 
@@ -66,13 +60,14 @@ class MainViewModel(
             })
     }
 
-
     fun signUpEmail(email: String, password: String, Username: String) {
         signUpEmail.signUpAccount(email, password, Username,
             onSameEmail = { _isExistsEmail.value = it },
             onSuccess = { _isSignUp.value = true },
             onFailure = { _isSignUp.value = false })
     }
+
+
 
 
 }

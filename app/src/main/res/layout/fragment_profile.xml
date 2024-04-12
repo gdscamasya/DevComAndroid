@@ -36,7 +36,7 @@ tools:context=".ui.fragment.profile.ProfileFragment">
     app:layout_constraintHorizontal_bias="0.461"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@drawable/top_backgorund" />
+    app:srcCompat="@drawable/top_background" />
 
 <TextView
     android:id="@+id/tv_title"
@@ -201,5 +201,25 @@ tools:context=".ui.fragment.profile.ProfileFragment">
             android:textSize="18sp" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line_account_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="55dp"
+            android:textColor="#FF0000"
+            android:text="Hesabı Sil"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

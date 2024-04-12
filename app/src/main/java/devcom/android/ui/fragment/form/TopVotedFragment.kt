@@ -1,34 +1,40 @@
 package devcom.android.ui.fragment.form
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import devcom.android.R
-import devcom.android.data.repository.DataStoreRepository
 import devcom.android.ui.fragment.form.adapter.TopQuestionAdapter
-import devcom.android.users.Question
+import devcom.android.data.Question
+import devcom.android.logic.usecase.CheckLikedQuestions
+import devcom.android.logic.usecase.LikedQuestion
 import devcom.android.utils.constants.FirebaseConstants
-import kotlinx.coroutines.launch
+import devcom.android.viewmodel.QuestionViewModel
+import devcom.android.viewmodel.QuestionViewModelFactory
 
 
-private lateinit var topQuestionList: ArrayList<Question>
-private lateinit var topVotedRecycleView: RecyclerView
-private lateinit var topQuestionAdapter: TopQuestionAdapter
-private lateinit var likedQuestionsTop: ArrayList<String?>
-lateinit var likedIndexQuestionsTopVoted: ArrayList<Int?>
+lateinit var topQuestionList: ArrayList<Question>
+lateinit var topQuestionRecyclerAdapter: TopQuestionAdapter
+private lateinit var topQuestionRecycleView: RecyclerView
+private lateinit var topQuestionViewModel: QuestionViewModel
 
 class TopVotedFragment : Fragment() {
 
-    lateinit var dataStoreRepository: DataStoreRepository
+
+    private lateinit var swipeRefreshTopLayout: SwipeRefreshLayout
+
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,98 +53,137 @@ class TopVotedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        likedIndexQuestionsTopVoted = ArrayList()
-        likedQuestionsTop = ArrayList()
+        val questionViewModelFactory =
+            QuestionViewModelFactory(LikedQuestion(db), CheckLikedQuestions(db))
+        topQuestionViewModel =
+            ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
+
         topQuestionList = ArrayList()
 
         getData()
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            checkLiked()
-        }
 
-        topVotedRecycleView = view.findViewById(R.id.topVotedRecycler)
+        swipeRefreshTopLayout = view.findViewById(R.id.swipeRefreshTopLayout)
+        topQuestionRecycleView = view.findViewById(R.id.topVotedRecycler)
 
-        topVotedRecycleView.layoutManager = LinearLayoutManager(requireContext())
-        topQuestionAdapter = TopQuestionAdapter(topQuestionList)
-        topVotedRecycleView.adapter = topQuestionAdapter
+        topQuestionRecycleView.layoutManager = LinearLayoutManager(requireContext())
+        topQuestionRecyclerAdapter = TopQuestionAdapter(object : TopRecyclerViewItemClickListener {
+            override fun onClick(param: Any?) {
+                //if Form Item navigate to InsideTheQuestionFragment
+                val action =
+                    FormFragmentDirections.actionFormToInsideTheQuestionFragment(param as String?)
+                Navigation.findNavController(requireView()).navigate(action)
+            }
+
+        }, object : TopRecyclerViewItemClickListener {
+            override fun onClick(param: Any?) {
+                //if Click Like Button update TopQuestionRecyclerAdapter
+                topQuestionViewModel.likedQuestions(
+                    requireView(),
+                    requireContext(),
+                    topQuestionList,
+                    param as Int,
+                    "TopQuestionList"
+                )
+            }
+        })
+        topQuestionRecycleView.adapter = topQuestionRecyclerAdapter
 
 
+        setOnRefreshListener()
     }
 
 
-    private suspend fun checkLiked() {
-        dataStoreRepository = DataStoreRepository(requireContext())
+    private fun setOnRefreshListener() {
+        //Refresh Data and change View
+        swipeRefreshTopLayout.setOnRefreshListener {
+            getData()
 
-        val documents = dataStoreRepository.getDataFromDataStore("document")
-        if (documents != null) {
-            db.collection(FirebaseConstants.COLLECTION_PATH_USERS).document(documents).collection("LikedQuestions")
-                .addSnapshotListener { value, error ->
-                    if (error != null) {
-                        Toast.makeText(requireContext(), "Beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT).show()
-                    } else {
-                        if (value != null && !value.isEmpty) {
+            swipeRefreshTopLayout.isRefreshing = false
+        }
+    }
+
+    private fun getData() {
+        //Get Questions data with limited 10 question
+        db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS)
+            .orderBy(FirebaseConstants.FILED_QUESTION_POINT, Query.Direction.DESCENDING).limit(10)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Toast.makeText(
+                        requireContext(),
+                        "beklenmedik bir hata oluştu.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    if (value != null) {
+                        if (!value.isEmpty) {
                             val documents = value.documents
 
-                            likedQuestionsTop.clear()
+                            topQuestionList.clear()
 
                             for (document in documents) {
-                                val docNum = document.id
-                                likedQuestionsTop.add(docNum)
+
+                                val docNUm = document.id
+                                val askingUsername =
+                                    document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
+                                val questionContent =
+                                    document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String
+                                val questionHeader =
+                                    document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
+                                val questionImage =
+                                    document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
+                                val questionTags =
+                                    document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
+                                val questionProfileImage =
+                                    document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String?
+                                val questionPoint =
+                                    document.getLong(FirebaseConstants.FILED_QUESTION_POINT)
+
+                                val askingQuestions = Question(
+                                    docNUm,
+                                    questionProfileImage,
+                                    askingUsername,
+                                    questionContent,
+                                    questionHeader,
+                                    questionImage,
+                                    questionTags,
+                                    questionPoint.toString(),
+                                    likingViewVisible = false
+                                )
+                                topQuestionList.add(askingQuestions)
+
                             }
+                            topQuestionRecyclerAdapter.setData(topQuestionList)
 
-                            processLikedQuestions()
-                        }
-                    }
-                }
-        }
-    }
+                            topQuestionViewModel.checkLikedQuestions(
+                                requireView(), requireContext(),
+                                topQuestionList, "TopQuestionList"
+                            )
 
-    private fun processLikedQuestions() {
-
-        for ((index, question) in topQuestionList.withIndex()) {
-            if (likedQuestionsTop.contains(question.docNum)) {
-                likedIndexQuestionsTopVoted.add(index)
-            }
-        }
-    }
-
-
-    private fun getData(){
-
-        db.collection(FirebaseConstants.COLLECTION_PATH_QUESTIONS).orderBy(FirebaseConstants.FILED_QUESTION_POINT,Query.Direction.DESCENDING).limit(10)
-            .addSnapshotListener{ value, error ->
-            if(error != null){
-                Toast.makeText(requireContext(), "beklenmedik bir hata oluştu.", Toast.LENGTH_SHORT).show()
-            }else{
-                if(value != null){
-                    if(!value.isEmpty){
-                        val documents = value.documents
-
-                        topQuestionList.clear()
-
-                        for(document in documents){
-
-                            val docNUm = document.id
-                            val askingUsername = document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String
-                            val questionContent = document.get(FirebaseConstants.FIELD_QUESTION_CONTENT) as? String
-                            val questionHeader = document.get(FirebaseConstants.FIELD_QUESTION_HEADER) as? String
-                            val questionImage = document.get(FirebaseConstants.FIELD_QUESTION_IMAGE) as? String
-                            val questionTags = document.get(FirebaseConstants.FIELD_QUESTION_TAGS) as? String
-                            val questionProfileImage = document.get(FirebaseConstants.FILED_QUESTION_PROFILE_IMAGE) as? String
-                            val questionPoint = document.getLong(FirebaseConstants.FILED_QUESTION_POINT)
-
-                            val askingQuestions = Question(docNUm,questionProfileImage,askingUsername,questionContent,questionHeader,questionImage,questionTags,questionPoint.toString())
-                            topQuestionList.add(askingQuestions)
+                            //if user was liked item, view visible Liking Button
+                            Log.i(
+                                "TopQuestionListSizeGetDataSubmitDataSonra",
+                                topQuestionList.size.toString()
+                            )
 
                         }
-                        topQuestionAdapter.submitDataTopVoted(topQuestionList)
+
                     }
-
                 }
-            }
 
-        }
+            }
     }
+
+
+    fun refresh() {
+        //When slide ViewPager2 Refresh contents on page
+        //getData()
+
+    }
+
+}
+
+interface TopRecyclerViewItemClickListener {
+    fun onClick(param: Any?)
 
 }
