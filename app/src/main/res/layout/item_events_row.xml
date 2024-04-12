@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="210dp"
+    android:layout_margin="10dp"
+    android:background="@drawable/main_button_v1"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <ImageView
+        android:id="@+id/iv_event_banner"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/gdsc_evet_banner"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_event_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="Event Header"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_event_banner"
+        />
+    <LinearLayout
+        android:id="@+id/event_LinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_event_banner"
+        >
+        
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            >
+
+            <ProgressBar
+                android:id="@+id/progressBar_Event"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:background="@drawable/circle_shape"
+                android:indeterminate="false"
+                android:progressDrawable="@drawable/circle_progress_bar"
+                android:textAlignment="center"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/progress_bar_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/progressBar_Event"
+                android:layout_alignRight="@id/progressBar_Event"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="---"
+                android:textColor="#F5872E"
+                android:textSize="18sp"
+                android:textStyle="bold"
+
+                />
+
+        </RelativeLayout>
+
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_event_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:hint="@string/Question_introdoucten"
+            android:text="Content"
+            />
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/iv_views"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/baseline_groups_24" />
+
+    <TextView
+        android:id="@+id/tv_views"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8sp"
+        android:text="0"
+        android:textSize="19sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_views"
+        app:layout_constraintStart_toEndOf="@+id/iv_views" />
+
+
+    <ImageView
+        android:id="@+id/iv_location_views"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_views"
+
+        app:srcCompat="@drawable/baseline_location_on_24" />
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8sp"
+        android:layout_marginBottom="3sp"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_location_views"
+        app:layout_constraintStart_toEndOf="@+id/iv_location_views"
+        app:layout_constraintEnd_toStartOf="@+id/btn_join_unjoin"/>
+
+    <ProgressBar
+        android:id="@+id/pb_waitJoin"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/btn_join_unjoin"
+        app:layout_constraintEnd_toEndOf="@id/btn_join_unjoin"
+        app:layout_constraintTop_toTopOf="@id/btn_join_unjoin"
+        app:layout_constraintBottom_toBottomOf="@id/btn_join_unjoin"/>
+
+
+    <Button
+        android:id="@+id/btn_join_unjoin"
+        android:layout_width="65dp"
+        android:layout_height="35dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/btn_event"
+        android:text="JOIN"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_location"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

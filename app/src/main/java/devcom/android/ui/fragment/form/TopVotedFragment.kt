@@ -26,14 +26,14 @@ import devcom.android.viewmodel.QuestionViewModel
 import devcom.android.viewmodel.QuestionViewModelFactory
 
 
-lateinit var topQuestionList: ArrayList<Question>
+var topQuestionList: ArrayList<Question> = ArrayList()
 lateinit var topQuestionRecyclerAdapter: TopQuestionAdapter
-private lateinit var topQuestionRecycleView: RecyclerView
-private lateinit var topQuestionViewModel: QuestionViewModel
+
 
 class TopVotedFragment : Fragment() {
 
-
+    private lateinit var topQuestionRecycleView: RecyclerView
+    private lateinit var topQuestionViewModel: QuestionViewModel
     private lateinit var swipeRefreshTopLayout: SwipeRefreshLayout
 
     val db = Firebase.firestore
@@ -58,8 +58,6 @@ class TopVotedFragment : Fragment() {
             QuestionViewModelFactory(LikedQuestion(db), CheckLikedQuestions(db))
         topQuestionViewModel =
             ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
-
-        topQuestionList = ArrayList()
 
         getData()
 
@@ -88,8 +86,6 @@ class TopVotedFragment : Fragment() {
                 )
             }
         })
-
-
         topQuestionRecycleView.adapter = topQuestionRecyclerAdapter
 
         observeLiveData()

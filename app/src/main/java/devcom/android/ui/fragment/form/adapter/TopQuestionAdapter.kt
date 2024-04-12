@@ -29,15 +29,15 @@ class TopQuestionAdapter(
 
     private val itemViewListener: TopRecyclerViewItemClickListener,
     private val likeClickListener: TopRecyclerViewItemClickListener
-) :
-    RecyclerView.Adapter<TopQuestionAdapter.TopQuestionHolder>() {
+
+) : RecyclerView.Adapter<TopQuestionAdapter.TopQuestionHolder>() {
 
     private var topQuestionList: ArrayList<Question> = ArrayList()
-    fun getTopQuestionList(): ArrayList<Question> {
+    private fun getTopQuestionList(): ArrayList<Question> {
         return topQuestionList
     }
 
-    fun setTopQuestionList(newTopQuestionList: ArrayList<Question>) {
+    private fun setTopQuestionList(newTopQuestionList: ArrayList<Question>) {
         topQuestionList = newTopQuestionList
     }
 
@@ -46,7 +46,6 @@ class TopQuestionAdapter(
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         setTopQuestionList(newTopQuestionList)
         diffResult.dispatchUpdatesTo(this)
-
     }
 
     class TopQuestionHolder(val binding: ItemQuestionRowBinding) :

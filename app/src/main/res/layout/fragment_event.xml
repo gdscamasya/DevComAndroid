@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_profile_forum"
+        android:id="@+id/iv_profile_event"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:padding="2dp"

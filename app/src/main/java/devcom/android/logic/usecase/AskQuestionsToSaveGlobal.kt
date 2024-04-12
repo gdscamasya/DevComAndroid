@@ -100,10 +100,10 @@ class AskQuestionsToSaveGlobal(
 
                     }
 
-                    questionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
-                    topQuestionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
-                    topQuestionRecyclerAdapter.setData(topQuestionList)
-                    questionRecyclerAdapter.setData(questionList)
+                    //questionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
+                    //topQuestionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
+                    //topQuestionRecyclerAdapter.setData(topQuestionList)
+                    //questionRecyclerAdapter.setData(questionList)
 
 
                 } else {
@@ -162,10 +162,10 @@ class AskQuestionsToSaveGlobal(
                             }
 
 
-                            questionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
-                            topQuestionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
-                            topQuestionRecyclerAdapter.setData(topQuestionList)
-                            questionRecyclerAdapter.setData(questionList)
+                           // questionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
+                           // topQuestionList.add(Question(uuid.toString(),profileImageUrl,getUsername,questionContent,questionHeader,selectedPicture.toString(),questionTags,point.toString(),false))
+                           // topQuestionRecyclerAdapter.setData(topQuestionList)
+                           // questionRecyclerAdapter.setData(questionList)
 
                         }
                     }.addOnFailureListener {

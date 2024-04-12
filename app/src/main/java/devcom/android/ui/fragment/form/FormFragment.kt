@@ -29,12 +29,10 @@ import devcom.android.utils.extensions.visible
 
 
 class FormFragment : Fragment() {
-
-    private val tabTitles = arrayListOf("Popüler Sorular", "Sorular")
-
-    val db = Firebase.firestore
+    private val db = Firebase.firestore
     private lateinit var auth: FirebaseAuth
 
+    private val tabTitles = arrayListOf("Popüler Sorular", "Sorular")
 
     private lateinit var searchBar: SearchView
     private lateinit var bottomNav: BottomNavigationView
@@ -98,7 +96,6 @@ class FormFragment : Fragment() {
         }
 
         addQuestionSetOnClickListener()
-
     }
 
     override fun onAttach(context: Context) {

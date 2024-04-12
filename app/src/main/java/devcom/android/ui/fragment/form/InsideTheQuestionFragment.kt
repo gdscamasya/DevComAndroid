@@ -162,38 +162,6 @@ class InsideTheQuestionFragment : Fragment() {
                  val context = fragmentContext ?: return@addOnFailureListener
                  Toast.makeText(context, "Hata oluştu: ${e.message}", Toast.LENGTH_SHORT).show()
              }
-            /*
-            docInCollectRef.document(docId).collection(FirebaseConstants.COLLECTION_PATH_ANSWERS).addSnapshotListener{ value, error ->
-                val context = fragmentContext ?: return@addSnapshotListener
-                if(error != null){
-                    Toast.makeText(context, "error bulundu", Toast.LENGTH_SHORT).show()
-                }else{
-                    if(value != null){
-                        val documents = value.documents
-
-                        for(document in documents){
-                            val answerContent = document.getString(FirebaseConstants.FIELD_ANSWER_CONTENT)
-                            val answerUsername = document.getString(FirebaseConstants.FIELD_ANSWER_USERNAME)
-                            val answerProfileImage = document.getString(FirebaseConstants.FIELD_ANSWER_PROFILE_IMAGE)
-                            //val answerAddingImage = document.getString(FirebaseConstants.FIELD_ANSWER_ADDING_IMAGE)
-
-                            val answer = Answer(answerUsername,answerProfileImage,answerContent)
-                            insideTheQuestionList.add(answer)
-                        }
-
-                        insideTheQuestionRecyclerView.layoutManager = LinearLayoutManager(context)
-                        insideTheQuestionAdapter = InsideTheQuestionAdapter(insideTheQuestionList)
-                        insideTheQuestionRecyclerView.adapter = insideTheQuestionAdapter
-
-                    }else{
-                        Toast.makeText(context, "belge bulunamadı", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-            }
-
-             */
-
         }
 
     }

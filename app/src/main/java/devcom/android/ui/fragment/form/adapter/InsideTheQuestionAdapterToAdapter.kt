@@ -1,15 +1,16 @@
 package devcom.android.ui.fragment.form.adapter
 
 import android.content.Context
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.PagerAdapter
 import com.squareup.picasso.Picasso
 import devcom.android.R
+import devcom.android.ui.fragment.form.size.FullScreenImageFragment
 
 class InsideTheQuestionAdapterToAdapter(private val context: Context,
                                         private val imagesUrls: ArrayList<*>):PagerAdapter() {
@@ -17,6 +18,9 @@ class InsideTheQuestionAdapterToAdapter(private val context: Context,
         return (imagesUrls.size / 2) + (imagesUrls.size % 2)
     }
 
+    override fun getPageTitle(position: Int): CharSequence? {
+        return "$position"
+    }
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
 
         val view = LayoutInflater.from(context).inflate(R.layout.question_images_item, container, false)
@@ -31,19 +35,15 @@ class InsideTheQuestionAdapterToAdapter(private val context: Context,
 
 
         imageView.setOnClickListener {
-            imageView.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
-            imageView.scaleType = ImageView.ScaleType.FIT_XY
+            val fullScreenImageFragment = FullScreenImageFragment.newInstance(selectedImages1.toString())
+            val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+            fullScreenImageFragment.show(fragmentManager, "FullScreenImageFragment")
         }
 
         imageViewTwo.setOnClickListener {
-            imageView.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
-            imageView.scaleType = ImageView.ScaleType.FIT_XY
+            val fullScreenImageFragment = FullScreenImageFragment.newInstance(selectedImages2.toString())
+            val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+            fullScreenImageFragment.show(fragmentManager, "FullScreenImageFragment")
         }
 
         container.addView(view)

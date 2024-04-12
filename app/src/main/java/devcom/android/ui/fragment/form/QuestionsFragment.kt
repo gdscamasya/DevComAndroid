@@ -28,11 +28,8 @@ import devcom.android.viewmodel.QuestionViewModel
 import devcom.android.viewmodel.QuestionViewModelFactory
 import kotlinx.coroutines.launch
 
-
-lateinit var questionList: ArrayList<Question>
+var questionList: ArrayList<Question> = ArrayList()
 lateinit var questionRecyclerAdapter: QuestionRecyclerAdapter
-
-
 
 class QuestionsFragment : Fragment() {
 
@@ -63,12 +60,11 @@ class QuestionsFragment : Fragment() {
         questionViewModel =
             ViewModelProvider(this, questionViewModelFactory).get(QuestionViewModel::class.java)
 
-        questionList = ArrayList()
-
         getData()
 
         swipeRefreshQuestionLayout = view.findViewById(R.id.swipeRefreshQuestionLayout)
         questionRecyclerView = view.findViewById(R.id.rv_question)
+
         questionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         questionRecyclerAdapter =
             QuestionRecyclerAdapter(object : RecyclerViewItemClickListener {
@@ -92,26 +88,29 @@ class QuestionsFragment : Fragment() {
                 }
 
             })
+
         questionRecyclerView.adapter = questionRecyclerAdapter
+
         observeLiveData()
         refreshSetOnListener()
     }
 
-    private fun observeLiveData(){
-        questionViewModel.isLikedQuestion.observe(viewLifecycleOwner, Observer {LikedQuestion ->
+    private fun observeLiveData() {
+        questionViewModel.isLikedQuestion.observe(viewLifecycleOwner, Observer { LikedQuestion ->
             LikedQuestion?.let {
-                if(LikedQuestion){
+                if (LikedQuestion) {
                     updateUI()
                 }
             }
         })
     }
+
     private fun updateUI() {
         getData()
     }
 
 
-    private fun refreshSetOnListener(){
+    private fun refreshSetOnListener() {
         swipeRefreshQuestionLayout.setOnRefreshListener {
             getData()
             swipeRefreshQuestionLayout.isRefreshing = false
@@ -138,12 +137,17 @@ class QuestionsFragment : Fragment() {
 
                             for (document in documents) {
 
-                                val pending = document.get(FirebaseConstants.FILED_QUESTION_PENDING) as? Boolean
-                                Toast.makeText(requireContext(), "Pending = $pending", Toast.LENGTH_SHORT).show()
+                                val pending =
+                                    document.get(FirebaseConstants.FILED_QUESTION_PENDING) as? Boolean
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Pending = $pending",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
-                                if(pending == false){
+                                if (pending == false) {
                                     continue
-                                }else{
+                                } else {
                                     val docNum = document.id
                                     val askingUsername =
                                         document.get(FirebaseConstants.FIELD_QUESTION_USERNAME) as? String

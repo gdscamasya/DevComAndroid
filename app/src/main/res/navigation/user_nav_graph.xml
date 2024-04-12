@@ -41,7 +41,11 @@
         android:id="@+id/event"
         android:name="devcom.android.ui.fragment.event.EventFragment"
         android:label="fragment_event"
-        tools:layout="@layout/fragment_event" />
+        tools:layout="@layout/fragment_event" >
+        <action
+            android:id="@+id/action_event_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/form"
         android:name="devcom.android.ui.fragment.form.FormFragment"

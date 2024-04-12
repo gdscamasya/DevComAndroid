@@ -20,48 +20,54 @@ import devcom.android.ui.fragment.form.RecyclerViewItemClickListener
 import devcom.android.data.Question
 
 
-class QuestionRecyclerAdapter( private val itemViewListener : RecyclerViewItemClickListener, private val likeClickListener : RecyclerViewItemClickListener) : RecyclerView.Adapter<QuestionRecyclerAdapter.AskQuestionHolder>() {
+class QuestionRecyclerAdapter(
+
+    private val itemViewListener: RecyclerViewItemClickListener,
+    private val likeClickListener: RecyclerViewItemClickListener
+
+) : RecyclerView.Adapter<QuestionRecyclerAdapter.AskQuestionHolder>() {
 
     private var questionList = ArrayList<Question>()
-    fun setData(newTopQuestionList : ArrayList<Question>){
-
-        val diffUtil = QuestionDiffUtil(questionList,newTopQuestionList)
+    fun setData(newTopQuestionList: ArrayList<Question>) {
+        val diffUtil = QuestionDiffUtil(questionList, newTopQuestionList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
-        //questionList = newTopQuestionList
+        questionList = newTopQuestionList
         diffResult.dispatchUpdatesTo(this)
-        for(question in questionList){
-            Log.i("Qqesersd",question.toString())
-        }
-
     }
-    class AskQuestionHolder(val binding: ItemQuestionRowBinding) : RecyclerView.ViewHolder(binding.root){
+
+    class AskQuestionHolder(val binding: ItemQuestionRowBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AskQuestionHolder {
-        val binding = ItemQuestionRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding =
+            ItemQuestionRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AskQuestionHolder(binding)
     }
 
     override fun onBindViewHolder(holder: AskQuestionHolder, position: Int) {
         holder.binding.tvNickname.text = questionList.get(position).questionUsername
 
-        setMaxCharacterLimit(holder.binding.tvQuestionHeader,100)
+        setMaxCharacterLimit(holder.binding.tvQuestionHeader, 100)
         holder.binding.tvQuestionHeader.text = questionList.get(position).questionHeader
 
-        setMaxCharacterLimit(holder.binding.tvQuestionIntrodoucten,100)
+        setMaxCharacterLimit(holder.binding.tvQuestionIntrodoucten, 100)
         holder.binding.tvQuestionIntrodoucten.text = questionList.get(position).questionContent
 
-        if(questionList.get(position).questionImageProfile != null){
-            Picasso.get().load(questionList.get(position).questionImageProfile).resize(200,200).centerCrop().into(holder.binding.ivProfileQuestion)
+        if (questionList.get(position).questionImageProfile != null) {
+            Picasso.get().load(questionList.get(position).questionImageProfile).resize(200, 200)
+                .centerCrop().into(holder.binding.ivProfileQuestion)
         }
         holder.binding.tvUp.text = questionList.get(position).questionPoint
 
-        holder.binding.ivLiking.visibility = if (questionList.get(position).likingViewVisible) View.INVISIBLE else View.VISIBLE
-        holder.binding.ivLiked.visibility = if (questionList.get(position).likingViewVisible) View.VISIBLE else View.INVISIBLE
+        holder.binding.ivLiking.visibility =
+            if (questionList.get(position).likingViewVisible) View.INVISIBLE else View.VISIBLE
+        holder.binding.ivLiked.visibility =
+            if (questionList.get(position).likingViewVisible) View.VISIBLE else View.INVISIBLE
 
 
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
 
             itemViewListener.onClick(questionList.get(position).docNum)
 

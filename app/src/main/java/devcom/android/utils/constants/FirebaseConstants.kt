@@ -24,6 +24,13 @@ object FirebaseConstants {
     const val FIELD_ANSWER_PROFILE_IMAGE = "AnswerProfileImage"
     const val FIELD_ANSWER_ADDING_IMAGE = "AnswerImgUrlList"
 
+    const val COLLECTION_PATH_EVENTS = "Events"
+    const val FIELD_EVENT_DATE = "EventDate"
+    const val FIELD_EVENT_DESCRIPTION = "EventDescription"
+    const val FIELD_EVENT_LOCATION = "EventLocation"
+    const val FIELD_EVENT_TITLE = "EventName"
+    const val FIELD_EVENT_CREATE_DATE = "CreateDate"
+
 
 
 }

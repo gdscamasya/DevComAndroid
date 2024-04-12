@@ -6,6 +6,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#F5872E"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_question_inside_introdoucten"
@@ -55,9 +59,19 @@
             android:id="@+id/viewPager_images_link"
             android:layout_width="wrap_content"
             android:layout_height="120dp"
-            />
+            >
+
+            <androidx.viewpager.widget.PagerTitleStrip
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top" />
+
+        </androidx.viewpager.widget.ViewPager>
 
     </LinearLayout>
 
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#F5872E"/>
 </LinearLayout>
